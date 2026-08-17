@@ -1,0 +1,2 @@
+import {PageTitle,ProjectGrid,Shell} from "../components";
+export default function Work(){return <Shell><PageTitle index="01" label="SELECTED WORK" title="WORK / UX·UI" description="Цифровые продукты, сайты и дизайн-системы. От исследования и структуры до финального визуального языка."/><section className="filter-row"><span>ALL [04]</span><span>WEB [03]</span><span>MOBILE [01]</span><span>SYSTEMS [02]</span></section><ProjectGrid/></Shell>}
