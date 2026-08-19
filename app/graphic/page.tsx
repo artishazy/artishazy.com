@@ -1,3 +1,4 @@
-import {PageTitle,Shell} from "../components";
-const items=["IDENTITY / VOID","POSTERS / SIGNAL","TYPE STUDIES","SOCIAL / RAW","LOGOS / 2026","PRINT / OBJECTS"];
-export default function Graphic(){return <Shell><PageTitle index="02" label="GRAPHIC DESIGN" title="GRAPHIC / ARCHIVE" description="Айдентика, логотипы, постеры, печатные материалы и визуальные системы."/><section className="masonry">{items.map((x,i)=><article className={`graphic-tile t${i}`} key={x}><div><b>{i%3===0?"A—Z":i%3===1?"▓▒░":"( )"}</b><i/></div><span>0{i+1}</span><h2>{x}</h2></article>)}</section></Shell>}
+"use client";
+import {LocalizedShell,PageTitle} from "../components";
+const items=[{ru:"АЙДЕНТИКА / VOID",en:"IDENTITY / VOID"},{ru:"ПОСТЕРЫ / SIGNAL",en:"POSTERS / SIGNAL"},{ru:"ШРИФТОВЫЕ ЭТЮДЫ",en:"TYPE STUDIES"},{ru:"СОЦСЕТИ / RAW",en:"SOCIAL / RAW"},{ru:"ЛОГОТИПЫ / 2026",en:"LOGOS / 2026"},{ru:"ПЕЧАТЬ / ОБЪЕКТЫ",en:"PRINT / OBJECTS"}];
+export default function Graphic(){return <LocalizedShell>{ru=><><PageTitle index="03" label={ru?"ГРАФИЧЕСКИЙ ДИЗАЙН":"GRAPHIC DESIGN"} title={ru?"ГРАФИКА / АРХИВ":"GRAPHIC / ARCHIVE"} description={ru?"Айдентика, логотипы, постеры, печатные материалы и визуальные системы.":"Identity, logos, posters, printed matter and visual systems."}/><section className="masonry">{items.map((x,i)=><article className={`graphic-tile t${i}`} key={x.en}><div><b>{i%3===0?"A—Z":i%3===1?"▓▒░":"( )"}</b><i/></div><span>0{i+1}</span><h2>{ru?x.ru:x.en}</h2></article>)}</section></>}</LocalizedShell>}

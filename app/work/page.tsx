@@ -1,2 +1,3 @@
-import {PageTitle,ProjectGrid,Shell} from "../components";
-export default function Work(){return <Shell><PageTitle index="01" label="SELECTED WORK" title="WORK / UX·UI" description="Цифровые продукты, сайты и дизайн-системы. От исследования и структуры до финального визуального языка."/><section className="filter-row"><span>ALL [04]</span><span>WEB [03]</span><span>MOBILE [01]</span><span>SYSTEMS [02]</span></section><ProjectGrid/></Shell>}
+"use client";
+import {LocalizedShell,PageTitle,ProjectGrid} from "../components";
+export default function Work(){return <LocalizedShell>{ru=><><PageTitle index="02" label={ru?"ИЗБРАННЫЕ ПРОЕКТЫ":"SELECTED WORK"} title={ru?"ПРОЕКТЫ / UX·UI":"WORK / UX·UI"} description={ru?"EXNODE, DREAMY, COLORIST и избранные коммерческие сайты — от исследования до адаптивного интерфейса.":"EXNODE, DREAMY, COLORIST and selected commercial websites — from research to responsive interfaces."}/><section className="filter-row"><span>{ru?"ВСЕ":"ALL"} [04]</span><span>{ru?"ВЕБ":"WEB"} [03]</span><span>{ru?"МОБИЛЬНЫЕ":"MOBILE"} [01]</span><span>{ru?"СИСТЕМЫ":"SYSTEMS"} [02]</span></section><ProjectGrid ru={ru}/></>}</LocalizedShell>}
