@@ -75,12 +75,15 @@ export default function AsciiHero({ru=true}:{ru?:boolean}){
     let currentX=0;
     let currentY=0;
     let visible=false;
+    let lastMotion=0;
+    const mobile=matchMedia("(max-width: 900px)").matches;
+    const reducedMotion=matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     const draw=()=>{
       const rect=host.getBoundingClientRect();
       const width=Math.max(1,rect.width);
       const height=Math.max(1,rect.height);
-      const ratio=Math.min(devicePixelRatio||1,1.35);
+      const ratio=Math.min(devicePixelRatio||1,mobile?1:1.35);
       const ink=getComputedStyle(document.documentElement).getPropertyValue("--fg").trim()||"#11110f";
       const unit=Math.min(width/132,height/122);
       const cx=width*.53;
@@ -101,7 +104,9 @@ export default function AsciiHero({ru=true}:{ru?:boolean}){
 
         const kind=canvas.dataset.kind;
         const layer=Number(canvas.dataset.layer) as Layer;
-        const points=kind==="cloud"?BLOB.filter(point=>point.shard===layer):STATUE.filter(point=>point.layer===layer);
+        const points=kind==="cloud"
+          ?BLOB.filter((point,index)=>point.shard===layer&&(!mobile||index%2===layer%2))
+          :STATUE.filter(point=>point.layer===layer);
         for(const point of points){
           const size=Math.max(4.1,unit*(.82+point.weight*.2));
           const baseAlpha=kind==="cloud"?.85:layer===0?.24:layer===1?.56:.9;
@@ -118,7 +123,9 @@ export default function AsciiHero({ru=true}:{ru?:boolean}){
       resizeFrame=requestAnimationFrame(draw);
     };
     const animate=(time:number)=>{
-      if(!visible){motionFrame=0;return;}
+      if(!visible||document.hidden||reducedMotion){motionFrame=0;return;}
+      if(mobile&&time-lastMotion<33){motionFrame=requestAnimationFrame(animate);return;}
+      lastMotion=time;
       currentX+=(targetX-currentX)*.065;
       currentY+=(targetY-currentY)*.065;
       const nx=currentX+Math.sin(time*.00038)*.025;
@@ -136,21 +143,27 @@ export default function AsciiHero({ru=true}:{ru?:boolean}){
       motionFrame=requestAnimationFrame(animate);
     };
     const move=(event:PointerEvent)=>{
+      if(mobile||reducedMotion)return;
       targetX=Math.max(-1,Math.min(1,(event.clientX/window.innerWidth-.5)*2));
       targetY=Math.max(-1,Math.min(1,(event.clientY/window.innerHeight-.5)*2));
+    };
+    const syncVisibility=()=>{
+      if(!document.hidden&&visible&&!reducedMotion&&!motionFrame)motionFrame=requestAnimationFrame(animate);
+      if(document.hidden&&motionFrame){cancelAnimationFrame(motionFrame);motionFrame=0;}
     };
 
     const resizeObserver=new ResizeObserver(scheduleDraw);
     const themeObserver=new MutationObserver(scheduleDraw);
     const visibilityObserver=new IntersectionObserver(([entry])=>{
       visible=entry.isIntersecting;
-      if(visible&&!motionFrame)motionFrame=requestAnimationFrame(animate);
+      if(visible&&!reducedMotion&&!motionFrame)motionFrame=requestAnimationFrame(animate);
       if(!visible&&motionFrame){cancelAnimationFrame(motionFrame);motionFrame=0;}
     },{threshold:0});
     resizeObserver.observe(host);
     themeObserver.observe(document.documentElement,{attributes:true,attributeFilter:["data-theme"]});
     visibilityObserver.observe(host);
-    window.addEventListener("pointermove",move,{capture:true,passive:true});
+    if(!mobile&&!reducedMotion)window.addEventListener("pointermove",move,{capture:true,passive:true});
+    document.addEventListener("visibilitychange",syncVisibility);
     draw();
 
     return()=>{
@@ -160,6 +173,7 @@ export default function AsciiHero({ru=true}:{ru?:boolean}){
       themeObserver.disconnect();
       visibilityObserver.disconnect();
       window.removeEventListener("pointermove",move,{capture:true});
+      document.removeEventListener("visibilitychange",syncVisibility);
     };
   },[]);
 

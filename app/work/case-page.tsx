@@ -3,29 +3,29 @@
 import {LocalizedShell} from "../components";
 
 const works=[
-  {slug:"signal",title:"EXNODE / FINANCE"},
-  {slug:"archive",title:"DREAMY / SLEEP APP"},
-  {slug:"nexus",title:"COLORIST / ACCESSIBILITY"},
-  {slug:"mono",title:"LANDINGS / SELECTED"},
+  {slug:"exnode",title:"EXNODE / FINANCE"},
+  {slug:"dreamy",title:"DREAMY / SLEEP APP"},
+  {slug:"colorist",title:"COLORIST / ACCESSIBILITY"},
+  {slug:"landings",title:"LANDINGS / SELECTED"},
 ];
 
 type Copy={title:string;subtitle:string;challenge:string;solution:string;outcome:string};
 type Detail={ru:Copy;en:Copy};
 
 export const caseDetails:Record<string,Detail>={
-  signal:{
+  exnode:{
     ru:{title:"EXNODE / FINANCE",subtitle:"Платформа мониторинга криптообменников и финансовых продуктов.",challenge:"Большой объём рейтингов, показателей и сервисных данных должен оставаться понятным и помогать пользователю принимать решения.",solution:"Исследование поведения, ясная структура данных, последовательные сценарии и поддерживаемая дизайн-система формируют масштабируемый продукт.",outcome:"Сложная финансовая информация складывается в спокойный интерфейс с предсказуемой логикой."},
     en:{title:"EXNODE / FINANCE",subtitle:"A monitoring platform for crypto exchanges and financial products.",challenge:"A large volume of ratings, metrics and service data needs to remain understandable and support decision-making.",solution:"Behavior research, clear data structure, consistent flows and a maintained design system create a scalable product.",outcome:"Complex financial information becomes a calm interface with predictable logic."},
   },
-  archive:{
+  dreamy:{
     ru:{title:"DREAMY / SLEEP APP",subtitle:"Мобильное приложение для контроля качества сна.",challenge:"Данные о сне должны быть понятны с первого взгляда, не перегружая пользователя медицинской сложностью.",solution:"Сценарии отслеживания, ясная иерархия показателей и мягкая визуальная система превращают наблюдения в ежедневную привычку.",outcome:"Пользователь видит динамику сна и понимает следующие действия без лишнего когнитивного давления."},
     en:{title:"DREAMY / SLEEP APP",subtitle:"A mobile application for tracking sleep quality.",challenge:"Sleep data needs to be clear at a glance without overwhelming the user with medical complexity.",solution:"Tracking flows, a clear metric hierarchy and a calm visual system turn observations into a daily habit.",outcome:"Users can see sleep patterns and understand next steps without unnecessary cognitive load."},
   },
-  nexus:{
+  colorist:{
     ru:{title:"COLORIST / ACCESSIBILITY",subtitle:"Инструмент работы с цветом для авторов и пользователей с нарушением цветовосприятия.",challenge:"Подбор палитры должен одновременно поддерживать творческий процесс и учитывать доступность.",solution:"Сравнение цветов, понятные состояния контраста и интерактивный прототип объединены в одном рабочем сценарии.",outcome:"Цветовые решения становятся быстрее, осознаннее и доступнее для более широкой аудитории."},
     en:{title:"COLORIST / ACCESSIBILITY",subtitle:"A color tool for creators and colorblind users.",challenge:"Palette selection needs to support creative work while accounting for accessibility.",solution:"Color comparison, clear contrast states and an interactive prototype are combined into one working flow.",outcome:"Color decisions become faster, more intentional and accessible to a wider audience."},
   },
-  mono:{
+  landings:{
     ru:{title:"LANDINGS / SELECTED",subtitle:"Серия коммерческих сайтов для медицины, строительства, стоматологии и систем безопасности.",challenge:"Разные отрасли и аудитории требовали своей структуры, сохраняя понятную коммуникацию и адаптивность.",solution:"Исследование контекста, модульные сетки, прототипы и сборка в Tilda Zero Block позволили быстро адаптировать подход под каждый проект.",outcome:"Каждый сайт получил собственный характер и ясный путь от первого экрана к целевому действию."},
     en:{title:"LANDINGS / SELECTED",subtitle:"Commercial websites for medicine, construction, dentistry and security systems.",challenge:"Different industries and audiences required distinct structures while keeping communication clear and responsive.",solution:"Context research, modular grids, prototypes and Tilda Zero Block development made the approach adaptable to every project.",outcome:"Each website gained its own character and a clear path from the first screen to the target action."},
   },
