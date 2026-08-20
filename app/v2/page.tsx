@@ -2,6 +2,7 @@
 
 import {useEffect,useState} from "react";
 import Link from "next/link";
+import {ArrowIcon} from "../components";
 
 const BORZOI=String.raw`                 __
             ____/  \__
@@ -122,7 +123,7 @@ export default function VariantTwo(){
       <div className="v2-case-list">{projects.map(project=><a href={`/work/${project.kind}`} className={`v2-case v2-case-${project.kind}`} key={project.kind} data-v2-reveal onPointerMove={tilt} onPointerLeave={untilt}>
         <div className="v2-case-top"><span>{project.title}</span><b>{project.index}</b></div>
         <div className="v2-case-art"><i/><i/><i/><strong>{project.kind.toUpperCase()}</strong></div>
-        <div className="v2-case-meta"><span>{project.tags}</span><b>ОТКРЫТЬ ↗</b></div>
+        <div className="v2-case-meta"><span>{project.tags}</span><b>ОТКРЫТЬ <ArrowIcon direction="up-right"/></b></div>
       </a>)}</div>
     </section>
 
@@ -130,13 +131,13 @@ export default function VariantTwo(){
       <p>НАЧНЁМ С</p>
       <h2>СИЛЬНОЙ<br/>ИДЕИ</h2>
       <span>Сначала — направление и ощущение. Затем структура, система и детали, которые собирают всё в цельный цифровой опыт.</span>
-      <a href="#v2-contact">ОБСУДИТЬ ПРОЕКТ ↗</a>
+      <a href="#v2-contact">ОБСУДИТЬ ПРОЕКТ <ArrowIcon direction="up-right"/></a>
     </section>
 
     <section className="v2-services" id="v2-services">
       <div className="v2-section-head" data-v2-reveal><small>02 / PRACTICE</small><h2>ГЛАВНЫЕ НАПРАВЛЕНИЯ</h2><span>WHAT I DO</span></div>
       <div className="v2-service-list">{services.map(service=><article key={service.number} data-v2-reveal>
-        <small>{service.number}</small><h3>{service.title}</h3><div className="v2-service-visual"><i/><pre>{service.number==="04"?BORZOI:"░▒▓██▓▒░"}</pre></div><p>{service.text}</p><span>↗</span>
+        <small>{service.number}</small><h3>{service.title}</h3><div className="v2-service-visual"><i/><pre>{service.number==="04"?BORZOI:"░▒▓██▓▒░"}</pre></div><p>{service.text}</p><ArrowIcon direction="up-right"/>
       </article>)}</div>
     </section>
 
@@ -149,7 +150,7 @@ export default function VariantTwo(){
     <footer className="v2-footer" id="v2-contact">
       <p>ЕСТЬ ЗАДАЧА?</p>
       <a href="mailto:hello@artishazy.com">ДАВАЙТЕ<br/>СДЕЛАЕМ<br/><span>СТРАННО.</span></a>
-      <div><span>ART_IS_HAZY® / MOSCOW</span><span>© 2026</span><Link href="/">ВЕРСИЯ 01 ↗</Link></div>
+      <div><span>ART_IS_HAZY® / MOSCOW</span><span>© 2026</span><Link href="/">ВЕРСИЯ 01 <ArrowIcon direction="up-right"/></Link></div>
       <pre>{BORZOI}</pre>
     </footer>
   </main>;

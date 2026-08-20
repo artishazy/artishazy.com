@@ -7,6 +7,16 @@ export const metadata:Metadata={
   description:"Портфолио Даниила Черкашина: продуктовый UX/UI-дизайн, сайты, графика и цифровое искусство.",
   alternates:{canonical:"/"},
   openGraph:{type:"website",locale:"ru_RU",siteName:"art_is_hazy",title:"art_is_hazy — Product Designer & Art Director",description:"Продуктовый UX/UI-дизайн, сайты, графика и цифровое искусство.",url:"/"},
-  icons:{icon:[{url:"/favicon-round.svg",type:"image/svg+xml"}],shortcut:"/favicon-round.svg",other:[{rel:"mask-icon",url:"/safari-pinned-tab.svg",color:"#0b0b0a"}]},
+  manifest:"/site.webmanifest",
+  icons:{
+    icon:[
+      {url:"/favicon-2026.svg",type:"image/svg+xml",sizes:"any"},
+      {url:"/favicon-32.png",type:"image/png",sizes:"32x32"},
+      {url:"/favicon-16.png",type:"image/png",sizes:"16x16"},
+    ],
+    shortcut:"/favicon-32.png",
+    apple:[{url:"/apple-touch-icon.png",type:"image/png",sizes:"180x180"}],
+    other:[{rel:"mask-icon",url:"/safari-pinned-tab.svg",color:"#0b0b0a"}],
+  },
 };
 export default function RootLayout({children}:Readonly<{children:React.ReactNode}>){return <html lang="ru" data-theme="light"><body><Cursor/>{children}</body></html>}

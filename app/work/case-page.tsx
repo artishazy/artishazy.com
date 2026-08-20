@@ -1,6 +1,6 @@
 "use client";
 
-import {LocalizedShell} from "../components";
+import {ArrowIcon,LocalizedShell} from "../components";
 
 const works=[
   {slug:"exnode",title:"EXNODE / FINANCE"},
@@ -55,7 +55,7 @@ export function CasePage({slug}:{slug:string}){
       <section className="process"><div className="process-head"><span>02—{ru?"ПРОЦЕСС":"PROCESS"}</span><h2>{ru?<>КАК ЭТО<br/>СДЕЛАНО</>:<>HOW IT<br/>WAS MADE</>}</h2></div>{process.map(item=><article className="process-step glass-panel" key={item[0]}><b>{item[0]}</b><h3>{item[1]}</h3><p>{item[2]}</p></article>)}</section>
       <section className="case-panels"><div>{ru?"ИССЛЕДОВАНИЕ":"DISCOVERY"}<br/><b>UX</b></div><div>{ru?"СИСТЕМА":"SYSTEM"}<br/><b>UI</b></div><div>{ru?"ИНТЕРФЕЙС":"INTERFACE"}<br/><b>WEB</b></div></section>
       <section className="outcome"><span>03—{ru?"РЕЗУЛЬТАТ":"OUTCOME"}</span><blockquote>“{p.outcome}”</blockquote><div><b>01</b><small>{ru?"ИССЛЕДОВАНИЕ":"RESEARCH"}</small></div><div><b>01</b><small>{ru?"СИСТЕМА":"SYSTEM"}</small></div><div><b>01</b><small>{ru?"ПРОТОТИП":"PROTOTYPE"}</small></div></section>
-      <a className="next-project interactive" href={"/work/"+next.slug}><span>{ru?"СЛЕДУЮЩИЙ ПРОЕКТ":"NEXT PROJECT"}</span><strong>{next.title}</strong><b>↗</b></a>
+      <a className="next-project interactive" href={"/work/"+next.slug}><span>{ru?"СЛЕДУЮЩИЙ ПРОЕКТ":"NEXT PROJECT"}</span><strong>{next.title}</strong><ArrowIcon direction="up-right"/></a>
     </>;
   }}</LocalizedShell>;
 }

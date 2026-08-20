@@ -158,7 +158,7 @@ button{border:0}
 }
 .footer-contact{align-self:end;padding-bottom:var(--space-2)}
 .footer-contact>span{display:block;margin-bottom:var(--space-4);color:var(--muted)}
-.footer-contact>a{display:inline-block;padding-bottom:6px;border-bottom:1px solid var(--fg);font-size:clamp(18px,1.6vw,26px);letter-spacing:0}
+.footer-contact>a{display:inline-flex;align-items:center;gap:.35em;padding-bottom:6px;border-bottom:1px solid var(--fg);font-size:clamp(18px,1.6vw,26px);letter-spacing:0}
 .footer-contact p{max-width:360px;margin:var(--space-5) 0 0;color:var(--muted);font-size:var(--text-body);line-height:1.5}
 .footer-nav{
   grid-column:1/-1;
@@ -260,7 +260,7 @@ button{border:0}
   .outcome b{font-size:64px}
   .next-project{gap:18px;padding:44px 0}
   .next-project strong{font-size:clamp(30px,9vw,42px);line-height:1;overflow-wrap:anywhere}
-  .next-project>b{padding-right:4px;font-size:42px}
+.next-project>.arrow-icon{width:42px;height:42px;margin-right:4px}
   .graphic-tile{margin-bottom:34px}
   .graphic-tile>div{height:min(112vw,430px)}
   .art-wall>div,.home-art>div{min-height:min(104vw,400px)}

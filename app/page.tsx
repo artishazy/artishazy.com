@@ -1,7 +1,7 @@
 "use client";
 
 import AsciiHero from "./AsciiHero";
-import {Footer,Header,PageTitle,ProjectGrid,useSiteLanguage} from "./components";
+import {ArrowIcon,Footer,Header,PageTitle,ProjectGrid,useSiteLanguage} from "./components";
 
 const graphicItems=[
   {ru:"АЙДЕНТИКА / VOID",en:"IDENTITY / VOID"},
@@ -47,7 +47,7 @@ export default function Home(){
           <span className="main-service-number">0{index+1}</span>
           <h2>{ru?service.ruTitle:service.enTitle}</h2>
           <small>{service.code}</small>
-          <span className="main-service-arrow">↘</span>
+          <ArrowIcon className="main-service-arrow"/>
         </a>)}
       </div>
     </section>
@@ -60,7 +60,7 @@ export default function Home(){
     <section className="landing-section" id="graphic">
       <PageTitle index="03" label={ru?"ГРАФИЧЕСКИЙ ДИЗАЙН":"GRAPHIC DESIGN"} title={ru?"ГРАФИКА / АРХИВ":"GRAPHIC / ARCHIVE"} description={ru?"Айдентика, логотипы, постеры, печатные материалы и визуальные системы.":"Identity, logos, posters, printed matter and visual systems."}/>
       <div className="masonry">{graphicItems.slice(0,3).map((item,i)=><article className={`graphic-tile t${i}`} key={item.en}><div><b>{i%3===0?"A—Z":i%3===1?"▓▒░":"( )"}</b><i/></div><span>0{i+1}</span><h2>{ru?item.ru:item.en}</h2></article>)}</div>
-      <a className="section-link" href="/graphic">{ru?"СМОТРЕТЬ ВЕСЬ АРХИВ":"VIEW FULL ARCHIVE"} ↗</a>
+      <a className="section-link" href="/graphic">{ru?"СМОТРЕТЬ ВЕСЬ АРХИВ":"VIEW FULL ARCHIVE"} <ArrowIcon direction="up-right"/></a>
     </section>
 
     <section className="landing-section" id="art">
@@ -72,12 +72,12 @@ export default function Home(){
    '## /_||_\\ ##'
       ######
    ARTIFACT_001`}</div><div className="glitch-word" data-text="HAZY">HAZY</div></div>
-      <a className="section-link" href="/art">{ru?"ОТКРЫТЬ ЛАБОРАТОРИЮ":"OPEN THE LAB"} ↗</a>
+      <a className="section-link" href="/art">{ru?"ОТКРЫТЬ ЛАБОРАТОРИЮ":"OPEN THE LAB"} <ArrowIcon direction="up-right"/></a>
     </section>
 
     <section className="landing-section" id="about">
       <div className="about-hero"><div className="kicker">05—{ru?"ОБО МНЕ / ПРОФИЛЬ":"ABOUT / PROFILE"}</div><h1>{ru?<>ДЕЛАЮ<br/>СЛОЖНОЕ <span>ЯСНЫМ.</span></>:<>MAKING<br/>COMPLEXITY <span>CLEAR.</span></>}</h1><p>{ru?"Я — Даниил Черкашин, продуктовый UX/UI-дизайнер и магистрант МИСИС. Исследую поведение пользователей и проектирую понятные системы для сложных цифровых продуктов.":"I am Daniil Cherkashin, a product UX/UI designer and MISIS master's student. I research user behavior and design clear systems for complex digital products."}</p></div>
-      <a className="section-link about-link" href="/about">{ru?"ПОДРОБНЕЕ ОБО МНЕ":"MORE ABOUT ME"} ↗</a>
+      <a className="section-link about-link" href="/about">{ru?"ПОДРОБНЕЕ ОБО МНЕ":"MORE ABOUT ME"} <ArrowIcon direction="up-right"/></a>
     </section>
 
     <Footer ru={ru}/>
