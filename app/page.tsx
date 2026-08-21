@@ -25,7 +25,7 @@ export default function Home(){
 
     <section className="hero" id="top">
       <div className="hero-copy">
-        <p className="eyebrow">{ru?"ПРОДУКТОВЫЙ UX/UI-ДИЗАЙНЕР / АРТ-ДИРЕКТОР — 2026":"PRODUCT UX/UI DESIGNER / ART DIRECTOR — 2026"}</p>
+        <p className="eyebrow">{ru?"ПРОДУКТОВЫЙ UX/UI-ДИЗАЙНЕР / ХУДОЖНИК — 2026":"PRODUCT UX/UI DESIGNER / ARTIST — 2026"}</p>
         <h1>{ru?<><span className="hero-line hero-line-outline">ИСКУССТВО —</span><span className="hero-line hero-line-main">ПРОЯВЛЯЕТСЯ</span><span className="hero-line hero-line-last">ИЗ ТУМАНА.</span></>:<><span className="hero-line hero-line-outline">ART —</span><span className="hero-line hero-line-main">EMERGES FROM</span><span className="hero-line hero-line-last">THE HAZE.</span></>}</h1>
       </div>
       <Stage ru={ru}/>

@@ -1,6 +1,5 @@
 "use client";
 import { useEffect,useRef,useState } from "react";
-import Link from "next/link";
 export function ArrowIcon({direction="down-right",className=""}:{direction?:"up-right"|"down-right"|"up"|"left"|"right";className?:string}){
   const path=direction==="up"?"M8 13V3M4 7l4-4 4 4":direction==="up-right"?"M4 12 12 4M6 4h6v6":direction==="left"?"M11 3 6 8l5 5":direction==="right"?"m5 3 5 5-5 5":"m4 4 8 8M12 6v6H6";
   return <svg className={`arrow-icon ${className}`.trim()} viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d={path}/></svg>;
@@ -74,7 +73,7 @@ export function Header({landing=false,ru:controlledRu,onToggleLanguage}:{landing
 export function Footer({ru=false}:{ru?:boolean}={}){return <footer className="site-footer" id="contact">
   <div className="footer-heading"><span className="footer-kicker">06—{ru?"КОНТАКТ":"CONTACT"}</span><h2>{ru?<>НА СВЯЗИ ДЛЯ<br/>НОВЫХ ПРОЕКТОВ<br/>И КОЛЛАБОРАЦИЙ.</>:<>AVAILABLE FOR<br/>NEW PROJECTS<br/>AND COLLABORATIONS.</>}</h2></div>
   <div className="footer-contact"><span>{ru?"НАПИСАТЬ":"EMAIL"}</span><a href="mailto:artishazy14@gmail.com">ARTISHAZY14@GMAIL.COM <ArrowIcon direction="up-right"/></a><p>{ru?"Продуктовый дизайн, графика и цифровое искусство.":"Product design, graphic design and digital art."}</p></div>
-  <nav className="footer-nav" aria-label={ru?"Навигация в подвале":"Footer navigation"}><Link href="/work">{ru?"КЕЙСЫ":"CASES"}</Link><Link href="/about">{ru?"ОБО МНЕ":"ABOUT"}</Link><Link href="/graphic">{ru?"ГРАФИКА":"GRAPHIC"}</Link><Link href="/art">{ru?"АРТ":"ART"}</Link><a href="/cv/daniil-cherkashin-uxui.pdf" target="_blank" rel="noreferrer">CV UX/UI <ArrowIcon direction="up-right"/></a><a href="/cv/daniil-cherkashin-graphic.pdf" target="_blank" rel="noreferrer">CV GRAPHIC <ArrowIcon direction="up-right"/></a><a href="#top">{ru?"НАВЕРХ":"BACK TO TOP"} <ArrowIcon direction="up"/></a></nav>
+  <nav className="footer-nav" aria-label={ru?"Навигация в подвале":"Footer navigation"}><a href="/work">{ru?"КЕЙСЫ":"CASES"}</a><a href="/about">{ru?"ОБО МНЕ":"ABOUT"}</a><a href="/graphic">{ru?"ГРАФИКА":"GRAPHIC"}</a><a href="/art">{ru?"АРТ":"ART"}</a><a href="/cv/daniil-cherkashin-uxui.pdf" target="_blank" rel="noreferrer">CV UX/UI <ArrowIcon direction="up-right"/></a><a href="/cv/daniil-cherkashin-graphic.pdf" target="_blank" rel="noreferrer">CV GRAPHIC <ArrowIcon direction="up-right"/></a><a href="#top">{ru?"НАВЕРХ":"BACK TO TOP"} <ArrowIcon direction="up"/></a></nav>
   <div className="footer-meta"><span>©2026 ДАНИИЛ ЧЕРКАШИН</span><span>{ru?"МОСКВА":"MOSCOW"} / WORLDWIDE</span><span>ART_IS_HAZY®</span></div>
 </footer>}
 export function PageTitle({index,label,title,description}:{index:string,label:string,title:string,description:string}){return <section className="page-title"><div className="kicker">{index}—{label}</div><h1>{title}</h1><p>{description}</p></section>}

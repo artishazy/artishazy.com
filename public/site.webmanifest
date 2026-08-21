@@ -3,7 +3,7 @@
   "short_name": "art_is_hazy",
   "icons": [
     {"src": "/favicon-32.png", "sizes": "32x32", "type": "image/png"},
-    {"src": "/apple-touch-icon.png", "sizes": "180x180", "type": "image/png"}
+    {"src": "/apple-touch-icon-v2.png", "sizes": "180x180", "type": "image/png", "purpose": "any maskable"}
   ],
   "theme_color": "#f8f8f5",
   "background_color": "#f8f8f5",
