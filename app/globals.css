@@ -3,6 +3,7 @@
 @import "./interactions.css";
 @import "./hero-overlap.css";
 @import "./system.css";
+@source "../components/originkit";
 
 @font-face{
   font-family:"Inter";
@@ -64,6 +65,7 @@ main{min-height:100vh;padding:0 28px}
   -webkit-backdrop-filter:blur(22px) saturate(145%);
   font:500 11px var(--font-mono);
   letter-spacing:.04em;
+  transition:transform .28s ease,opacity .2s ease,background .35s,color .35s;
 }
 .wordmark{font-weight:700}
 .header nav{display:flex;gap:14px}
@@ -80,7 +82,8 @@ main{min-height:100vh;padding:0 28px}
 .eyebrow{font:10px var(--font-mono);color:var(--muted);margin:0 0 11vh}
 .hero h1{font-size:clamp(58px,7.3vw,118px);line-height:1;font-weight:400;margin:0;max-width:1000px}
 .hero h1 .hero-line{display:block;font-family:var(--font-sans);font-weight:400;letter-spacing:0;font-kerning:normal}
-.hero h1 .hero-line-outline{color:transparent;-webkit-text-stroke:1px var(--fg);paint-order:stroke fill;font-weight:400}
+.hero h1 .hero-line-outline{color:var(--fg);-webkit-text-stroke:0;filter:url(#hero-text-outline-light);paint-order:normal;font-weight:400}
+:root[data-theme="dark"] .hero h1 .hero-line-outline{filter:url(#hero-text-outline-dark)}
 .hero h1 .hero-line-main,.hero h1 .hero-line-last{letter-spacing:0}
 .intro{margin-top:8vh;display:grid;grid-template-columns:120px 360px;gap:20px;font:10px var(--font-mono);color:var(--muted)}
 .intro p{margin:0;color:var(--fg);line-height:1.6}
@@ -96,7 +99,7 @@ main{min-height:100vh;padding:0 28px}
 
 /* Main navigation */
 .main-menu-trigger{min-width:118px;display:grid;grid-template-columns:14px 1fr;align-items:center;column-gap:11px;padding:0 15px;border:1px solid var(--fg);border-radius:999px;background:var(--fg);color:var(--bg);font:500 10px/1 var(--font-mono);letter-spacing:.06em;text-align:left;cursor:pointer;opacity:1}
-.main-menu-floating{position:fixed;left:18px;bottom:20px;z-index:320;width:118px;height:48px;min-width:0;box-shadow:0 12px 34px color-mix(in srgb,#000,transparent 82%);transition:width .4s cubic-bezier(.2,.8,.2,1),background .3s,color .3s}
+.main-menu-floating{position:fixed;left:18px;bottom:20px;z-index:320;width:118px;height:48px;min-width:0;box-shadow:0 12px 34px color-mix(in srgb,#000,transparent 82%);transition:width .4s cubic-bezier(.2,.8,.2,1),background .3s,color .3s,transform .28s ease,opacity .2s ease}
 .main-menu-floating[aria-expanded="true"]{width:118px;background:#11110f;color:#f8f8f5;border-color:rgba(248,248,245,.34)}
 .main-menu-trigger>span{display:block;line-height:1;transform:translateY(.5px)}
 .main-menu-trigger i{position:relative;width:14px;height:14px;display:block}
@@ -154,7 +157,7 @@ main{min-height:100vh;padding:0 28px}
 .main-services{padding-bottom:70px}
 .main-services .page-title{grid-template-columns:130px minmax(0,1fr) 300px}
 .main-services .page-title h1{min-width:0;font-size:clamp(58px,6.3vw,108px)}
-.main-service-list{border-top:1px solid var(--line);margin-top:42px}
+.main-service-list{border-top:0;margin-top:42px}
 .main-service-row{position:relative;display:grid;grid-template-columns:54px minmax(230px,1fr) 150px 30px;gap:24px;align-items:center;min-height:112px;border-bottom:1px solid var(--line);padding:18px 4px;overflow:hidden;transition:background .25s,color .25s,padding .35s cubic-bezier(.2,.8,.2,1)}
 .main-service-number,.main-service-row small{font:10px var(--font-mono);color:var(--muted)}
 .main-service-row h2{margin:0;font-size:clamp(34px,3.6vw,62px);line-height:.96;letter-spacing:0;font-weight:400}
@@ -171,7 +174,7 @@ main{min-height:100vh;padding:0 28px}
 
 @media(max-width:900px){
   main{padding:0 16px}
-  .header{top:max(8px,env(safe-area-inset-top));height:60px;margin:8px 0;padding:0 13px;grid-template-columns:1fr auto}
+  .header{position:relative;top:auto;height:60px;margin:8px 0;padding:0 13px;grid-template-columns:1fr auto}
   .header nav{display:none}
   .hero{min-height:auto;padding-bottom:0}
   .hero-copy{padding-top:24px}
@@ -184,6 +187,8 @@ main{min-height:100vh;padding:0 28px}
   .controls>button:nth-child(2){display:block}
   .main-menu-floating{left:10px;bottom:max(12px,env(safe-area-inset-bottom));width:104px;height:42px;padding:0 12px}
   .main-menu-floating[aria-expanded="true"]{width:104px}
+  .header.is-scroll-hidden{transform:translateY(calc(-100% - 20px));opacity:0;pointer-events:none}
+  .main-menu-floating.is-scroll-hidden{transform:translateY(72px);opacity:0;pointer-events:none}
   .main-menu-overlay{padding:6px}
   .main-menu-panel{width:calc(100vw - 12px);height:calc(100svh - 12px);padding:54px 18px 18px;border-radius:22px}
   .main-menu-content{padding:18px 0}

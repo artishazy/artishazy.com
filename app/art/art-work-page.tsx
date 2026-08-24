@@ -1,5 +1,5 @@
 "use client";
-import {LocalizedShell,artWorks} from "../components";
+import {ArrowIcon,LocalizedShell,artWorks} from "../components";
 
 const copy={
   "ascii-sculpture":{
@@ -19,8 +19,8 @@ const copy={
 export default function ArtWorkPage({slug}:{slug:keyof typeof copy}){
   const work=artWorks.find(item=>item.slug===slug)!;
   return <LocalizedShell>{ru=><>
-    <section className="art-detail-hero"><div className="kicker">04—{ru?"АРТ-ЛАБОРАТОРИЯ":"ART LAB"} / {work.id}</div><h1>{ru?work.titleRu:work.titleEn}</h1><p>{ru?copy[slug].ru:copy[slug].en}</p></section>
+    <section className="art-detail-hero"><a className="case-back" href="/art"><ArrowIcon direction="left"/>{ru?"ВСЯ АРТ-ЛАБОРАТОРИЯ":"ALL ART WORKS"}</a><div className="kicker">05—{ru?"АРТ-ЛАБОРАТОРИЯ":"ART LAB"} / {work.id}</div><h1>{ru?work.titleRu:work.titleEn}</h1><p>{ru?copy[slug].ru:copy[slug].en}</p></section>
     <div className={`art-detail-visual ${work.type}`}>{work.type==="ascii"?<pre>.+########+.{"\n"}###▒░()░▒###{"\n"}##▒ /||||\\ ▒##{"\n"}### /_||||_\\ ###{"\n"}  ########</pre>:work.type==="glitch"?<strong>HAZY</strong>:<strong>▓▒░ / SIGNAL</strong>}</div>
-    <section className="art-detail-copy"><span className="kicker">{ru?"О РАБОТЕ":"ABOUT THE WORK"}</span><p>{ru?"Здесь будет полное описание: замысел, процесс, медиум, год создания и серия изображений. Страница уже готова к наполнению конкретными материалами.":"This page is ready for a full description: concept, process, medium, year and an image series."}</p></section>
+    <section className="art-detail-copy"><span className="kicker">{ru?"О РАБОТЕ":"ABOUT THE WORK"}</span><p>{ru?"Серия строится на работе с масштабом, плотностью символов и контрастом. Сетка удерживает композицию, а цифровой шум и смещения делают форму живой и меняющейся.":"The series explores scale, symbol density and contrast. A grid holds the composition together while digital noise and displacement keep the form alive and changing."}</p></section>
   </>}</LocalizedShell>;
 }

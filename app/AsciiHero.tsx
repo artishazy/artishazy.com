@@ -83,7 +83,7 @@ export default function AsciiHero({ru=true}:{ru?:boolean}){
       const rect=host.getBoundingClientRect();
       const width=Math.max(1,rect.width);
       const height=Math.max(1,rect.height);
-      const ratio=Math.min(devicePixelRatio||1,mobile?1:1.35);
+      const ratio=Math.min(devicePixelRatio||1,mobile?2:1.5);
       const ink=getComputedStyle(document.documentElement).getPropertyValue("--fg").trim()||"#11110f";
       const unit=Math.min(width/132,height/122);
       const cx=width*.53;
@@ -128,12 +128,12 @@ export default function AsciiHero({ru=true}:{ru?:boolean}){
       lastMotion=time;
       currentX+=(targetX-currentX)*.065;
       currentY+=(targetY-currentY)*.065;
-      const nx=currentX+Math.sin(time*.00038)*.025;
-      const ny=currentY+Math.cos(time*.00031)*.022;
-      object.style.setProperty("--volume-ry",9+nx*12+"deg");
+      const nx=currentX*.72+Math.sin(time*.00055)*.34;
+      const ny=currentY*.72+Math.cos(time*.00047)*.28;
+      object.style.setProperty("--volume-ry",8+nx*11+"deg");
       object.style.setProperty("--volume-rx",-4-ny*7+"deg");
-      object.style.setProperty("--volume-y",Math.sin(time*.00072)*4+"px");
-      object.style.setProperty("--volume-rz",Math.sin(time*.00045)*.28+"deg");
+      object.style.setProperty("--volume-y",Math.sin(time*.00075)*9+"px");
+      object.style.setProperty("--volume-rz",Math.sin(time*.0004)*1.05+"deg");
       cloud.style.setProperty("--scatter-a-x",-nx*16+"px");
       cloud.style.setProperty("--scatter-a-y",-ny*11+"px");
       cloud.style.setProperty("--scatter-b-x",nx*12+"px");

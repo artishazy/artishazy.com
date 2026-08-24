@@ -1,8 +1,64 @@
 "use client";
 import { useEffect,useRef,useState } from "react";
+import LiquidCarveButton from "../components/originkit/ui/liquid-carve-button";
+import {DotScatter} from "../components/originkit/ui/dot-scatter";
 export function ArrowIcon({direction="down-right",className=""}:{direction?:"up-right"|"down-right"|"up"|"left"|"right";className?:string}){
   const path=direction==="up"?"M8 13V3M4 7l4-4 4 4":direction==="up-right"?"M4 12 12 4M6 4h6v6":direction==="left"?"M11 3 6 8l5 5":direction==="right"?"m5 3 5 5-5 5":"m4 4 8 8M12 6v6H6";
   return <svg className={`arrow-icon ${className}`.trim()} viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d={path}/></svg>;
+}
+const socialProfiles=[
+  {label:"ARTSTATION",href:"https://www.artstation.com/art_is_hazy",path:"M0 17.723l2.027 3.505h.001a2.424 2.424 0 0 0 2.164 1.333h13.457l-2.792-4.838H0zm24 .025c0-.484-.143-.935-.388-1.314L15.728 2.728a2.424 2.424 0 0 0-2.142-1.289H9.419L21.598 22.54l1.92-3.325c.378-.637.482-.919.482-1.467zm-11.129-3.462L7.428 4.858l-5.444 9.428h10.887z"},
+  {label:"TELEGRAM",href:"https://t.me/art_is_hazy",path:"M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"},
+  {label:"BEHANCE",href:"https://www.behance.net/art_is_hazy",path:"M16.969 16.927a2.561 2.561 0 0 0 1.901.677 2.501 2.501 0 0 0 1.531-.475c.362-.235.636-.584.779-.99h2.585a5.091 5.091 0 0 1-1.9 2.896 5.292 5.292 0 0 1-3.091.88 5.839 5.839 0 0 1-2.284-.433 4.871 4.871 0 0 1-1.723-1.211 5.657 5.657 0 0 1-1.08-1.874 7.057 7.057 0 0 1-.383-2.393c-.005-.8.129-1.595.396-2.349a5.313 5.313 0 0 1 5.088-3.604 4.87 4.87 0 0 1 2.376.563c.661.362 1.231.87 1.668 1.485a6.2 6.2 0 0 1 .943 2.133c.194.821.263 1.666.205 2.508h-7.699c-.063.79.184 1.574.688 2.187ZM6.947 4.084a8.065 8.065 0 0 1 1.928.198 4.29 4.29 0 0 1 1.49.638c.418.303.748.711.958 1.182.241.579.357 1.203.341 1.83a3.506 3.506 0 0 1-.506 1.961 3.726 3.726 0 0 1-1.503 1.287 3.588 3.588 0 0 1 2.027 1.437c.464.747.697 1.615.67 2.494a4.593 4.593 0 0 1-.423 2.032 3.945 3.945 0 0 1-1.163 1.413 5.114 5.114 0 0 1-1.683.807 7.135 7.135 0 0 1-1.928.259H0V4.084h6.947Zm-.235 12.9c.308.004.616-.029.916-.099a2.18 2.18 0 0 0 .766-.332c.228-.158.411-.371.534-.619.142-.317.208-.663.191-1.009a2.08 2.08 0 0 0-.642-1.715 2.618 2.618 0 0 0-1.696-.505h-3.54v4.279h3.471Zm13.635-5.967a2.13 2.13 0 0 0-1.654-.619 2.336 2.336 0 0 0-1.163.259 2.474 2.474 0 0 0-.738.62 2.359 2.359 0 0 0-.396.792c-.074.239-.12.485-.137.734h4.769a3.239 3.239 0 0 0-.679-1.785l-.002-.001Zm-13.813-.648a2.254 2.254 0 0 0 1.423-.433c.399-.355.607-.88.56-1.413a1.916 1.916 0 0 0-.178-.891 1.298 1.298 0 0 0-.495-.533 1.851 1.851 0 0 0-.711-.274 3.966 3.966 0 0 0-.835-.073H3.241v3.631h3.293v-.014ZM21.62 5.122h-5.976v1.527h5.976V5.122Z"},
+];
+export function SocialLinks({ru=false,className=""}:{ru?:boolean;className?:string}={}){return <nav className={`social-links ${className}`.trim()} aria-label={ru?"Социальные сети":"Social profiles"}>{socialProfiles.map(profile=><a href={profile.href} target="_blank" rel="noreferrer" key={profile.label} aria-label={profile.label}><svg viewBox="0 0 24 24" role="img" aria-hidden="true" focusable="false"><path d={profile.path}/></svg><span>{profile.label}</span></a>)}</nav>}
+function useLiquidTheme(){
+  const[dark,setDark]=useState(false);
+  useEffect(()=>{
+    const sync=()=>setDark(document.documentElement.dataset.theme==="dark");
+    sync();
+    const observer=new MutationObserver(sync);
+    observer.observe(document.documentElement,{attributes:true,attributeFilter:["data-theme"]});
+    return()=>observer.disconnect();
+  },[]);
+  return{foreground:dark?"#f4f4f0":"#10100f",background:dark?"#10100f":"#f4f4f0"};
+}
+function initialBlobFor(seed:string):{edge:"left"|"right"|"top"|"bottom";offset:number}{
+  let hash=2166136261;
+  for(const character of seed){hash^=character.charCodeAt(0);hash=Math.imul(hash,16777619)}
+  const value=hash>>>0;
+  const offsets=[-.78,-.42,0,.42,.78] as const;
+  return{edge:value%2?"bottom":"top",offset:offsets[value%offsets.length]};
+}
+function liquidArrowData(direction:"up-right"|"down-right",color:string){
+  const path=direction==="down-right"?"M4 4 14 14M14 7v7H7":"M4 14 14 4M7 4h7v7";
+  const svg=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 18" fill="none"><path d="${path}" stroke="${color}" stroke-width="1.5" stroke-linecap="square" stroke-linejoin="miter"/></svg>`;
+  return`data:image/svg+xml,${encodeURIComponent(svg)}`;
+}
+export function PortfolioLiquidLink({href,label,className="",variant="outline",direction="up-right",full=false}:{href:string;label:string;className?:string;variant?:"solid"|"outline";direction?:"up-right"|"down-right";full?:boolean}){
+  const{foreground,background}=useLiquidTheme();
+  const solid=variant==="solid";
+  if(!full)return <a className={className} href={href}>{label}<ArrowIcon direction={direction}/></a>;
+  const fill=solid?foreground:background;
+  const initialBlob=initialBlobFor(`${href}:${label}`);
+  return <span className={`origin-liquid-slot origin-liquid-${variant} origin-liquid-full ${className}`.trim()} style={{"--liquid-fill":fill,"--liquid-stroke":foreground} as React.CSSProperties}>
+    <LiquidCarveButton
+      label={label}
+      link={href}
+      newTab={false}
+      colors={{fill,textColor:solid?background:foreground}}
+      font={{fontFamily:"var(--font-sans)",fontWeight:500,fontSize:11,lineHeight:1,letterSpacing:".02em",textAlign:"left",width:"100%",justifyContent:"space-between"}}
+      padding="0 20px"
+      rounded={0}
+      addIcon
+      icon={{type:"image",image:liquidArrowData(direction,solid?background:foreground),size:18,padding:0,rounded:0,side:"right"}}
+      gap={18}
+      blob={{color:solid?background:foreground,size:34,smoothness:32}}
+      initialBlob={initialBlob}
+      transition={{type:"tween",duration:.45,ease:[.44,0,.56,1]}}
+      style={{width:"100%",minHeight:72,border:0,borderRadius:0,background:"transparent"}}
+    />
+  </span>;
 }
 export function Cursor(){const ref=useRef<HTMLDivElement>(null);useEffect(()=>{if(!matchMedia('(pointer:fine)').matches)return;const el=ref.current;if(!el)return;const label=el.querySelector("span");let visible=false,project=false;const move=(e:PointerEvent)=>{el.style.transform=`translate3d(${e.clientX-18}px,${e.clientY-18}px,0)`;const zone=(e.target as Element|null)?.closest?.("[data-cursor-label]") as HTMLElement|null;const nextProject=Boolean(zone);if(nextProject!==project){project=nextProject;el.classList.toggle("is-project",project)}if(zone&&label)label.textContent=zone.dataset.cursorLabel||"ПЕРЕЙТИ";if(!visible){visible=true;el.classList.add('is-visible')}};const down=()=>el.classList.add('is-pressed');const up=()=>el.classList.remove('is-pressed');addEventListener('pointermove',move,{capture:true,passive:true});addEventListener('pointerdown',down,{passive:true});addEventListener('pointerup',up,{passive:true});return()=>{removeEventListener('pointermove',move,true);removeEventListener('pointerdown',down);removeEventListener('pointerup',up)}},[]);return <div className="soft-cursor" ref={ref} aria-hidden="true"><i/><span>ПЕРЕЙТИ</span></div>}
 export function useSiteLanguage(){
@@ -16,6 +72,8 @@ export function Header({landing=false,ru:controlledRu,onToggleLanguage}:{landing
   const[dark,setDark]=useState(false);
   const{ru:localRu,toggle:toggleLocalRu}=useSiteLanguage();
   const[menuOpen,setMenuOpen]=useState(false);
+  const[chromeHidden,setChromeHidden]=useState(false);
+  const[mobileMenu,setMobileMenu]=useState(false);
   const triggerRef=useRef<HTMLButtonElement>(null);
   const panelRef=useRef<HTMLDivElement>(null);
   const ru=controlledRu??localRu;
@@ -25,11 +83,32 @@ export function Header({landing=false,ru:controlledRu,onToggleLanguage}:{landing
     {label:ru?"ПРОДУКТОВЫЙ ДИЗАЙН":"PRODUCT DESIGN",url:"/work"},
     {label:ru?"ГРАФИКА":"GRAPHIC DESIGN",url:"/graphic"},
     {label:ru?"АРТ-ЛАБОРАТОРИЯ":"ART LAB",url:"/art"},
-    {label:ru?"РЕЗЮМЕ":"RÉSUMÉ",url:"/cv/daniil-cherkashin-uxui.pdf",external:true},
+    mobileMenu?{label:ru?"ОБО МНЕ":"ABOUT",url:"/about"}:{label:ru?"РЕЗЮМЕ":"RÉSUMÉ",url:"/resume"},
   ];
 
   useEffect(()=>{const frame=requestAnimationFrame(()=>{const stored=localStorage.getItem("aih-theme");if(stored)setDark(stored==="dark")});return()=>cancelAnimationFrame(frame)},[]);
   useEffect(()=>{document.documentElement.dataset.theme=dark?"dark":"light"},[dark]);
+  useEffect(()=>{
+    const media=matchMedia("(max-width: 900px)");
+    const sync=()=>setMobileMenu(media.matches);
+    sync();
+    media.addEventListener("change",sync);
+    return()=>media.removeEventListener("change",sync);
+  },[]);
+  useEffect(()=>{
+    const media=matchMedia("(max-width: 900px)");
+    if(!media.matches){const frame=requestAnimationFrame(()=>setChromeHidden(false));return()=>cancelAnimationFrame(frame)}
+    let previous=scrollY;
+    const onScroll=()=>{
+      const current=scrollY;
+      if(menuOpen||current<80)setChromeHidden(false);
+      else if(current>previous+6)setChromeHidden(true);
+      else if(current<previous-6)setChromeHidden(false);
+      previous=current;
+    };
+    addEventListener("scroll",onScroll,{passive:true});
+    return()=>removeEventListener("scroll",onScroll);
+  },[menuOpen]);
   useEffect(()=>{
     if(!menuOpen)return;
     const previous=document.body.style.overflow;
@@ -48,7 +127,7 @@ export function Header({landing=false,ru:controlledRu,onToggleLanguage}:{landing
   },[menuOpen]);
 
   return <>
-    <header className="header">
+    <header className={`header ${chromeHidden?"is-scroll-hidden":""}`}>
       <a className="wordmark" href={landing?"#top":"/"}>ART_IS_HAZY®</a>
       <nav><a href={href("work")}>{ru?"КЕЙСЫ":"CASES"}</a><a href={href("about")}>{ru?"ОБО МНЕ":"ABOUT"}</a><a href={href("contact")}>{ru?"КОНТАКТЫ":"CONTACTS"}</a></nav>
       <div className="controls">
@@ -56,7 +135,7 @@ export function Header({landing=false,ru:controlledRu,onToggleLanguage}:{landing
         <button onClick={()=>setDark(current=>{const next=!current;localStorage.setItem("aih-theme",next?"dark":"light");return next})} aria-label={dark?(ru?"Включить светлую тему":"Use light theme"):(ru?"Включить тёмную тему":"Use dark theme")}>{dark?"LIGHT":"DARK"}</button>
       </div>
     </header>
-    <button ref={triggerRef} className="main-menu-trigger main-menu-floating" onClick={()=>setMenuOpen(!menuOpen)} aria-expanded={menuOpen} aria-controls="main-menu"><i aria-hidden="true"><b/><b/></i><span>{menuOpen?(ru?"ЗАКРЫТЬ":"CLOSE"):(ru?"МЕНЮ":"MENU")}</span></button>
+    <button ref={triggerRef} type="button" className={`main-menu-trigger main-menu-floating ${chromeHidden?"is-scroll-hidden":""}`} onClick={()=>setMenuOpen(!menuOpen)} aria-expanded={menuOpen} aria-controls="main-menu"><i aria-hidden="true"><b/><b/></i><span>{menuOpen?(ru?"ЗАКРЫТЬ":"CLOSE"):(ru?"МЕНЮ":"MENU")}</span></button>
     <div className={`main-menu-overlay ${menuOpen?"is-open":""}`} id="main-menu" aria-hidden={!menuOpen}>
       <button className="main-menu-backdrop" onClick={()=>{setMenuOpen(false);requestAnimationFrame(()=>triggerRef.current?.focus())}} aria-label={ru?"Закрыть меню":"Close menu"} tabIndex={-1}/>
       <div ref={panelRef} className="main-menu-panel" role="dialog" aria-modal="true" aria-label={ru?"Навигация по сайту":"Site navigation"}>
@@ -71,9 +150,9 @@ export function Header({landing=false,ru:controlledRu,onToggleLanguage}:{landing
   </>;
 }
 export function Footer({ru=false}:{ru?:boolean}={}){return <footer className="site-footer" id="contact">
-  <div className="footer-heading"><span className="footer-kicker">06—{ru?"КОНТАКТ":"CONTACT"}</span><h2>{ru?<>НА СВЯЗИ ДЛЯ<br/>НОВЫХ ПРОЕКТОВ<br/>И КОЛЛАБОРАЦИЙ.</>:<>AVAILABLE FOR<br/>NEW PROJECTS<br/>AND COLLABORATIONS.</>}</h2></div>
-  <div className="footer-contact"><span>{ru?"НАПИСАТЬ":"EMAIL"}</span><a href="mailto:artishazy14@gmail.com">ARTISHAZY14@GMAIL.COM <ArrowIcon direction="up-right"/></a><p>{ru?"Продуктовый дизайн, графика и цифровое искусство.":"Product design, graphic design and digital art."}</p></div>
-  <nav className="footer-nav" aria-label={ru?"Навигация в подвале":"Footer navigation"}><a href="/work">{ru?"КЕЙСЫ":"CASES"}</a><a href="/about">{ru?"ОБО МНЕ":"ABOUT"}</a><a href="/graphic">{ru?"ГРАФИКА":"GRAPHIC"}</a><a href="/art">{ru?"АРТ":"ART"}</a><a href="/cv/daniil-cherkashin-uxui.pdf" target="_blank" rel="noreferrer">CV UX/UI <ArrowIcon direction="up-right"/></a><a href="/cv/daniil-cherkashin-graphic.pdf" target="_blank" rel="noreferrer">CV GRAPHIC <ArrowIcon direction="up-right"/></a><a href="#top">{ru?"НАВЕРХ":"BACK TO TOP"} <ArrowIcon direction="up"/></a></nav>
+  <div className="footer-heading"><span className="footer-kicker">06—{ru?"КОНТАКТ":"CONTACT"}</span><h2 className="footer-brand-scatter"><span className="visually-hidden">ART_IS_HAZY</span><DotScatter text="art_is_hazy" cursorRadius={96}/></h2></div>
+  <div className="footer-contact"><span>{ru?"НАПИСАТЬ":"EMAIL"}</span><a href="mailto:artishazy14@gmail.com">ARTISHAZY14@GMAIL.COM <ArrowIcon direction="up-right"/></a><p>{ru?"Продуктовый дизайн, графика и цифровое искусство.":"Product design, graphic design and digital art."}</p><SocialLinks ru={ru} className="footer-social-links"/></div>
+  <nav className="footer-nav" aria-label={ru?"Навигация в подвале":"Footer navigation"}><a href="/work">{ru?"КЕЙСЫ":"CASES"}</a><a href="/about">{ru?"ОБО МНЕ":"ABOUT"}</a><a href="/graphic">{ru?"ГРАФИКА":"GRAPHIC"}</a><a href="/art">{ru?"АРТ":"ART"}</a><a href="/resume">{ru?"РЕЗЮМЕ":"RÉSUMÉ"} <ArrowIcon direction="up-right"/></a><a href="#top">{ru?"НАВЕРХ":"BACK TO TOP"} <ArrowIcon direction="up"/></a></nav>
   <div className="footer-meta"><span>©2026 ДАНИИЛ ЧЕРКАШИН</span><span>{ru?"МОСКВА":"MOSCOW"} / WORLDWIDE</span><span>ART_IS_HAZY®</span></div>
 </footer>}
 export function PageTitle({index,label,title,description}:{index:string,label:string,title:string,description:string}){return <section className="page-title"><div className="kicker">{index}—{label}</div><h1>{title}</h1><p>{description}</p></section>}

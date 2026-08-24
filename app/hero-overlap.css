@@ -1,8 +1,8 @@
 @media(min-width:901px){
   body .hero{display:block;min-height:calc(100svh - 94px);isolation:isolate;overflow:hidden}
   .hero .hero-copy{position:relative;z-index:2;width:100%;min-height:calc(100svh - 94px);padding:40px 0 32px;pointer-events:none}
-  .hero-copy .eyebrow,.hero-copy h1{pointer-events:auto}
-  .hero .hero-copy h1{position:relative;width:min(1240px,91vw);max-width:none;font-size:clamp(64px,8.4vw,136px);line-height:.86;z-index:4;color:var(--fg)}
+  .hero-copy .eyebrow,.hero-copy h1,.hero-copy .hero-intro{pointer-events:auto}
+  .hero .hero-copy h1{position:relative;width:min(650px,46vw);max-width:none;font-size:clamp(64px,6vw,102px);line-height:.94;z-index:4;color:var(--fg)}
   .hero .stage{position:absolute;z-index:1;inset:0 0 0 auto;width:66%;height:100%;min-height:100%;border:0;background:transparent}
   .hero .stage-grid{z-index:1}
   .hero .webgl-statue{position:absolute;inset:0;z-index:3}
@@ -10,7 +10,7 @@
 }
 
 @media(min-width:1400px){
-  .hero .hero-copy h1{font-size:132px}
+  .hero .hero-copy h1{font-size:102px}
   .hero .stage{width:68%}
 }
 

@@ -149,7 +149,7 @@ export default function VariantTwo(){
 
     <footer className="v2-footer" id="v2-contact">
       <p>ЕСТЬ ЗАДАЧА?</p>
-      <a href="mailto:hello@artishazy.com">ДАВАЙТЕ<br/>СДЕЛАЕМ<br/><span>СТРАННО.</span></a>
+      <a href="mailto:hello@artishazy.com">ДАВАЙТЕ<br/>СДЕЛАЕМ<br/><span>СТРАННО</span></a>
       <div><span>ART_IS_HAZY® / MOSCOW</span><span>© 2026</span><Link href="/">ВЕРСИЯ 01 <ArrowIcon direction="up-right"/></Link></div>
       <pre>{BORZOI}</pre>
     </footer>

@@ -36,6 +36,7 @@ export function CasePage({slug}:{slug:string}){
     const detail=caseDetails[slug];
     const p=ru?detail.ru:detail.en;
     const current=Math.max(0,works.findIndex(work=>work.slug===slug));
+    const previous=works[(current-1+works.length)%works.length];
     const next=works[(current+1)%works.length];
     const process=ru?[
       ["01","ИССЛЕДОВАНИЕ","Интервью, анализ пользователей, рынка и конкурентов, формулировка задачи."],
@@ -49,13 +50,17 @@ export function CasePage({slug}:{slug:string}){
       ["04","DELIVERY","Interactive prototype, final screens and development handoff."],
     ];
     return <>
-      <section className="case-hero"><div className="kicker">{ru?"КЕЙС":"CASE STUDY"} / 2026</div><h1>{p.title.split(" / ")[0]}<br/><span>{p.title.split(" / ")[1]}</span></h1><p className="case-lead">{p.subtitle}</p><div className="case-facts glass-panel"><p><span>{ru?"РОЛЬ":"ROLE"}</span>{ru?"Продуктовый дизайн":"Product design"}<br/>UX/UI</p><p><span>{ru?"ЗАДАЧИ":"SCOPE"}</span>{ru?"Исследование":"Research"}<br/>{ru?"Прототип и система":"Prototype & system"}</p><p><span>{ru?"ГОД / СТАТУС":"YEAR / STATUS"}</span>2026<br/>{ru?"В РАБОТЕ / ЗАВЕРШЕНО":"ONGOING / COMPLETED"}</p></div></section>
-      <section className="case-cover"><div className="case-object"><i/><i/><i/></div><span>01 / {ru?"ГЛАВНЫЙ ОБРАЗ":"HERO VISUAL"}</span><b className="segment-mark">M2.</b></section>
-      <section className="case-copy"><h2>{ru?<>ОТ СЛОЖНОСТИ<br/>К ЯСНОСТИ.</>:<>FROM COMPLEXITY<br/>TO CLARITY.</>}</h2><div><span>{ru?"ЗАДАЧА":"THE CHALLENGE"}</span><p>{p.challenge}</p><span>{ru?"РЕШЕНИЕ":"THE SOLUTION"}</span><p>{p.solution}</p></div></section>
+      <section className="case-hero"><a className="case-back" href="/work"><ArrowIcon direction="left"/>{ru?"ВСЕ КЕЙСЫ":"ALL CASES"}</a><div className="kicker">{ru?"КЕЙС":"CASE STUDY"} / 2026</div><h1>{p.title.split(" / ")[0]}<br/><span>{p.title.split(" / ")[1]}</span></h1><p className="case-lead">{p.subtitle}</p><div className="case-facts glass-panel"><p><span>{ru?"РОЛЬ":"ROLE"}</span>{ru?"Продуктовый дизайн":"Product design"}<br/>UX/UI</p><p><span>{ru?"ЗАДАЧИ":"SCOPE"}</span>{ru?"Исследование":"Research"}<br/>{ru?"Прототип и система":"Prototype & system"}</p><p><span>{ru?"ГОД / СТАТУС":"YEAR / STATUS"}</span>2026<br/>{ru?"ЗАВЕРШЕНО":"COMPLETED"}</p></div></section>
+      <section className="case-cover"><div className="case-object"><i/><i/><i/></div><span>01 / {ru?"ГЛАВНЫЙ ОБРАЗ":"HERO VISUAL"}</span><b className="segment-mark">M2</b></section>
+      <section className="case-copy"><h2>{ru?<>ОТ СЛОЖНОСТИ<br/>К ЯСНОСТИ</>:<>FROM COMPLEXITY<br/>TO CLARITY</>}</h2><div><span>{ru?"ЗАДАЧА":"THE CHALLENGE"}</span><p>{p.challenge}</p><span>{ru?"РЕШЕНИЕ":"THE SOLUTION"}</span><p>{p.solution}</p></div></section>
       <section className="process"><div className="process-head"><span>02—{ru?"ПРОЦЕСС":"PROCESS"}</span><h2>{ru?<>КАК ЭТО<br/>СДЕЛАНО</>:<>HOW IT<br/>WAS MADE</>}</h2></div>{process.map(item=><article className="process-step glass-panel" key={item[0]}><b>{item[0]}</b><h3>{item[1]}</h3><p>{item[2]}</p></article>)}</section>
-      <section className="case-panels"><div>{ru?"ИССЛЕДОВАНИЕ":"DISCOVERY"}<br/><b>UX</b></div><div>{ru?"СИСТЕМА":"SYSTEM"}<br/><b>UI</b></div><div>{ru?"ИНТЕРФЕЙС":"INTERFACE"}<br/><b>WEB</b></div></section>
+      <section className="case-panels"><div><span>{ru?"ИССЛЕДОВАНИЕ":"DISCOVERY"}</span><b>UX</b><p>{ru?"Интервью, аналитика и проверка продуктовых гипотез.":"Interviews, analysis and product hypothesis validation."}</p></div><div><span>{ru?"АРХИТЕКТУРА":"ARCHITECTURE"}</span><b>UI</b><p>{ru?"Сценарии, пользовательские потоки и каркас интерфейса.":"Scenarios, user flows and the interface framework."}</p></div><div><span>{ru?"СИСТЕМА":"SYSTEM"}</span><b>WEB</b><p>{ru?"Компоненты, состояния и правила адаптивного интерфейса.":"Components, states and responsive interface rules."}</p></div></section>
       <section className="outcome"><span>03—{ru?"РЕЗУЛЬТАТ":"OUTCOME"}</span><blockquote>“{p.outcome}”</blockquote><div><b>01</b><small>{ru?"ИССЛЕДОВАНИЕ":"RESEARCH"}</small></div><div><b>01</b><small>{ru?"СИСТЕМА":"SYSTEM"}</small></div><div><b>01</b><small>{ru?"ПРОТОТИП":"PROTOTYPE"}</small></div></section>
-      <a className="next-project interactive" href={"/work/"+next.slug}><span>{ru?"СЛЕДУЮЩИЙ ПРОЕКТ":"NEXT PROJECT"}</span><strong>{next.title}</strong><ArrowIcon direction="up-right"/></a>
+      <nav className="case-project-nav" aria-label={ru?"Навигация между кейсами":"Case study navigation"}>
+        <a className="case-project-link previous" href={"/work/"+previous.slug}><span><ArrowIcon direction="left"/>{ru?"ПРЕДЫДУЩИЙ":"PREVIOUS"}</span><strong>{previous.title}</strong></a>
+        <a className="case-project-all" href="/work">{ru?"ВСЕ КЕЙСЫ":"ALL CASES"}</a>
+        <a className="case-project-link next" href={"/work/"+next.slug}><span>{ru?"СЛЕДУЮЩИЙ":"NEXT"}<ArrowIcon direction="right"/></span><strong>{next.title}</strong></a>
+      </nav>
     </>;
   }}</LocalizedShell>;
 }
