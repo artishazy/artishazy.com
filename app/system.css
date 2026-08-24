@@ -237,6 +237,19 @@ button{border:0}
 .art-card-visual.noise span{font-size:clamp(44px,6vw,92px);letter-spacing:-.16em}
 .art-card-meta{display:grid;grid-template-columns:minmax(0,1fr) 34px;align-items:start;gap:var(--space-4);padding:var(--space-4) 2px var(--space-2);border-top:1px solid var(--line)}
 .art-card-meta h2{margin:0;font-size:clamp(22px,2vw,34px);font-weight:400;line-height:1.08;text-wrap:balance}
+.artstation-section{padding-top:var(--space-9)}
+.artstation-heading{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(260px,.62fr);align-items:end;gap:clamp(24px,3vw,52px);padding:0 0 var(--space-6);border-bottom:1px solid var(--line)}
+.artstation-heading h2{max-width:100%;margin:var(--space-5) 0 0;font-size:clamp(52px,6.4vw,104px);font-weight:400;line-height:.96;letter-spacing:0}
+.artstation-heading p{max-width:430px;margin:0;font-size:var(--text-body);line-height:1.55}
+.artstation-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--gallery-gap);padding-top:var(--gallery-gap)}
+.artstation-card{display:block;padding:var(--gallery-card-inset);transition:background .35s}
+.artstation-card:hover{background:color-mix(in srgb,var(--fg),transparent 96%)}
+.artstation-card-visual{position:relative;aspect-ratio:1;overflow:hidden;background:var(--fg)}
+.artstation-card-visual img{width:100%;height:100%;display:block;object-fit:cover;transition:transform .7s var(--ease-out),filter .7s var(--ease-out)}
+.artstation-card:hover .artstation-card-visual img{transform:scale(1.025);filter:contrast(1.05)}
+.artstation-card-visual small{position:absolute;left:16px;top:16px;min-width:28px;height:28px;display:grid;place-items:center;padding:0 7px;background:color-mix(in srgb,var(--bg),transparent 8%);color:var(--fg);font-size:var(--text-label);font-weight:500;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.artstation-card-meta{display:grid;grid-template-columns:minmax(0,1fr) 34px;align-items:start;gap:var(--space-4);padding:var(--space-4) 2px var(--space-5);border-top:1px solid var(--line)}
+.artstation-card-meta h3{margin:0;font-size:clamp(20px,1.65vw,30px);font-weight:400;line-height:1.08;text-wrap:balance}
 .card-open-icon{width:34px;height:34px;display:grid!important;place-items:center;align-self:start;justify-self:end;flex:0 0 34px;padding:0!important;border:1px solid var(--fg)!important;border-radius:50%!important;color:var(--fg)}
 .card-open-icon .arrow-icon{width:14px;height:14px;stroke-width:1.2}
 
@@ -419,6 +432,8 @@ button{border:0}
   .main-service-row:hover .main-service-arrow{transform:none}
   .graphic-project-card:hover,.art-card:hover{background:transparent}
   .graphic-project-card:hover .graphic-project-visual,.art-card:hover .art-card-visual{transform:none;filter:none}
+  .artstation-card:hover{background:transparent}
+  .artstation-card:hover .artstation-card-visual img{transform:none;filter:none}
   .graphic-project-card:hover .graphic-project-visual{border-radius:16px}
   .project-card{padding:10px}
   .project-visual{height:auto;max-height:none;aspect-ratio:4/5}
@@ -434,6 +449,10 @@ button{border:0}
   .art-card{flex-basis:38%}
   .art-card.landscape{flex-basis:54%}
   .art-card.square{flex-basis:44%}
+  .artstation-section{padding-top:76px}
+  .artstation-heading{grid-template-columns:1fr;gap:24px;padding-bottom:24px}
+  .artstation-heading h2{font-size:clamp(36px,10.5vw,52px);line-height:1.02}
+  .artstation-grid{grid-template-columns:1fr 1fr}
   .art-detail-copy{grid-template-columns:1fr;gap:24px}
   .graphic-gallery-head{top:76px;margin-inline:0;padding-inline:var(--gallery-card-inset)}
   .graphic-project-card{flex-basis:38%}
@@ -535,6 +554,9 @@ button{border:0}
   .art-slider .card-slider-track{gap:var(--gallery-gap)}
   .art-card,.art-card.landscape,.art-card.square{flex-basis:82%}
   .art-card-meta{display:grid}
+  .artstation-grid{grid-template-columns:1fr}
+  .artstation-card{padding:var(--gallery-card-inset) 0}
+  .artstation-card-meta h3{font-size:clamp(23px,7.2vw,30px)}
   .art-detail-hero{padding-top:32px}
   .art-detail-hero h1{margin-top:32px;font-size:clamp(42px,13vw,62px)}
   .art-detail-visual{min-height:58svh}

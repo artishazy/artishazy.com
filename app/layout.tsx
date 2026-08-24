@@ -4,10 +4,11 @@ import {Cursor} from "./components";
 export const metadata:Metadata={
   metadataBase:new URL("https://artishazy.com"),
   applicationName:"art_is_hazy",
-  title:{default:"art_is_hazy — Product Designer & Artist",template:"%s — art_is_hazy"},
-  description:"Портфолио Даниила Черкашина: продуктовый UX/UI-дизайн, сайты, графика и цифровое искусство.",
+  title:{default:"Даниил Черкашин — продуктовый UX/UI-дизайнер и художник",template:"%s — art_is_hazy"},
+  description:"Портфолио: цифровые продукты, сайты, графика и цифровое искусство.",
   alternates:{canonical:"/"},
-  openGraph:{type:"website",locale:"ru_RU",siteName:"art_is_hazy",title:"art_is_hazy — Product Designer & Artist",description:"Продуктовый UX/UI-дизайн, сайты, графика и цифровое искусство.",url:"/"},
+  openGraph:{type:"website",locale:"ru_RU",siteName:"art_is_hazy",title:"Даниил Черкашин — продуктовый UX/UI-дизайнер и художник",description:"Портфолио: цифровые продукты, сайты, графика и цифровое искусство.",url:"/"},
+  twitter:{card:"summary",title:"Даниил Черкашин — продуктовый UX/UI-дизайнер и художник",description:"Портфолио: цифровые продукты, сайты, графика и цифровое искусство."},
   appleWebApp:{capable:true,title:"art_is_hazy",statusBarStyle:"default"},
   manifest:"/site.webmanifest",
   icons:{
