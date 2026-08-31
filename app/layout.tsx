@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
+import "lenis/dist/lenis.css";
 import "./globals.css";
 import {Cursor} from "./components";
+import SmoothScroll from "./SmoothScroll";
 export const metadata:Metadata={
   metadataBase:new URL("https://artishazy.com"),
   applicationName:"art_is_hazy",
@@ -22,4 +24,4 @@ export const metadata:Metadata={
     other:[{rel:"mask-icon",url:"/safari-pinned-tab.svg",color:"#0b0b0a"}],
   },
 };
-export default function RootLayout({children}:Readonly<{children:React.ReactNode}>){return <html lang="ru" data-theme="light"><body><Cursor/>{children}</body></html>}
+export default function RootLayout({children}:Readonly<{children:React.ReactNode}>){return <html lang="ru" data-theme="light"><body><SmoothScroll/><Cursor/>{children}</body></html>}
