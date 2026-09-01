@@ -83,7 +83,7 @@ export default function AsciiHero({ru=true}:{ru?:boolean}){
       const rect=host.getBoundingClientRect();
       const width=Math.max(1,rect.width);
       const height=Math.max(1,rect.height);
-      const ratio=Math.min(devicePixelRatio||1,mobile?2:1.5);
+      const ratio=Math.min(devicePixelRatio||1,mobile?1.5:1.25);
       const ink=getComputedStyle(document.documentElement).getPropertyValue("--fg").trim()||"#11110f";
       const unit=Math.min(width/132,height/122);
       const cx=width*.53;
@@ -105,13 +105,14 @@ export default function AsciiHero({ru=true}:{ru?:boolean}){
         const kind=canvas.dataset.kind;
         const layer=Number(canvas.dataset.layer) as Layer;
         const points=kind==="cloud"
-          ?BLOB.filter((point,index)=>point.shard===layer&&(!mobile||index%2===layer%2))
+          ?BLOB.filter((_,index)=>!mobile||index%2===0)
           :STATUE.filter(point=>point.layer===layer);
         for(const point of points){
           const size=Math.max(4.1,unit*(.82+point.weight*.2));
-          const baseAlpha=kind==="cloud"?.85:layer===0?.24:layer===1?.56:.9;
+          const pointLayer=kind==="cloud"?layer:point.layer;
+          const baseAlpha=kind==="cloud"?.85:pointLayer===0?.24:pointLayer===1?.56:.9;
           context.globalAlpha=baseAlpha*(.42+point.weight*.7)*point.alpha;
-          context.font=(layer===2?"650 ":"520 ")+size+"px ui-monospace, SFMono-Regular, Menlo, monospace";
+          context.font=(pointLayer===2?"650 ":"520 ")+size+"px ui-monospace, SFMono-Regular, Menlo, monospace";
           context.fillText(point.char,cx+point.x*unit,cy+point.y*unit);
         }
         context.globalAlpha=1;
@@ -124,7 +125,8 @@ export default function AsciiHero({ru=true}:{ru?:boolean}){
     };
     const animate=(time:number)=>{
       if(!visible||document.hidden||reducedMotion){motionFrame=0;return;}
-      if(mobile&&time-lastMotion<33){motionFrame=requestAnimationFrame(animate);return;}
+      const frameInterval=mobile?42:33;
+      if(time-lastMotion<frameInterval){motionFrame=requestAnimationFrame(animate);return;}
       lastMotion=time;
       currentX+=(targetX-currentX)*.065;
       currentY+=(targetY-currentY)*.065;
@@ -182,8 +184,6 @@ export default function AsciiHero({ru=true}:{ru?:boolean}){
     <div className="ascii-aura" aria-hidden="true"/>
     <div className="ascii-scatter-field" ref={scatter} aria-hidden="true">
       <canvas className="ascii-scatter scatter-a" data-kind="cloud" data-layer="0"/>
-      <canvas className="ascii-scatter scatter-b" data-kind="cloud" data-layer="1"/>
-      <canvas className="ascii-scatter scatter-c" data-kind="cloud" data-layer="2"/>
     </div>
     <div className="ascii-volume" ref={volume} aria-hidden="true">
       <canvas className="ascii-depth ascii-depth-back" data-kind="statue" data-layer="0"/>

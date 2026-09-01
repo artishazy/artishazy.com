@@ -13,7 +13,7 @@ export default function SmoothScroll(){
     const lenis=new Lenis({
       autoRaf:true,
       smoothWheel:true,
-      lerp:.085,
+      lerp:.12,
       wheelMultiplier:.9,
       anchors:true,
       allowNestedScroll:true,

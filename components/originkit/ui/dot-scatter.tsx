@@ -97,6 +97,11 @@ export function DotScatter({text = "DESIGN", cursorRadius = 120, className = ""}
     let cssWidth = 0;
     let cssHeight = 0;
     let color = "#fff";
+    let visible = false;
+
+    const schedule = () => {
+      if (visible && !frame) frame = requestAnimationFrame(draw);
+    };
 
     const resize = () => {
       const rect = canvas.getBoundingClientRect();
@@ -108,12 +113,15 @@ export function DotScatter({text = "DESIGN", cursorRadius = 120, className = ""}
       context.setTransform(ratio, 0, 0, ratio, 0, 0);
       color = getComputedStyle(canvas).color;
       particlesRef.current = buildParticles(text, cssWidth, cssHeight);
+      schedule();
     };
 
     const draw = () => {
+      frame = 0;
       context.clearRect(0, 0, cssWidth, cssHeight);
       context.fillStyle = color;
       const pointer = pointerRef.current;
+      let moving = false;
 
       particlesRef.current.forEach(particle => {
         if (!reducedMotion.matches && pointer.active) {
@@ -133,6 +141,14 @@ export function DotScatter({text = "DESIGN", cursorRadius = 120, className = ""}
         particle.vy *= .9;
         particle.x += particle.vx;
         particle.y += particle.vy;
+        const homeDistance = Math.hypot(particle.homeX - particle.x, particle.homeY - particle.y);
+        if (Math.abs(particle.vx) > .02 || Math.abs(particle.vy) > .02 || homeDistance > .08) moving = true;
+        else {
+          particle.x = particle.homeX;
+          particle.y = particle.homeY;
+          particle.vx = 0;
+          particle.vy = 0;
+        }
 
         const radius = particle.height / 2;
         context.beginPath();
@@ -140,29 +156,39 @@ export function DotScatter({text = "DESIGN", cursorRadius = 120, className = ""}
         context.fill();
       });
 
-      frame = requestAnimationFrame(draw);
+      if (visible && (pointer.active || moving)) frame = requestAnimationFrame(draw);
     };
 
     const move = (event: PointerEvent) => {
       const rect = canvas.getBoundingClientRect();
       pointerRef.current = {x: event.clientX - rect.left, y: event.clientY - rect.top, active: true};
+      schedule();
     };
-    const leave = () => { pointerRef.current.active = false; };
+    const leave = () => { pointerRef.current.active = false; schedule(); };
     const root = document.documentElement;
     if (!root) return;
 
     const observer = new ResizeObserver(resize);
-    const syncTheme = () => { color = getComputedStyle(canvas).color; };
+    const visibilityObserver = new IntersectionObserver(([entry]) => {
+      visible = entry.isIntersecting;
+      if (visible) schedule();
+      else if (frame) {
+        cancelAnimationFrame(frame);
+        frame = 0;
+      }
+    });
+    const syncTheme = () => { color = getComputedStyle(canvas).color; schedule(); };
     observer.observe(canvas);
+    visibilityObserver.observe(canvas);
     addEventListener("aih-theme-change", syncTheme);
     canvas.addEventListener("pointermove", move);
     canvas.addEventListener("pointerleave", leave);
     resize();
-    frame = requestAnimationFrame(draw);
 
     return () => {
       cancelAnimationFrame(frame);
       observer.disconnect();
+      visibilityObserver.disconnect();
       removeEventListener("aih-theme-change", syncTheme);
       canvas.removeEventListener("pointermove", move);
       canvas.removeEventListener("pointerleave", leave);
