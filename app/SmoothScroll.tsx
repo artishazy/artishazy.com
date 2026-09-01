@@ -7,6 +7,8 @@ export default function SmoothScroll(){
   useEffect(()=>{
     const reducedMotion=matchMedia("(prefers-reduced-motion: reduce)");
     if(reducedMotion.matches)return;
+    const body=document.body;
+    if(!body)return;
 
     const lenis=new Lenis({
       autoRaf:true,
@@ -18,16 +20,13 @@ export default function SmoothScroll(){
       stopInertiaOnNavigate:true,
     });
 
-    const syncLockedState=()=>{
-      if(getComputedStyle(document.body).overflow==="hidden")lenis.stop();
-      else lenis.start();
-    };
-    const bodyObserver=new MutationObserver(syncLockedState);
-    bodyObserver.observe(document.body,{attributes:true,attributeFilter:["style"]});
-    syncLockedState();
+    const setLocked=(locked:boolean)=>locked?lenis.stop():lenis.start();
+    const onScrollLock=(event:Event)=>setLocked((event as CustomEvent<boolean>).detail);
+    addEventListener("aih-scroll-lock",onScrollLock);
+    setLocked(getComputedStyle(body).overflow==="hidden");
 
     return()=>{
-      bodyObserver.disconnect();
+      removeEventListener("aih-scroll-lock",onScrollLock);
       lenis.destroy();
     };
   },[]);

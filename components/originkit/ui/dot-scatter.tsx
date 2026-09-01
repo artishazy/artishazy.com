@@ -148,11 +148,13 @@ export function DotScatter({text = "DESIGN", cursorRadius = 120, className = ""}
       pointerRef.current = {x: event.clientX - rect.left, y: event.clientY - rect.top, active: true};
     };
     const leave = () => { pointerRef.current.active = false; };
+    const root = document.documentElement;
+    if (!root) return;
 
     const observer = new ResizeObserver(resize);
-    const themeObserver = new MutationObserver(() => { color = getComputedStyle(canvas).color; });
+    const syncTheme = () => { color = getComputedStyle(canvas).color; };
     observer.observe(canvas);
-    themeObserver.observe(document.documentElement, {attributes: true, attributeFilter: ["data-theme"]});
+    addEventListener("aih-theme-change", syncTheme);
     canvas.addEventListener("pointermove", move);
     canvas.addEventListener("pointerleave", leave);
     resize();
@@ -161,7 +163,7 @@ export function DotScatter({text = "DESIGN", cursorRadius = 120, className = ""}
     return () => {
       cancelAnimationFrame(frame);
       observer.disconnect();
-      themeObserver.disconnect();
+      removeEventListener("aih-theme-change", syncTheme);
       canvas.removeEventListener("pointermove", move);
       canvas.removeEventListener("pointerleave", leave);
     };

@@ -1,5 +1,5 @@
 "use client";
-import {useRef,useState} from "react";
+import {useEffect,useRef,useState} from "react";
 import {ArrowIcon,SliderControls} from "../components";
 import {GraphicCategory,graphicCategories,graphicWorks} from "./data";
 
@@ -16,7 +16,8 @@ export default function GraphicGallery({ru}:{ru:boolean}){
   const[current,setCurrent]=useState(0);
   const track=useRef<HTMLDivElement>(null);
   const visible=active==="all"?graphicWorks:graphicWorks.filter(work=>work.category===active);
-  const choose=(category:GraphicCategory)=>{setActive(category);setCurrent(0);track.current?.scrollTo({left:0,behavior:"smooth"})};
+  const choose=(category:GraphicCategory)=>{setActive(category);setCurrent(0)};
+  useEffect(()=>{if(track.current)track.current.scrollLeft=0},[active]);
   const sync=()=>{const el=track.current;if(!el)return;const card=el.querySelector<HTMLElement>("[data-slide]");const gap=parseFloat(getComputedStyle(el).columnGap||getComputedStyle(el).gap)||0;if(card)setCurrent(Math.min(visible.length-1,Math.round(el.scrollLeft/(card.offsetWidth+gap))))};
   return <section className="graphic-gallery">
     <div className="graphic-gallery-head"><div className="graphic-filters" role="group" aria-label={ru?"Фильтр графических работ":"Filter graphic work"}>{graphicCategories.map(category=><button key={category.id} className={active===category.id?"is-active":""} onClick={()=>choose(category.id)} aria-pressed={active===category.id}>{ru?category.ru:category.en}<span>{String(category.id==="all"?graphicWorks.length:graphicWorks.filter(work=>work.category===category.id).length).padStart(2,"0")}</span></button>)}</div><SliderControls track={track} current={current} total={visible.length} ru={ru} hideCount/></div>

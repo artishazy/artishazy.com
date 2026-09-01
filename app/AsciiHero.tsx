@@ -153,14 +153,15 @@ export default function AsciiHero({ru=true}:{ru?:boolean}){
     };
 
     const resizeObserver=new ResizeObserver(scheduleDraw);
-    const themeObserver=new MutationObserver(scheduleDraw);
+    const documentRoot=document.documentElement;
+    if(!documentRoot)return;
     const visibilityObserver=new IntersectionObserver(([entry])=>{
       visible=entry.isIntersecting;
       if(visible&&!reducedMotion&&!motionFrame)motionFrame=requestAnimationFrame(animate);
       if(!visible&&motionFrame){cancelAnimationFrame(motionFrame);motionFrame=0;}
     },{threshold:0});
     resizeObserver.observe(host);
-    themeObserver.observe(document.documentElement,{attributes:true,attributeFilter:["data-theme"]});
+    addEventListener("aih-theme-change",scheduleDraw);
     visibilityObserver.observe(host);
     if(!mobile&&!reducedMotion)window.addEventListener("pointermove",move,{capture:true,passive:true});
     document.addEventListener("visibilitychange",syncVisibility);
@@ -170,7 +171,7 @@ export default function AsciiHero({ru=true}:{ru?:boolean}){
       cancelAnimationFrame(resizeFrame);
       cancelAnimationFrame(motionFrame);
       resizeObserver.disconnect();
-      themeObserver.disconnect();
+      removeEventListener("aih-theme-change",scheduleDraw);
       visibilityObserver.disconnect();
       window.removeEventListener("pointermove",move,{capture:true});
       document.removeEventListener("visibilitychange",syncVisibility);

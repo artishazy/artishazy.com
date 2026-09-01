@@ -15,11 +15,12 @@ export function SocialLinks({ru=false,className=""}:{ru?:boolean;className?:stri
 function useLiquidTheme(){
   const[dark,setDark]=useState(false);
   useEffect(()=>{
-    const sync=()=>setDark(document.documentElement.dataset.theme==="dark");
+    const root=document.documentElement;
+    if(!root)return;
+    const sync=()=>setDark(root.dataset.theme==="dark");
     sync();
-    const observer=new MutationObserver(sync);
-    observer.observe(document.documentElement,{attributes:true,attributeFilter:["data-theme"]});
-    return()=>observer.disconnect();
+    addEventListener("aih-theme-change",sync);
+    return()=>removeEventListener("aih-theme-change",sync);
   },[]);
   return{foreground:dark?"#f4f4f0":"#10100f",background:dark?"#10100f":"#f4f4f0"};
 }
@@ -87,7 +88,7 @@ export function Header({landing=false,ru:controlledRu,onToggleLanguage}:{landing
   ];
 
   useEffect(()=>{const frame=requestAnimationFrame(()=>{const stored=localStorage.getItem("aih-theme");if(stored)setDark(stored==="dark")});return()=>cancelAnimationFrame(frame)},[]);
-  useEffect(()=>{document.documentElement.dataset.theme=dark?"dark":"light"},[dark]);
+  useEffect(()=>{document.documentElement.dataset.theme=dark?"dark":"light";dispatchEvent(new CustomEvent("aih-theme-change",{detail:dark?"dark":"light"}))},[dark]);
   useEffect(()=>{
     const media=matchMedia("(max-width: 900px)");
     const sync=()=>setMobileMenu(media.matches);
@@ -122,8 +123,9 @@ export function Header({landing=false,ru:controlledRu,onToggleLanguage}:{landing
       event.preventDefault();links[next]?.focus();
     };
     document.body.style.overflow="hidden";
+    dispatchEvent(new CustomEvent("aih-scroll-lock",{detail:true}));
     addEventListener("keydown",close);
-    return()=>{document.body.style.overflow=previous;removeEventListener("keydown",close)};
+    return()=>{document.body.style.overflow=previous;dispatchEvent(new CustomEvent("aih-scroll-lock",{detail:false}));removeEventListener("keydown",close)};
   },[menuOpen]);
 
   return <>
