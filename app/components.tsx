@@ -180,8 +180,27 @@ export function SliderControls({track,current,total,ru,hideCount=false}:{track:R
   return <div className={`slider-controls ${hideCount?"without-count":""}`}>{!hideCount&&<span>{String(current+1).padStart(2,"0")} / {String(total).padStart(2,"0")}</span>}<div><button disabled={total<=1} onClick={()=>move(-1)} aria-label={ru?"Предыдущие карточки":"Previous cards"}><ArrowIcon direction="left"/></button><button disabled={total<=1} onClick={()=>move(1)} aria-label={ru?"Следующие карточки":"Next cards"}><ArrowIcon direction="right"/></button></div></div>;
 }
 
+export function useHorizontalTrack(track:React.RefObject<HTMLDivElement|null>,enabled=true){
+  useEffect(()=>{
+    const element=track.current;
+    if(!element||!enabled)return;
+    const onWheel=(event:WheelEvent)=>{
+      if(Math.abs(event.deltaX)<=Math.abs(event.deltaY)||event.deltaX===0)return;
+      const max=Math.max(0,element.scrollWidth-element.clientWidth);
+      const next=Math.max(0,Math.min(max,element.scrollLeft+event.deltaX));
+      if(next===element.scrollLeft)return;
+      event.preventDefault();
+      event.stopPropagation();
+      element.scrollLeft=next;
+    };
+    element.addEventListener("wheel",onWheel,{passive:false});
+    return()=>element.removeEventListener("wheel",onWheel);
+  },[track,enabled]);
+}
+
 export function ProjectCarousel({ru=false}:{ru?:boolean}){
   const track=useRef<HTMLDivElement>(null);const[current,setCurrent]=useState(0);
+  useHorizontalTrack(track);
   const sync=()=>{const el=track.current;if(!el)return;const card=el.querySelector<HTMLElement>("[data-slide]");const gap=parseFloat(getComputedStyle(el).columnGap||getComputedStyle(el).gap)||0;if(card)setCurrent(Math.min(works.length-1,Math.round(el.scrollLeft/(card.offsetWidth+gap))))};
   return <div className="card-slider"><SliderControls track={track} current={current} total={works.length} ru={ru}/><div className="card-slider-track" ref={track} onScroll={sync}>{works.map((w,i)=><a data-slide className="project-card interactive" href={`/work/${w.slug}`} key={w.slug}><div className={`project-visual ${w.tone}`} data-cursor-label={ru?"ПЕРЕЙТИ":"OPEN"}><span>{w.id}</span><i/><b>{i%2?"▓▓▒░":"░▒▓▓"}</b></div><div className="project-meta glass-strip"><h2>{w.title}</h2><p>{ru?w.tagsRu:w.tagsEn}</p><span className="card-open-icon" aria-hidden="true"><ArrowIcon direction="up-right"/></span></div></a>)}</div></div>;
 }
@@ -193,6 +212,7 @@ export const artWorks=[
 ];
 export function ArtCarousel({ru=false}:{ru?:boolean}){
   const track=useRef<HTMLDivElement>(null);const[current,setCurrent]=useState(0);
+  useHorizontalTrack(track);
   const sync=()=>{const el=track.current;if(!el)return;const card=el.querySelector<HTMLElement>("[data-slide]");const gap=parseFloat(getComputedStyle(el).columnGap||getComputedStyle(el).gap)||0;if(card)setCurrent(Math.min(artWorks.length-1,Math.round(el.scrollLeft/(card.offsetWidth+gap))))};
   return <div className="card-slider art-slider"><SliderControls track={track} current={current} total={artWorks.length} ru={ru}/><div className="card-slider-track" ref={track} onScroll={sync}>{artWorks.map((work)=><a data-slide className={`art-card interactive ${work.shape}`} href={`/art/${work.slug}`} key={work.slug} data-cursor-label={ru?"ОТКРЫТЬ":"OPEN"}><div className={`art-card-visual ${work.type}`}>{work.type==="ascii"?<pre>.+######+.{"\n"}##▒░()░▒##{"\n"}#▒ /||\\ ▒#{"\n"}## /_||_\\ ##{"\n"}  ######</pre>:work.type==="glitch"?<b data-text="HAZY">HAZY</b>:<i><span>▓▒░</span></i>}<small>{work.id}</small></div><div className="art-card-meta"><h2>{ru?work.titleRu:work.titleEn}</h2><span className="card-open-icon" aria-hidden="true"><ArrowIcon direction="up-right"/></span></div></a>)}</div></div>;
 }

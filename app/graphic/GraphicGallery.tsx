@@ -1,7 +1,7 @@
 "use client";
 import {useEffect,useRef,useState} from "react";
 import Image from "next/image";
-import {ArrowIcon,SliderControls} from "../components";
+import {ArrowIcon,SliderControls,useHorizontalTrack} from "../components";
 import {GraphicCategory,graphicCategories,graphicWorks,publishedGraphicWorks} from "./data";
 
 export function GraphicCard({work,ru}:{work:typeof graphicWorks[number];ru:boolean}){
@@ -12,16 +12,17 @@ export function GraphicCard({work,ru}:{work:typeof graphicWorks[number];ru:boole
   </a>;
 }
 
-export default function GraphicGallery({ru}:{ru:boolean}){
+export default function GraphicGallery({ru,standalone=false}:{ru:boolean;standalone?:boolean}){
   const[active,setActive]=useState<GraphicCategory>("all");
   const[current,setCurrent]=useState(0);
   const track=useRef<HTMLDivElement>(null);
   const visible=active==="all"?publishedGraphicWorks:publishedGraphicWorks.filter(work=>work.category===active);
+  useHorizontalTrack(track,!standalone);
   const choose=(category:GraphicCategory)=>{setActive(category);setCurrent(0)};
   useEffect(()=>{if(track.current)track.current.scrollLeft=0},[active]);
   const sync=()=>{const el=track.current;if(!el)return;const card=el.querySelector<HTMLElement>("[data-slide]");const gap=parseFloat(getComputedStyle(el).columnGap||getComputedStyle(el).gap)||0;if(card)setCurrent(Math.min(visible.length-1,Math.round(el.scrollLeft/(card.offsetWidth+gap))))};
-  return <section className="graphic-gallery">
-    <div className="graphic-gallery-head"><div className="graphic-filters" role="group" aria-label={ru?"Фильтр графических работ":"Filter graphic work"}>{graphicCategories.map(category=><button key={category.id} className={active===category.id?"is-active":""} onClick={()=>choose(category.id)} aria-pressed={active===category.id}>{ru?category.ru:category.en}<span>{String(category.id==="all"?publishedGraphicWorks.length:publishedGraphicWorks.filter(work=>work.category===category.id).length).padStart(2,"0")}</span></button>)}</div><SliderControls track={track} current={current} total={visible.length} ru={ru} hideCount/></div>
+  return <section className={`graphic-gallery ${standalone?"is-grid":""}`}>
+    <div className="graphic-gallery-head"><div className="graphic-filters" role="group" aria-label={ru?"Фильтр графических работ":"Filter graphic work"}>{graphicCategories.map(category=><button key={category.id} className={active===category.id?"is-active":""} onClick={()=>choose(category.id)} aria-pressed={active===category.id}>{ru?category.ru:category.en}<span>{String(category.id==="all"?publishedGraphicWorks.length:publishedGraphicWorks.filter(work=>work.category===category.id).length).padStart(2,"0")}</span></button>)}</div>{!standalone&&<SliderControls track={track} current={current} total={visible.length} ru={ru} hideCount/>}</div>
     <div className="graphic-project-grid" ref={track} onScroll={sync}>{visible.map(work=><GraphicCard work={work} ru={ru} key={work.slug}/>)}</div>
     {active!=="all"&&<button className="graphic-show-all" onClick={()=>choose("all")}>{ru?"ПОКАЗАТЬ ВСЕ РАБОТЫ":"SHOW ALL WORK"}<span>{publishedGraphicWorks.length}</span></button>}
   </section>;

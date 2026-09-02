@@ -197,8 +197,8 @@ button{border:0}
   grid-auto-columns:min(46%,60vh);
   gap:var(--gallery-gap);
   overflow-x:auto;
-  overscroll-behavior-x:contain;
-  scroll-snap-type:x mandatory;
+  overscroll-behavior-x:auto;
+  scroll-snap-type:none;
   scrollbar-width:none;
 }
 .card-slider-track::-webkit-scrollbar{display:none}
@@ -260,7 +260,7 @@ button{border:0}
 .card-open-icon .arrow-icon{width:14px;height:14px;stroke-width:1.2}
 
 .graphic-gallery{padding-top:0}
-.graphic-gallery-head{position:sticky;top:94px;z-index:30;display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:var(--space-4);padding:14px var(--gallery-card-inset);border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:color-mix(in srgb,var(--bg),transparent 14%);box-shadow:none;backdrop-filter:blur(22px) saturate(145%);-webkit-backdrop-filter:blur(22px) saturate(145%)}
+.graphic-gallery-head{position:sticky;top:94px;z-index:30;display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:var(--space-4);padding:14px var(--gallery-card-inset);border-bottom:1px solid var(--line);background:color-mix(in srgb,var(--bg),transparent 14%);box-shadow:none;backdrop-filter:blur(22px) saturate(145%);-webkit-backdrop-filter:blur(22px) saturate(145%)}
 .graphic-filters{display:flex;gap:8px;padding:0;overflow-x:auto;scrollbar-width:none}
 .graphic-filters::-webkit-scrollbar{display:none}
 .graphic-filters button{flex:0 0 auto;min-height:42px;display:inline-flex;align-items:center;gap:16px;padding:0 16px;border:1px solid var(--line);border-radius:999px;background:var(--bg);color:var(--fg);font-size:var(--text-label);font-weight:500;cursor:pointer;transition:background .2s,color .2s,border-color .2s}
@@ -268,18 +268,21 @@ button{border:0}
 .graphic-filters button:hover,.graphic-filters button.is-active{background:var(--fg);color:var(--bg);border-color:var(--fg)}
 .graphic-filters button.is-active span{color:color-mix(in srgb,var(--bg),transparent 32%)}
 .graphic-gallery-head .slider-controls{margin:0;padding:0;border:0}
-.graphic-project-grid{display:flex;align-items:flex-start;gap:var(--gallery-gap);padding-top:var(--space-4);overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;scrollbar-width:none}
+.graphic-project-grid{display:flex;align-items:flex-start;gap:var(--gallery-gap);padding-top:var(--space-4);overflow-x:auto;overscroll-behavior-x:auto;scroll-snap-type:none;scrollbar-width:none}
 .graphic-project-grid::-webkit-scrollbar{display:none}
 .graphic-project-card{width:auto;display:block;flex:0 0 clamp(360px,36%,560px);margin:0;padding:var(--gallery-card-inset);outline:none;scroll-snap-align:start;transition:background .35s}
 .graphic-project-card.landscape{flex-basis:clamp(520px,50%,800px)}
 .graphic-project-card.square{flex-basis:clamp(420px,34%,600px)}
+.graphic-gallery.is-grid .graphic-gallery-head{position:relative;top:auto;z-index:2;grid-template-columns:1fr;padding-inline:0;background:var(--bg);backdrop-filter:none;-webkit-backdrop-filter:none}
+.graphic-gallery.is-grid .graphic-project-grid{display:block;columns:3;column-gap:var(--gallery-gap);overflow:visible;scroll-snap-type:none}
+.graphic-gallery.is-grid .graphic-project-card,.graphic-gallery.is-grid .graphic-project-card.landscape,.graphic-gallery.is-grid .graphic-project-card.square{width:100%;display:inline-block;break-inside:avoid;margin:0 0 var(--gallery-gap);padding:var(--gallery-card-inset);scroll-snap-align:none}
 .graphic-project-card:focus-visible{outline:2px solid var(--fg);outline-offset:4px}
 .graphic-project-visual{position:relative;width:100%;max-height:none;aspect-ratio:4/5;display:grid;place-items:center;overflow:hidden;border-radius:16px;background:var(--fg);color:var(--bg);transition:transform .7s var(--ease-out),filter .7s var(--ease-out),border-radius .55s var(--ease-out)}
 .graphic-project-card.landscape .graphic-project-visual{aspect-ratio:4/3}
 .graphic-project-card.square .graphic-project-visual{aspect-ratio:1}
 .graphic-project-card.landscape .graphic-project-visual.brandbook{aspect-ratio:16/9;background:#d8d8d3}
 .graphic-project-visual.brandbook img{width:100%;height:100%;display:block;object-fit:cover}
-.graphic-project-visual.brandbook>span{padding:6px 8px;background:rgba(248,248,245,.9);color:#11110f;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.project-visual>span,.art-card-visual small,.graphic-project-visual.brandbook>span{min-width:30px;min-height:30px;display:grid;place-items:center;padding:5px 8px;border:1px solid color-mix(in srgb,var(--fg),transparent 78%);border-radius:10px;background:color-mix(in srgb,var(--bg),transparent 28%);color:var(--fg);box-shadow:0 5px 16px color-mix(in srgb,var(--fg),transparent 92%);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
 .graphic-project-card:hover{background:color-mix(in srgb,var(--fg),transparent 96%)}
 .graphic-project-card:hover .graphic-project-visual{transform:scale(.985);filter:contrast(1.08);border-radius:24px}
 .graphic-project-visual>span,.graphic-detail-visual>span{position:absolute;left:16px;top:16px;font-size:var(--text-label);font-weight:500;z-index:2}
@@ -350,6 +353,7 @@ button{border:0}
 .case-back:hover{background:var(--fg);color:var(--bg);border-color:var(--fg)}
 .case-back .arrow-icon{width:14px;height:14px}
 .case-back.graphic-back-fixed{position:fixed;left:max(28px,env(safe-area-inset-left));top:96px;z-index:90;margin:0;background:color-mix(in srgb,var(--bg),transparent 6%);box-shadow:0 8px 28px color-mix(in srgb,var(--fg),transparent 92%);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+.case-back.graphic-back-fixed:hover{background:var(--fg);color:var(--bg);border-color:var(--fg)}
 .case-panels div{height:auto;min-height:260px;gap:18px}
 .case-panels span{font-size:var(--text-label);font-weight:500;color:var(--muted)}
 .case-panels p{max-width:300px;margin:0;font-size:var(--text-body);line-height:1.45;color:var(--muted)}
@@ -442,6 +446,7 @@ button{border:0}
 
 @media(max-width:1100px){
   .graphic-gallery-head{position:relative;top:auto;border-top:0}
+  .graphic-gallery.is-grid .graphic-project-grid{columns:2}
 }
 
 @media(max-width:900px){
@@ -638,6 +643,7 @@ button{border:0}
 }
 
 @media(max-width:620px){
+  .graphic-gallery.is-grid .graphic-project-grid{columns:1}
   :root{--gallery-card-inset:10px;--gallery-gap:12px}
   .card-slider-track{grid-auto-columns:82%;gap:var(--gallery-gap);scroll-padding-left:0}
   .card-slider .project-card{padding:var(--gallery-card-inset)}
