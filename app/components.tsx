@@ -31,12 +31,12 @@ function initialBlobFor(seed:string):{edge:"left"|"right"|"top"|"bottom";offset:
   const offsets=[-.78,-.42,0,.42,.78] as const;
   return{edge:value%2?"bottom":"top",offset:offsets[value%offsets.length]};
 }
-function liquidArrowData(direction:"up-right"|"down-right",color:string){
-  const path=direction==="down-right"?"M4 4 14 14M14 7v7H7":"M4 14 14 4M7 4h7v7";
+function liquidArrowData(direction:"up-right"|"down-right"|"right",color:string){
+  const path=direction==="down-right"?"M4 4 14 14M14 7v7H7":direction==="right"?"M5 3l5 5-5 5":"M4 14 14 4M7 4h7v7";
   const svg=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 18" fill="none"><path d="${path}" stroke="${color}" stroke-width="1.5" stroke-linecap="square" stroke-linejoin="miter"/></svg>`;
   return`data:image/svg+xml,${encodeURIComponent(svg)}`;
 }
-export function PortfolioLiquidLink({href,label,className="",variant="outline",direction="up-right",full=false}:{href:string;label:string;className?:string;variant?:"solid"|"outline";direction?:"up-right"|"down-right";full?:boolean}){
+export function PortfolioLiquidLink({href,label,className="",variant="outline",direction="up-right",full=false}:{href:string;label:string;className?:string;variant?:"solid"|"outline";direction?:"up-right"|"down-right"|"right";full?:boolean}){
   const{foreground,background}=useLiquidTheme();
   const solid=variant==="solid";
   if(!full)return <a className={className} href={href}>{label}<ArrowIcon direction={direction}/></a>;
@@ -78,6 +78,8 @@ export function Header({landing=false,ru:controlledRu,onToggleLanguage}:{landing
   const triggerRef=useRef<HTMLButtonElement>(null);
   const panelRef=useRef<HTMLDivElement>(null);
   const ru=controlledRu??localRu;
+  const toggleLanguage=onToggleLanguage??toggleLocalRu;
+  const toggleTheme=()=>setDark(current=>{const next=!current;localStorage.setItem("aih-theme",next?"dark":"light");return next});
   const href=(section:string)=>section==="about"?"/about":landing?`#${section}`:`/#${section}`;
   const menuItems=[
     {label:ru?"ГЛАВНАЯ":"HOME",url:landing?"#top":"/"},
@@ -133,14 +135,21 @@ export function Header({landing=false,ru:controlledRu,onToggleLanguage}:{landing
       <a className="wordmark" href={landing?"#top":"/"}>ART_IS_HAZY®</a>
       <nav><a href={href("work")}>{ru?"КЕЙСЫ":"CASES"}</a><a href={href("about")}>{ru?"ОБО МНЕ":"ABOUT"}</a><a href={href("contact")}>{ru?"КОНТАКТЫ":"CONTACTS"}</a></nav>
       <div className="controls">
-        <button onClick={onToggleLanguage??toggleLocalRu} aria-label={ru?"Переключить на английский":"Switch to Russian"}>{ru?"RU":"EN"}</button>
-        <button onClick={()=>setDark(current=>{const next=!current;localStorage.setItem("aih-theme",next?"dark":"light");return next})} aria-label={dark?(ru?"Включить светлую тему":"Use light theme"):(ru?"Включить тёмную тему":"Use dark theme")}>{dark?"LIGHT":"DARK"}</button>
+        <button onClick={toggleLanguage} aria-label={ru?"Переключить на английский":"Switch to Russian"}>{ru?"RU":"EN"}</button>
+        <button onClick={toggleTheme} aria-label={dark?(ru?"Включить светлую тему":"Use light theme"):(ru?"Включить тёмную тему":"Use dark theme")}>{dark?"LIGHT":"DARK"}</button>
       </div>
     </header>
     <button ref={triggerRef} type="button" className={`main-menu-trigger main-menu-floating ${chromeHidden?"is-scroll-hidden":""}`} onClick={()=>setMenuOpen(!menuOpen)} aria-expanded={menuOpen} aria-controls="main-menu"><i aria-hidden="true"><b/><b/></i><span>{menuOpen?(ru?"ЗАКРЫТЬ":"CLOSE"):(ru?"МЕНЮ":"MENU")}</span></button>
     <div className={`main-menu-overlay ${menuOpen?"is-open":""}`} id="main-menu" aria-hidden={!menuOpen}>
       <button className="main-menu-backdrop" onClick={()=>{setMenuOpen(false);requestAnimationFrame(()=>triggerRef.current?.focus())}} aria-label={ru?"Закрыть меню":"Close menu"} tabIndex={-1}/>
       <div ref={panelRef} className="main-menu-panel" role="dialog" aria-modal="true" aria-label={ru?"Навигация по сайту":"Site navigation"}>
+        <div className="main-menu-top">
+          <span>ART_IS_HAZY®</span>
+          <div className="main-menu-switches">
+            <button type="button" onClick={toggleLanguage} aria-label={ru?"Переключить на английский":"Switch to Russian"}><small>{ru?"ЯЗЫК":"LANG"}</small><strong>{ru?"RU":"EN"}</strong></button>
+            <button type="button" onClick={toggleTheme} aria-label={dark?(ru?"Включить светлую тему":"Use light theme"):(ru?"Включить тёмную тему":"Use dark theme")}><small>{ru?"ТЕМА":"THEME"}</small><strong>{dark?(ru?"СВЕТ":"LIGHT"):(ru?"ТЬМА":"DARK")}</strong></button>
+          </div>
+        </div>
         <div className="main-menu-content">
           <nav className="main-menu-nav" aria-label={ru?"Основные страницы":"Main pages"}>
             {menuItems.map((item,index)=><a href={item.url} key={item.label} onClick={()=>setMenuOpen(false)} target={item.external?"_blank":undefined} rel={item.external?"noreferrer":undefined}><small>0{index+1}</small><strong>{item.label}</strong><ArrowIcon/></a>)}
@@ -167,7 +176,7 @@ export const works=[
 export function ProjectGrid({compact=false,ru=false}:{compact?:boolean;ru?:boolean}){return <div className={`project-grid ${compact?"compact":""}`}>{works.map((w,i)=><a className="project-card interactive" href={`/work/${w.slug}`} key={w.slug}><div className={`project-visual ${w.tone}`} data-cursor-label={ru?"ПЕРЕЙТИ":"OPEN"}><span>{w.id}</span><i/><b>{i%2?"▓▓▒░":"░▒▓▓"}</b></div><div className="project-meta glass-strip"><h2>{w.title}</h2><p>{ru?w.tagsRu:w.tagsEn}</p><span className="card-open-icon" aria-hidden="true"><ArrowIcon direction="up-right"/></span></div></a>)}</div>}
 
 export function SliderControls({track,current,total,ru,hideCount=false}:{track:React.RefObject<HTMLDivElement|null>;current:number;total:number;ru:boolean;hideCount?:boolean}){
-  const move=(direction:-1|1)=>{const el=track.current;if(!el)return;const card=el.querySelector<HTMLElement>("[data-slide]");const gap=parseFloat(getComputedStyle(el).columnGap||getComputedStyle(el).gap)||0;el.scrollBy({left:direction*((card?.offsetWidth??el.clientWidth)+gap),behavior:"smooth"})};
+  const move=(direction:-1|1)=>{const el=track.current;if(!el)return;const card=el.querySelector<HTMLElement>("[data-slide]");const gap=parseFloat(getComputedStyle(el).columnGap||getComputedStyle(el).gap)||0;const step=(card?.offsetWidth??el.clientWidth)+gap;const index=direction<0?Math.max(0,Math.ceil(el.scrollLeft/step)-1):Math.floor(el.scrollLeft/step)+1;const maxScroll=Math.max(0,el.scrollWidth-el.clientWidth);el.scrollTo({left:Math.min(maxScroll,index*step),behavior:"smooth"})};
   return <div className={`slider-controls ${hideCount?"without-count":""}`}>{!hideCount&&<span>{String(current+1).padStart(2,"0")} / {String(total).padStart(2,"0")}</span>}<div><button disabled={total<=1} onClick={()=>move(-1)} aria-label={ru?"Предыдущие карточки":"Previous cards"}><ArrowIcon direction="left"/></button><button disabled={total<=1} onClick={()=>move(1)} aria-label={ru?"Следующие карточки":"Next cards"}><ArrowIcon direction="right"/></button></div></div>;
 }
 
