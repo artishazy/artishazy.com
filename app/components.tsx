@@ -1,7 +1,9 @@
 "use client";
 import { useEffect,useRef,useState } from "react";
+import Image from "next/image";
 import LiquidCarveButton from "../components/originkit/ui/liquid-carve-button";
 import {DotScatter} from "../components/originkit/ui/dot-scatter";
+import {artStationWorks} from "./art/data";
 export function ArrowIcon({direction="down-right",className=""}:{direction?:"up-right"|"down-right"|"up"|"left"|"right";className?:string}){
   const path=direction==="up"?"M8 13V3M4 7l4-4 4 4":direction==="up-right"?"M4 12 12 4M6 4h6v6":direction==="left"?"M11 3 6 8l5 5":direction==="right"?"m5 3 5 5-5 5":"m4 4 8 8M12 6v6H6";
   return <svg className={`arrow-icon ${className}`.trim()} viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d={path}/></svg>;
@@ -61,7 +63,40 @@ export function PortfolioLiquidLink({href,label,className="",variant="outline",d
     />
   </span>;
 }
-export function Cursor(){const ref=useRef<HTMLDivElement>(null);useEffect(()=>{if(!matchMedia('(pointer:fine)').matches)return;const el=ref.current;if(!el)return;const label=el.querySelector("span");let visible=false,project=false;const move=(e:PointerEvent)=>{el.style.transform=`translate3d(${e.clientX-18}px,${e.clientY-18}px,0)`;const zone=(e.target as Element|null)?.closest?.("[data-cursor-label]") as HTMLElement|null;const nextProject=Boolean(zone);if(nextProject!==project){project=nextProject;el.classList.toggle("is-project",project)}if(zone&&label)label.textContent=zone.dataset.cursorLabel||"ПЕРЕЙТИ";if(!visible){visible=true;el.classList.add('is-visible')}};const down=()=>el.classList.add('is-pressed');const up=()=>el.classList.remove('is-pressed');addEventListener('pointermove',move,{capture:true,passive:true});addEventListener('pointerdown',down,{passive:true});addEventListener('pointerup',up,{passive:true});return()=>{removeEventListener('pointermove',move,true);removeEventListener('pointerdown',down);removeEventListener('pointerup',up)}},[]);return <div className="soft-cursor" ref={ref} aria-hidden="true"><i/><span>ПЕРЕЙТИ</span></div>}
+export function Cursor(){
+  const ref=useRef<HTMLDivElement>(null);
+  useEffect(()=>{
+    if(!matchMedia("(pointer:fine)").matches)return;
+    const el=ref.current;
+    if(!el)return;
+    const label=el.querySelector("span");
+    let visible=false;
+    let project=false;
+    let control=false;
+    const move=(event:PointerEvent)=>{
+      el.style.transform=`translate3d(${event.clientX-18}px,${event.clientY-18}px,0)`;
+      const target=event.target as Element|null;
+      const zone=target?.closest?.("[data-cursor-label]") as HTMLElement|null;
+      const nextProject=Boolean(zone);
+      const nextControl=!nextProject&&Boolean(target?.closest?.("a,button"));
+      if(nextProject!==project){project=nextProject;el.classList.toggle("is-project",project)}
+      if(nextControl!==control){control=nextControl;el.classList.toggle("is-control",control)}
+      if(zone&&label)label.textContent=zone.dataset.cursorLabel||"ПЕРЕЙТИ";
+      if(!visible){visible=true;el.classList.add("is-visible")}
+    };
+    const down=()=>el.classList.add("is-pressed");
+    const up=()=>el.classList.remove("is-pressed");
+    addEventListener("pointermove",move,{capture:true,passive:true});
+    addEventListener("pointerdown",down,{passive:true});
+    addEventListener("pointerup",up,{passive:true});
+    return()=>{
+      removeEventListener("pointermove",move,true);
+      removeEventListener("pointerdown",down);
+      removeEventListener("pointerup",up);
+    };
+  },[]);
+  return <div className="soft-cursor" ref={ref} aria-hidden="true"><i/><span>ПЕРЕЙТИ</span></div>;
+}
 export function useSiteLanguage(){
   const[ru,setRu]=useState(true);
   useEffect(()=>{const frame=requestAnimationFrame(()=>{const stored=localStorage.getItem("aih-language");if(stored)setRu(stored!=="en")});return()=>cancelAnimationFrame(frame)},[]);
@@ -69,14 +104,29 @@ export function useSiteLanguage(){
   const toggle=()=>setRu(current=>{const next=!current;localStorage.setItem("aih-language",next?"ru":"en");return next});
   return{ru,toggle};
 }
+
+export type WorkCategory="all"|"web"|"mobile"|"sites";
+export const workCategories:Array<{key:WorkCategory;labelRu:string;labelEn:string}>=[
+  {key:"all",labelRu:"ВСЕ КЕЙСЫ",labelEn:"ALL CASES"},
+  {key:"web",labelRu:"ВЕБ-СЕРВИСЫ",labelEn:"WEB SERVICES"},
+  {key:"mobile",labelRu:"МОБИЛЬНЫЕ ПРИЛОЖЕНИЯ",labelEn:"MOBILE APPS"},
+  {key:"sites",labelRu:"САЙТЫ / ЛЕНДИНГИ",labelEn:"WEBSITES / LANDINGS"},
+];
+const portfolioSections=[
+  {href:"/work",labelRu:"ПРОДДИЗАЙН",labelEn:"PRODUCT"},
+  {href:"/graphic",labelRu:"ГРАФИКА",labelEn:"GRAPHIC"},
+  {href:"/art",labelRu:"АРТ-ЛАБ",labelEn:"ART LAB"},
+];
+
 export function Header({landing=false,ru:controlledRu,onToggleLanguage}:{landing?:boolean;ru?:boolean;onToggleLanguage?:()=>void}={}){
   const[dark,setDark]=useState(false);
   const{ru:localRu,toggle:toggleLocalRu}=useSiteLanguage();
   const[menuOpen,setMenuOpen]=useState(false);
+  const[caseMenuOpen,setCaseMenuOpen]=useState(false);
   const[chromeHidden,setChromeHidden]=useState(false);
-  const[mobileMenu,setMobileMenu]=useState(false);
   const triggerRef=useRef<HTMLButtonElement>(null);
   const panelRef=useRef<HTMLDivElement>(null);
+  const caseMenuRef=useRef<HTMLDivElement>(null);
   const ru=controlledRu??localRu;
   const toggleLanguage=onToggleLanguage??toggleLocalRu;
   const toggleTheme=()=>setDark(current=>{const next=!current;localStorage.setItem("aih-theme",next?"dark":"light");return next});
@@ -86,18 +136,19 @@ export function Header({landing=false,ru:controlledRu,onToggleLanguage}:{landing
     {label:ru?"ПРОДУКТОВЫЙ ДИЗАЙН":"PRODUCT DESIGN",url:"/work"},
     {label:ru?"ГРАФИКА":"GRAPHIC DESIGN",url:"/graphic"},
     {label:ru?"АРТ-ЛАБОРАТОРИЯ":"ART LAB",url:"/art"},
-    mobileMenu?{label:ru?"ОБО МНЕ":"ABOUT",url:"/about"}:{label:ru?"РЕЗЮМЕ":"RÉSUMÉ",url:"/resume"},
+    {label:ru?"ОБО МНЕ":"ABOUT",url:"/about"},
   ];
 
   useEffect(()=>{const frame=requestAnimationFrame(()=>{const stored=localStorage.getItem("aih-theme");if(stored)setDark(stored==="dark")});return()=>cancelAnimationFrame(frame)},[]);
   useEffect(()=>{document.documentElement.dataset.theme=dark?"dark":"light";dispatchEvent(new CustomEvent("aih-theme-change",{detail:dark?"dark":"light"}))},[dark]);
   useEffect(()=>{
-    const media=matchMedia("(max-width: 900px)");
-    const sync=()=>setMobileMenu(media.matches);
-    sync();
-    media.addEventListener("change",sync);
-    return()=>media.removeEventListener("change",sync);
-  },[]);
+    if(!caseMenuOpen)return;
+    const close=(event:PointerEvent)=>{if(!caseMenuRef.current?.contains(event.target as Node))setCaseMenuOpen(false)};
+    const closeOnEscape=(event:KeyboardEvent)=>{if(event.key==="Escape")setCaseMenuOpen(false)};
+    addEventListener("pointerdown",close);
+    addEventListener("keydown",closeOnEscape);
+    return()=>{removeEventListener("pointerdown",close);removeEventListener("keydown",closeOnEscape)};
+  },[caseMenuOpen]);
   useEffect(()=>{
     const media=matchMedia("(max-width: 900px)");
     if(!media.matches){const frame=requestAnimationFrame(()=>setChromeHidden(false));return()=>cancelAnimationFrame(frame)}
@@ -133,7 +184,15 @@ export function Header({landing=false,ru:controlledRu,onToggleLanguage}:{landing
   return <>
     <header className={`header ${chromeHidden?"is-scroll-hidden":""}`}>
       <a className="wordmark" href={landing?"#top":"/"}>ART_IS_HAZY®</a>
-      <nav><a href={href("work")}>{ru?"КЕЙСЫ":"CASES"}</a><a href={href("about")}>{ru?"ОБО МНЕ":"ABOUT"}</a><a href={href("contact")}>{ru?"КОНТАКТЫ":"CONTACTS"}</a></nav>
+      <nav>
+        <div className={`header-cases ${caseMenuOpen?"is-open":""}`} ref={caseMenuRef}>
+          <button type="button" onClick={()=>setCaseMenuOpen(open=>!open)} aria-expanded={caseMenuOpen} aria-controls="header-case-menu"><span>{ru?"КЕЙСЫ":"CASES"}</span><i aria-hidden="true"/></button>
+          <div className="header-case-menu" id="header-case-menu" aria-hidden={!caseMenuOpen}>
+            {portfolioSections.map(section=><a href={section.href} key={section.href} onClick={()=>setCaseMenuOpen(false)}>{ru?section.labelRu:section.labelEn}<ArrowIcon direction="right"/></a>)}
+          </div>
+        </div>
+        <a href={href("about")}>{ru?"ОБО МНЕ":"ABOUT"}</a><a href={href("contact")}>{ru?"КОНТАКТЫ":"CONTACTS"}</a>
+      </nav>
       <div className="controls">
         <button onClick={toggleLanguage} aria-label={ru?"Переключить на английский":"Switch to Russian"}>{ru?"RU":"EN"}</button>
         <button onClick={toggleTheme} aria-label={dark?(ru?"Включить светлую тему":"Use light theme"):(ru?"Включить тёмную тему":"Use dark theme")}>{dark?"LIGHT":"DARK"}</button>
@@ -163,17 +222,48 @@ export function Header({landing=false,ru:controlledRu,onToggleLanguage}:{landing
 export function Footer({ru=false}:{ru?:boolean}={}){return <footer className="site-footer" id="contact">
   <div className="footer-heading"><span className="footer-kicker">06—{ru?"КОНТАКТ":"CONTACT"}</span><h2 className="footer-brand-scatter"><span className="visually-hidden">ART_IS_HAZY</span><DotScatter text="art_is_hazy" cursorRadius={96}/></h2></div>
   <div className="footer-contact"><span>{ru?"НАПИСАТЬ":"EMAIL"}</span><a href="mailto:artishazy14@gmail.com">ARTISHAZY14@GMAIL.COM <ArrowIcon direction="up-right"/></a><p>{ru?"Продуктовый дизайн, графика и цифровое искусство.":"Product design, graphic design and digital art."}</p><SocialLinks ru={ru} className="footer-social-links"/></div>
-  <nav className="footer-nav" aria-label={ru?"Навигация в подвале":"Footer navigation"}><a href="/work">{ru?"КЕЙСЫ":"CASES"}</a><a href="/about">{ru?"ОБО МНЕ":"ABOUT"}</a><a href="/graphic">{ru?"ГРАФИКА":"GRAPHIC"}</a><a href="/art">{ru?"АРТ":"ART"}</a><a href="/resume">{ru?"РЕЗЮМЕ":"RÉSUMÉ"} <ArrowIcon direction="up-right"/></a><a href="#top">{ru?"НАВЕРХ":"BACK TO TOP"} <ArrowIcon direction="up"/></a></nav>
+  <nav className="footer-nav" aria-label={ru?"Навигация в подвале":"Footer navigation"}><a href="/work">{ru?"КЕЙСЫ":"CASES"}</a><a href="/about">{ru?"ОБО МНЕ":"ABOUT"}</a><a href="/graphic">{ru?"ГРАФИКА":"GRAPHIC"}</a><a href="/art">{ru?"АРТ":"ART"}</a><a href="#top">{ru?"НАВЕРХ":"BACK TO TOP"} <ArrowIcon direction="up"/></a></nav>
   <div className="footer-meta"><span>©2026 ДАНИИЛ ЧЕРКАШИН</span><span>{ru?"МОСКВА":"MOSCOW"} / WORLDWIDE</span><span>ART_IS_HAZY®</span></div>
 </footer>}
 export function PageTitle({index,label,title,description}:{index:string,label:string,title:string,description:string}){return <section className="page-title"><div className="kicker">{index}—{label}</div><h1>{title}</h1><p>{description}</p></section>}
 export const works=[
- {id:"01",slug:"exnode",title:"EXNODE / FINANCE",tagsEn:"PRODUCT · FINTECH · DESIGN SYSTEM",tagsRu:"ПРОДУКТ · ФИНТЕХ · ДИЗАЙН-СИСТЕМА",tone:"grid"},
- {id:"02",slug:"dreamy",title:"DREAMY / SLEEP APP",tagsEn:"MOBILE · UX/UI · RESEARCH",tagsRu:"МОБИЛЬНОЕ · UX/UI · ИССЛЕДОВАНИЕ",tone:"blocks"},
- {id:"03",slug:"colorist",title:"COLORIST / ACCESSIBILITY",tagsEn:"COLOR TOOL · UX/UI · PROTOTYPE",tagsRu:"ЦВЕТ · ДОСТУПНОСТЬ · ПРОТОТИП",tone:"rings"},
- {id:"04",slug:"landings",title:"LANDINGS / SELECTED",tagsEn:"WEB · TELEGRAM APPS · FREELANCE",tagsRu:"ВЕБ · TELEGRAM APPS · ФРИЛАНС",tone:"type"},
+ {id:"01",slug:"exnode",title:"EXNODE / FINANCE",tagsEn:"PRODUCT · FINTECH · DESIGN SYSTEM",tagsRu:"ПРОДУКТ · ФИНТЕХ · ДИЗАЙН-СИСТЕМА",tone:"grid",category:"web" as WorkCategory},
+ {id:"02",slug:"dreamy",title:"DREAMY / SLEEP APP",tagsEn:"MOBILE · UX/UI · RESEARCH",tagsRu:"МОБИЛЬНОЕ · UX/UI · ИССЛЕДОВАНИЕ",tone:"blocks",category:"mobile" as WorkCategory},
+ {id:"03",slug:"colorist",title:"COLORIST / ACCESSIBILITY",tagsEn:"COLOR TOOL · UX/UI · PROTOTYPE",tagsRu:"ЦВЕТ · ДОСТУПНОСТЬ · ПРОТОТИП",tone:"rings",category:"web" as WorkCategory},
+ {id:"04",slug:"landings",title:"LANDINGS / SELECTED",tagsEn:"WEB · TELEGRAM APPS · FREELANCE",tagsRu:"ВЕБ · TELEGRAM APPS · ФРИЛАНС",tone:"type",category:"sites" as WorkCategory},
 ];
-export function ProjectGrid({compact=false,ru=false}:{compact?:boolean;ru?:boolean}){return <div className={`project-grid ${compact?"compact":""}`}>{works.map((w,i)=><a className="project-card interactive" href={`/work/${w.slug}`} key={w.slug}><div className={`project-visual ${w.tone}`} data-cursor-label={ru?"ПЕРЕЙТИ":"OPEN"}><span>{w.id}</span><i/><b>{i%2?"▓▓▒░":"░▒▓▓"}</b></div><div className="project-meta glass-strip"><h2>{w.title}</h2><p>{ru?w.tagsRu:w.tagsEn}</p><span className="card-open-icon" aria-hidden="true"><ArrowIcon direction="up-right"/></span></div></a>)}</div>}
+export function ProjectGrid({compact=false,ru=false}:{compact?:boolean;ru?:boolean}){return <div className={`project-grid work-project-grid ${compact?"compact":""}`}>{works.map((w,i)=><a className="project-card interactive" href={`/work/${w.slug}`} key={w.slug} data-case-card data-cursor-label={ru?"ПЕРЕЙТИ":"OPEN"}><div className={`project-visual case-overlay-visual ${w.tone}`}><i/><b>{i%2?"▓▓▒░":"░▒▓▓"}</b><div className="case-card-overlay"><h2>{w.title}</h2><p>{ru?w.tagsRu:w.tagsEn}</p></div></div></a>)}</div>}
+
+export function FilteredProjectGrid({ru=false}:{ru?:boolean}){
+  const[active,setActive]=useState<WorkCategory>("all");
+  useEffect(()=>{
+    const sync=()=>{
+      const value=new URLSearchParams(location.search).get("category");
+      if(workCategories.some(category=>category.key===value))setActive(value as WorkCategory);
+      else setActive("all");
+    };
+    sync();
+    addEventListener("popstate",sync);
+    return()=>removeEventListener("popstate",sync);
+  },[]);
+  const select=(category:WorkCategory)=>{
+    setActive(category);
+    const url=new URL(location.href);
+    if(category==="all")url.searchParams.delete("category");
+    else url.searchParams.set("category",category);
+    history.replaceState(null,"",`${url.pathname}${url.search}${url.hash}`);
+  };
+  const visible=active==="all"?works:works.filter(work=>work.category===active);
+  return <section className="work-catalog">
+    <div className="graphic-gallery-head work-gallery-head">
+      <div className="graphic-filters" role="group" aria-label={ru?"Фильтр проектов":"Project filter"}>{workCategories.map(category=>{
+        const count=category.key==="all"?works.length:works.filter(work=>work.category===category.key).length;
+        return <button type="button" className={active===category.key?"is-active":""} aria-pressed={active===category.key} onClick={()=>select(category.key)} key={category.key}>{ru?category.labelRu:category.labelEn}<span>{String(count).padStart(2,"0")}</span></button>;
+      })}</div>
+    </div>
+    <div className="project-grid work-project-grid" aria-live="polite">{visible.map((work,index)=><a className="project-card interactive" href={`/work/${work.slug}`} key={work.slug} data-case-card data-cursor-label={ru?"ПЕРЕЙТИ":"OPEN"}><div className={`project-visual case-overlay-visual ${work.tone}`}><i/><b>{index%2?"▓▓▒░":"░▒▓▓"}</b><div className="case-card-overlay"><h2>{work.title}</h2><p>{ru?work.tagsRu:work.tagsEn}</p></div></div></a>)}</div>
+  </section>;
+}
 
 export function SliderControls({track,current,total,ru,hideCount=false}:{track:React.RefObject<HTMLDivElement|null>;current:number;total:number;ru:boolean;hideCount?:boolean}){
   const move=(direction:-1|1)=>{const el=track.current;if(!el)return;const card=el.querySelector<HTMLElement>("[data-slide]");const gap=parseFloat(getComputedStyle(el).columnGap||getComputedStyle(el).gap)||0;const step=(card?.offsetWidth??el.clientWidth)+gap;const index=direction<0?Math.max(0,Math.ceil(el.scrollLeft/step)-1):Math.floor(el.scrollLeft/step)+1;const maxScroll=Math.max(0,el.scrollWidth-el.clientWidth);el.scrollTo({left:Math.min(maxScroll,index*step),behavior:"smooth"})};
@@ -202,19 +292,37 @@ export function ProjectCarousel({ru=false}:{ru?:boolean}){
   const track=useRef<HTMLDivElement>(null);const[current,setCurrent]=useState(0);
   useHorizontalTrack(track);
   const sync=()=>{const el=track.current;if(!el)return;const card=el.querySelector<HTMLElement>("[data-slide]");const gap=parseFloat(getComputedStyle(el).columnGap||getComputedStyle(el).gap)||0;if(card)setCurrent(Math.min(works.length-1,Math.round(el.scrollLeft/(card.offsetWidth+gap))))};
-  return <div className="card-slider"><SliderControls track={track} current={current} total={works.length} ru={ru}/><div className="card-slider-track" ref={track} onScroll={sync}>{works.map((w,i)=><a data-slide className="project-card interactive" href={`/work/${w.slug}`} key={w.slug}><div className={`project-visual ${w.tone}`} data-cursor-label={ru?"ПЕРЕЙТИ":"OPEN"}><span>{w.id}</span><i/><b>{i%2?"▓▓▒░":"░▒▓▓"}</b></div><div className="project-meta glass-strip"><h2>{w.title}</h2><p>{ru?w.tagsRu:w.tagsEn}</p><span className="card-open-icon" aria-hidden="true"><ArrowIcon direction="up-right"/></span></div></a>)}</div></div>;
+  return <div className="card-slider"><SliderControls track={track} current={current} total={works.length} ru={ru} hideCount/><div className="card-slider-track" ref={track} onScroll={sync}>{works.map((w,i)=><a data-slide data-case-card className="project-card interactive" href={`/work/${w.slug}`} key={w.slug} data-cursor-label={ru?"ПЕРЕЙТИ":"OPEN"}><div className={`project-visual case-overlay-visual ${w.tone}`}><i/><b>{i%2?"▓▓▒░":"░▒▓▓"}</b><div className="case-card-overlay"><h2>{w.title}</h2><p>{ru?w.tagsRu:w.tagsEn}</p></div></div></a>)}</div></div>;
 }
 
-export const artWorks=[
- {id:"01",slug:"ascii-sculpture",titleRu:"ASCII / СКУЛЬПТУРА",titleEn:"ASCII / SCULPTURE",type:"ascii",shape:"portrait"},
- {id:"02",slug:"hazy-form",titleRu:"ФОРМА / ТУМАН",titleEn:"FORM / HAZE",type:"glitch",shape:"landscape"},
- {id:"03",slug:"noise-study",titleRu:"ШУМ / СИГНАЛ",titleEn:"NOISE / SIGNAL",type:"noise",shape:"square"},
+export type ArtCategory="all"|"digital"|"vector"|"3d";
+export const artCategories:[ArtCategory,string,string][]=[
+  ["all","ВСЕ РАБОТЫ","ALL WORK"],
+  ["digital","ДИДЖИТАЛ-АРТ","DIGITAL ART"],
+  ["vector","ВЕКТОРНАЯ ИЛЛЮСТРАЦИЯ","VECTOR ILLUSTRATION"],
+  ["3d","3D","3D"],
 ];
-export function ArtCarousel({ru=false}:{ru?:boolean}){
-  const track=useRef<HTMLDivElement>(null);const[current,setCurrent]=useState(0);
-  useHorizontalTrack(track);
-  const sync=()=>{const el=track.current;if(!el)return;const card=el.querySelector<HTMLElement>("[data-slide]");const gap=parseFloat(getComputedStyle(el).columnGap||getComputedStyle(el).gap)||0;if(card)setCurrent(Math.min(artWorks.length-1,Math.round(el.scrollLeft/(card.offsetWidth+gap))))};
-  return <div className="card-slider art-slider"><SliderControls track={track} current={current} total={artWorks.length} ru={ru}/><div className="card-slider-track" ref={track} onScroll={sync}>{artWorks.map((work)=><a data-slide className={`art-card interactive ${work.shape}`} href={`/art/${work.slug}`} key={work.slug} data-cursor-label={ru?"ОТКРЫТЬ":"OPEN"}><div className={`art-card-visual ${work.type}`}>{work.type==="ascii"?<pre>.+######+.{"\n"}##▒░()░▒##{"\n"}#▒ /||\\ ▒#{"\n"}## /_||_\\ ##{"\n"}  ######</pre>:work.type==="glitch"?<b data-text="HAZY">HAZY</b>:<i><span>▓▒░</span></i>}<small>{work.id}</small></div><div className="art-card-meta"><h2>{ru?work.titleRu:work.titleEn}</h2><span className="card-open-icon" aria-hidden="true"><ArrowIcon direction="up-right"/></span></div></a>)}</div></div>;
+export const artWorks=[
+ {id:"01",slug:"ascii-sculpture",titleRu:"ASCII / СКУЛЬПТУРА",titleEn:"ASCII / SCULPTURE",type:"ascii",shape:"portrait",category:"3d" as ArtCategory},
+ {id:"02",slug:"hazy-form",titleRu:"ФОРМА / ТУМАН",titleEn:"FORM / HAZE",type:"glitch",shape:"landscape",category:"digital" as ArtCategory},
+ {id:"03",slug:"noise-study",titleRu:"ШУМ / СИГНАЛ",titleEn:"NOISE / SIGNAL",type:"noise",shape:"square",category:"vector" as ArtCategory},
+];
+const artGalleryWorks=[
+  ...artWorks.map(work=>({...work,source:"local" as const})),
+  ...artStationWorks.map(work=>({...work,source:"artstation" as const,category:"digital" as ArtCategory,shape:"landscape"})),
+];
+export function ArtCarousel({ru=false,standalone=false}:{ru?:boolean;standalone?:boolean}){
+  const track=useRef<HTMLDivElement>(null);const[current,setCurrent]=useState(0);const[active,setActive]=useState<ArtCategory>("all");
+  const visible=active==="all"?artGalleryWorks:artGalleryWorks.filter(work=>work.category===active);
+  useHorizontalTrack(track,!standalone);
+  useEffect(()=>{if(track.current)track.current.scrollLeft=0},[active]);
+  const choose=(category:ArtCategory)=>{setActive(category);setCurrent(0)};
+  const sync=()=>{const el=track.current;if(!el)return;const card=el.querySelector<HTMLElement>("[data-slide]");const gap=parseFloat(getComputedStyle(el).columnGap||getComputedStyle(el).gap)||0;if(card)setCurrent(Math.min(visible.length-1,Math.round(el.scrollLeft/(card.offsetWidth+gap))))};
+  const categoryLabel=(category:ArtCategory)=>artCategories.find(item=>item[0]===category)!;
+  return <div className={`card-slider art-slider ${standalone?"is-grid":""}`}>
+    <div className={`graphic-gallery-head art-gallery-head ${standalone?"is-standalone":""}`}><div className="graphic-filters" role="group" aria-label={ru?"Фильтр арт-работ":"Art work filter"}>{artCategories.map(category=>{const count=category[0]==="all"?artGalleryWorks.length:artGalleryWorks.filter(work=>work.category===category[0]).length;return <button type="button" className={active===category[0]?"is-active":""} aria-pressed={active===category[0]} onClick={()=>choose(category[0])} key={category[0]}>{ru?category[1]:category[2]}<span>{String(count).padStart(2,"0")}</span></button>})}</div>{!standalone&&<SliderControls track={track} current={current} total={visible.length} ru={ru} hideCount/>}</div>
+    <div className="card-slider-track" ref={track} onScroll={sync}>{visible.map((work)=>{const category=categoryLabel(work.category);const external=work.source==="artstation";const title=external?work.title:ru?work.titleRu:work.titleEn;return <a data-slide data-case-card className={`art-card interactive ${work.shape}`} href={external?work.href:`/art/${work.slug}`} target={external?"_blank":undefined} rel={external?"noreferrer":undefined} key={external?work.href:work.slug} data-cursor-label={ru?"ПЕРЕЙТИ":"OPEN"}><div className={`art-card-visual case-overlay-visual ${external?"artstation-image":work.type}`}>{external?<Image src={work.image} alt={work.title} width={1920} height={1080} loading="lazy" unoptimized/>:work.type==="ascii"?<pre>.+######+.{"\n"}##▒░()░▒##{"\n"}#▒ /||\\ ▒#{"\n"}## /_||_\\ ##{"\n"}  ######</pre>:work.type==="glitch"?<b data-text="HAZY">HAZY</b>:<i><span>▓▒░</span></i>}<div className="case-card-overlay"><h2>{title}</h2><p>{external?"ARTSTATION · ":""}{ru?category[1]:category[2]}</p></div></div></a>})}</div>
+  </div>;
 }
 export function Shell({children}:{children:React.ReactNode}){return <main id="top"><Header/>{children}<Footer/></main>}
 export function LocalizedShell({children}:{children:(ru:boolean)=>React.ReactNode}){const{ru,toggle}=useSiteLanguage();return <main id="top"><Header ru={ru} onToggleLanguage={toggle}/>{children(ru)}<Footer ru={ru}/></main>}

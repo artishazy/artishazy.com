@@ -24,21 +24,17 @@ export function ArtStationGallery({ru=false}:{ru?:boolean}){
     <header className="artstation-heading">
       <div>
         <span className="kicker">06—ARTSTATION</span>
-        <h2 id="artstation-heading">{ru?"ИЛЛЮСТРАЦИИ":"ILLUSTRATIONS"}</h2>
+        <h2 id="artstation-heading">{ru?"ДИДЖИТАЛ-АРТ":"DIGITAL ART"}</h2>
       </div>
-      <p>{ru?"Атмосферные истории о тишине, памяти и свете":"Atmospheric stories about stillness, memory and light"}</p>
+      <p>{ru?"Цифровая живопись и атмосферные истории о тишине, памяти и свете":"Digital painting and atmospheric stories about stillness, memory and light"}</p>
     </header>
     <div className="artstation-grid">
-      {artStationWorks.map(work=><a className="artstation-card interactive" href={work.href} target="_blank" rel="noreferrer" key={work.href} data-cursor-label="ARTSTATION">
-        <div className="artstation-card-visual">
+      {artStationWorks.map(work=><a className="artstation-card interactive" href={work.href} target="_blank" rel="noreferrer" key={work.href} data-case-card data-cursor-label={ru?"ПЕРЕЙТИ":"OPEN"}>
+        <div className="artstation-card-visual case-overlay-visual">
           {/* Static export keeps these local ArtStation assets independent from an image proxy. */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={work.image} alt={work.title} loading="lazy" decoding="async"/>
-          <small>{work.id}</small>
-        </div>
-        <div className="artstation-card-meta">
-          <h3>{work.title}</h3>
-          <span className="card-open-icon" aria-hidden="true"><ArrowIcon direction="up-right"/></span>
+          <div className="case-card-overlay"><h3>{work.title}</h3><p>ARTSTATION · DIGITAL ART</p></div>
         </div>
       </a>)}
     </div>

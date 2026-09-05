@@ -30,11 +30,11 @@ export default function Home(){
         <h1><span className="hero-line hero-line-outline">UX/UI</span><span className="hero-line hero-line-main">{ru?"ДИЗАЙНЕР":"DESIGNER"}</span></h1>
         <div className="hero-intro">
           <p>{ru?"Проектирую веб- и мобильные продукты: от исследования и пользовательских сценариев до адаптивного интерфейса и дизайн-системы.":"I design web and mobile products from research and user flows to responsive interfaces and design systems."}</p>
-          <div className="hero-actions"><PortfolioLiquidLink href="#work" variant="solid" direction="down-right" label={ru?"СМОТРЕТЬ КЕЙСЫ":"VIEW CASES"}/><PortfolioLiquidLink className="hero-about-inline" href="/about" label={ru?"ОБО МНЕ / CV":"ABOUT / CV"}/></div>
+          <div className="hero-actions"><PortfolioLiquidLink href="#work" variant="solid" direction="down-right" label={ru?"СМОТРЕТЬ КЕЙСЫ":"VIEW CASES"}/><PortfolioLiquidLink className="hero-about-inline" href="/about" label={ru?"ОБО МНЕ":"ABOUT"}/></div>
         </div>
       </div>
       <Stage ru={ru}/>
-      <PortfolioLiquidLink className="hero-about-floating" href="/about" label={ru?"ОБО МНЕ / CV":"ABOUT / CV"}/>
+      <PortfolioLiquidLink className="hero-about-floating" href="/about" label={ru?"ОБО МНЕ":"ABOUT"}/>
     </section>
 
     <section className="landing-section" id="work">
@@ -67,7 +67,7 @@ export default function Home(){
     </section>
 
     <section className="landing-section" id="art">
-      <PageTitle index="05" label={ru?"ЛИЧНАЯ ЛАБОРАТОРИЯ":"PERSONAL LAB"} title={ru?"АРТ / ЛАБОРАТОРИЯ":"ART / LAB"} description={ru?"Личная визуальная лаборатория: 3D, ASCII, цифровая графика, исследования формы, света и фактуры.":"A personal visual laboratory for 3D, ASCII, digital graphics and studies of form, light and texture."}/>
+      <PageTitle index="05" label={ru?"ЛИЧНАЯ ЛАБОРАТОРИЯ":"PERSONAL LAB"} title={ru?"АРТ / ЛАБ":"ART / LAB"} description={ru?"Диджитал-арт, векторная иллюстрация и 3D — авторские исследования формы, света, материала и движения.":"Digital art, vector illustration and 3D — independent studies of form, light, material and motion."}/>
       <ArtCarousel ru={ru}/>
       <PortfolioLiquidLink href="/art" label={ru?"ОТКРЫТЬ ЛАБОРАТОРИЮ":"OPEN THE LAB"} variant="solid" full/>
     </section>

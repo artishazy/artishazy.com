@@ -1,14 +1,13 @@
 "use client";
 import {useEffect,useRef,useState} from "react";
 import Image from "next/image";
-import {ArrowIcon,SliderControls,useHorizontalTrack} from "../components";
+import {SliderControls,useHorizontalTrack} from "../components";
 import {GraphicCategory,graphicCategories,graphicWorks,publishedGraphicWorks} from "./data";
 
 export function GraphicCard({work,ru}:{work:typeof graphicWorks[number];ru:boolean}){
   const category=graphicCategories.find(item=>item.id===work.category)!;
-  return <a data-slide className={`graphic-project-card ${work.shape}`} href={`/graphic/${work.slug}`} data-cursor-label={ru?"ОТКРЫТЬ":"OPEN"}>
-    <div className={`graphic-project-visual ${work.tone}`}>{"cover" in work&&work.cover?<><Image src={work.cover} alt="" width={1920} height={1080} priority={work.id==="01"} unoptimized/><span>{work.id}</span></>:<><span>{work.id}</span><b>{work.tone==="identity"?"V/O":work.tone==="poster"?"SIGNAL":work.tone==="type"?"Aa":work.tone==="digital"?"▓▒░":work.tone==="logos"?"(✦)":"A3"}</b><i/><em/></>}</div>
-    <div className="graphic-project-meta"><div><h2>{ru?work.titleRu:work.titleEn}</h2><p>{ru?category.ru:category.en} · {work.year}</p></div><span className="card-open-icon" aria-hidden="true"><ArrowIcon direction="up-right"/></span></div>
+  return <a data-slide data-case-card className={`graphic-project-card ${work.shape}`} href={`/graphic/${work.slug}`} data-cursor-label={ru?"ПЕРЕЙТИ":"OPEN"}>
+    <div className={`graphic-project-visual case-overlay-visual ${work.tone}`}>{"cover" in work&&work.cover?<Image src={work.cover} alt="" width={1920} height={1080} priority={work.id==="01"} unoptimized/>:<><b>{work.tone==="identity"?"V/O":work.tone==="poster"?"SIGNAL":work.tone==="type"?"Aa":work.tone==="digital"?"▓▒░":work.tone==="logos"?"(✦)":"A3"}</b><i/><em/></>}<div className="case-card-overlay"><h2>{ru?work.titleRu:work.titleEn}</h2><p>{ru?category.ru:category.en} · {work.year}</p></div></div>
   </a>;
 }
 

@@ -1,0 +1,18 @@
+export const artStationWorks=[
+  {title:"the stillness of the swamp",image:"/artstation/stillness-of-the-swamp.jpg",href:"https://www.artstation.com/artwork/OvJLaK"},
+  {title:"abandoned",image:"/artstation/abandoned.jpg",href:"https://www.artstation.com/artwork/a0RN0R"},
+  {title:"addiction",image:"/artstation/addiction.jpg",href:"https://www.artstation.com/artwork/kN4El0"},
+  {title:"a room full of art",image:"/artstation/a-room-full-of-art.jpg",href:"https://www.artstation.com/artwork/qJALQ2"},
+  {title:"waiting for the bus",image:"/artstation/waiting-for-the-bus.jpg",href:"https://www.artstation.com/artwork/Nq5w5g"},
+  {title:"at night",image:"/artstation/at-night.jpg",href:"https://www.artstation.com/artwork/YGLXoV"},
+  {title:"winter roofs",image:"/artstation/winter-roofs.jpg",href:"https://www.artstation.com/artwork/XJeqxY"},
+  {title:"covid 2019",image:"/artstation/covid-2019.jpg",href:"https://www.artstation.com/artwork/mAZxva"},
+  {title:"flying",image:"/artstation/flying.jpg",href:"https://www.artstation.com/artwork/AZwA5z"},
+  {title:"hurrying shadows",image:"/artstation/hurrying-shadows.jpg",href:"https://www.artstation.com/artwork/5WnAOP"},
+  {title:"loneliness",image:"/artstation/loneliness.jpg",href:"https://www.artstation.com/artwork/a0N2dJ"},
+  {title:"I do not feel cold",image:"/artstation/i-do-not-feel-cold.jpg",href:"https://www.artstation.com/artwork/qJLqER"},
+  {title:"Charlize Theron",image:"/artstation/charlize-theron.jpg",href:"https://www.artstation.com/artwork/a0N299"},
+  {title:"Metro 2033",image:"/artstation/metro-2033.jpg",href:"https://www.artstation.com/artwork/mAZrWE"},
+  {title:'"closed"',image:"/artstation/closed.jpg",href:"https://www.artstation.com/artwork/bgXGam"},
+  {title:"Dark Souls",image:"/artstation/dark-souls.jpg",href:"https://www.artstation.com/artwork/dyJZYw"},
+] as const;

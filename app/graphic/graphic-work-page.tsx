@@ -15,8 +15,8 @@ export default function GraphicWorkPage({slug}:{slug:keyof typeof descriptions})
   const work=graphicWorks.find(item=>item.slug===slug)!;
   const category=graphicCategories.find(item=>item.id===work.category)!;
   return <LocalizedShell>{ru=><>
-    <section className="art-detail-hero"><a className="case-back graphic-back-fixed" href="/graphic"><ArrowIcon direction="left"/>{ru?"ВСЯ ГРАФИКА":"ALL GRAPHIC WORK"}</a><div className="kicker">04—{ru?"ГРАФИКА":"GRAPHIC"} / {work.id}</div><h1>{ru?work.titleRu:work.titleEn}</h1><p>{ru?descriptions[slug].ru:descriptions[slug].en}</p></section>
-    <div className={`graphic-detail-visual ${work.tone}`}><span>{work.id}</span><strong>{work.tone==="identity"?"V/O":work.tone==="poster"?"SIGNAL":work.tone==="type"?"Aa":work.tone==="digital"?"▓▒░":work.tone==="logos"?"(✦)":"A3"}</strong><i/><em/></div>
+    <section className="art-detail-hero"><a className="case-back graphic-back-fixed" href="/graphic"><ArrowIcon direction="left"/>{ru?"ВСЯ ГРАФИКА":"ALL GRAPHIC WORK"}</a><div className="kicker">04—{ru?"ГРАФИКА":"GRAPHIC"}</div><h1>{ru?work.titleRu:work.titleEn}</h1><p>{ru?descriptions[slug].ru:descriptions[slug].en}</p></section>
+    <div className={`graphic-detail-visual ${work.tone}`}><strong>{work.tone==="identity"?"V/O":work.tone==="poster"?"SIGNAL":work.tone==="type"?"Aa":work.tone==="digital"?"▓▒░":work.tone==="logos"?"(✦)":"A3"}</strong><i/><em/></div>
     <section className="art-detail-copy"><span className="kicker">{ru?category.ru:category.en} / {work.year}</span><p>{ru?"В проекте собраны ключевой визуальный принцип, система элементов и варианты применения. Композиция остаётся узнаваемой в разных масштабах и на цифровых и печатных носителях.":"The project brings together a core visual principle, a system of elements and application examples. The composition remains recognizable across scales and on both digital and printed media."}</p></section>
   </>}</LocalizedShell>;
 }
