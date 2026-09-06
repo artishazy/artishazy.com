@@ -1,6 +1,8 @@
 "use client";
-import { useEffect,useRef,useState } from "react";
-import Image from "next/image";
+import { useEffect,useLayoutEffect,useRef,useState,useSyncExternalStore } from "react";
+import PortfolioImage from "./PortfolioImage";
+import {usePathname} from "next/navigation";
+import {localizedTitles} from "./seo-titles";
 import LiquidCarveButton from "../components/originkit/ui/liquid-carve-button";
 import {DotScatter} from "../components/originkit/ui/dot-scatter";
 import {artStationWorks} from "./art/data";
@@ -97,12 +99,22 @@ export function Cursor(){
   },[]);
   return <div className="soft-cursor" ref={ref} aria-hidden="true"><i/><span>ПЕРЕЙТИ</span></div>;
 }
+function subscribePreferences(callback:()=>void){addEventListener("aih-preferences",callback);addEventListener("storage",callback);return()=>{removeEventListener("aih-preferences",callback);removeEventListener("storage",callback)}}
+const visitPreferences:Record<string,string>={};
+function readPreference(key:string){try{return localStorage.getItem(key)??visitPreferences[key]??null}catch{return visitPreferences[key]??null}}
+function savePreference(key:string,value:string){visitPreferences[key]=value;try{localStorage.setItem(key,value)}catch{/* Keep an in-memory preference when storage is unavailable. */}dispatchEvent(new Event("aih-preferences"))}
 export function useSiteLanguage(){
-  const[ru,setRu]=useState(true);
-  useEffect(()=>{const frame=requestAnimationFrame(()=>{const stored=localStorage.getItem("aih-language");if(stored)setRu(stored!=="en")});return()=>cancelAnimationFrame(frame)},[]);
-  useEffect(()=>{document.documentElement.lang=ru?"ru":"en"},[ru]);
-  const toggle=()=>setRu(current=>{const next=!current;localStorage.setItem("aih-language",next?"ru":"en");return next});
-  return{ru,toggle};
+  const pathname=usePathname();
+  const ru=useSyncExternalStore(subscribePreferences,()=>readPreference("aih-language")!=="en",()=>true);
+  useLayoutEffect(()=>{
+    if(ru!==(readPreference("aih-language")!=="en"))return;
+    document.documentElement.lang=ru?"ru":"en";
+    delete document.documentElement.dataset.languagePending;
+    const route=pathname.replace(/\/$/,"")||"/";
+    const titles=localizedTitles[route];
+    if(titles)document.title=titles[ru?0:1];
+  },[ru,pathname]);
+  return{ru,toggle:()=>savePreference("aih-language",ru?"en":"ru")};
 }
 
 export type WorkCategory="all"|"web"|"mobile"|"sites";
@@ -119,7 +131,7 @@ const portfolioSections=[
 ];
 
 export function Header({landing=false,ru:controlledRu,onToggleLanguage}:{landing?:boolean;ru?:boolean;onToggleLanguage?:()=>void}={}){
-  const[dark,setDark]=useState(false);
+  const dark=useSyncExternalStore(subscribePreferences,()=>readPreference("aih-theme")==="dark",()=>false);
   const{ru:localRu,toggle:toggleLocalRu}=useSiteLanguage();
   const[menuOpen,setMenuOpen]=useState(false);
   const[caseMenuOpen,setCaseMenuOpen]=useState(false);
@@ -129,7 +141,7 @@ export function Header({landing=false,ru:controlledRu,onToggleLanguage}:{landing
   const caseMenuRef=useRef<HTMLDivElement>(null);
   const ru=controlledRu??localRu;
   const toggleLanguage=onToggleLanguage??toggleLocalRu;
-  const toggleTheme=()=>setDark(current=>{const next=!current;localStorage.setItem("aih-theme",next?"dark":"light");return next});
+  const toggleTheme=()=>savePreference("aih-theme",dark?"light":"dark");
   const href=(section:string)=>section==="about"?"/about":landing?`#${section}`:`/#${section}`;
   const menuItems=[
     {label:ru?"ГЛАВНАЯ":"HOME",url:landing?"#top":"/"},
@@ -139,8 +151,7 @@ export function Header({landing=false,ru:controlledRu,onToggleLanguage}:{landing
     {label:ru?"ОБО МНЕ":"ABOUT",url:"/about"},
   ];
 
-  useEffect(()=>{const frame=requestAnimationFrame(()=>{const stored=localStorage.getItem("aih-theme");if(stored)setDark(stored==="dark")});return()=>cancelAnimationFrame(frame)},[]);
-  useEffect(()=>{document.documentElement.dataset.theme=dark?"dark":"light";dispatchEvent(new CustomEvent("aih-theme-change",{detail:dark?"dark":"light"}))},[dark]);
+  useLayoutEffect(()=>{if(dark!==(readPreference("aih-theme")==="dark"))return;document.documentElement.dataset.theme=dark?"dark":"light";dispatchEvent(new CustomEvent("aih-theme-change",{detail:dark?"dark":"light"}))},[dark]);
   useEffect(()=>{
     if(!caseMenuOpen)return;
     const close=(event:PointerEvent)=>{if(!caseMenuRef.current?.contains(event.target as Node))setCaseMenuOpen(false)};
@@ -211,7 +222,7 @@ export function Header({landing=false,ru:controlledRu,onToggleLanguage}:{landing
         </div>
         <div className="main-menu-content">
           <nav className="main-menu-nav" aria-label={ru?"Основные страницы":"Main pages"}>
-            {menuItems.map((item,index)=><a href={item.url} key={item.label} onClick={()=>setMenuOpen(false)} target={item.external?"_blank":undefined} rel={item.external?"noreferrer":undefined}><small>0{index+1}</small><strong>{item.label}</strong><ArrowIcon/></a>)}
+            {menuItems.map((item,index)=><a href={item.url} key={item.label} onClick={()=>setMenuOpen(false)} ><small>0{index+1}</small><strong>{item.label}</strong><ArrowIcon/></a>)}
           </nav>
         </div>
         <div className="main-menu-bottom"><p>ART_IS_HAZY® / 2026<br/>{ru?"МОСКВА":"MOSCOW"} / WORLDWIDE</p></div>
@@ -221,11 +232,11 @@ export function Header({landing=false,ru:controlledRu,onToggleLanguage}:{landing
 }
 export function Footer({ru=false}:{ru?:boolean}={}){return <footer className="site-footer" id="contact">
   <div className="footer-heading"><span className="footer-kicker">06—{ru?"КОНТАКТ":"CONTACT"}</span><h2 className="footer-brand-scatter"><span className="visually-hidden">ART_IS_HAZY</span><DotScatter text="art_is_hazy" cursorRadius={96}/></h2></div>
-  <div className="footer-contact"><span>{ru?"НАПИСАТЬ":"EMAIL"}</span><a href="mailto:artishazy14@gmail.com">ARTISHAZY14@GMAIL.COM <ArrowIcon direction="up-right"/></a><p>{ru?"Продуктовый дизайн, графика и цифровое искусство.":"Product design, graphic design and digital art."}</p><SocialLinks ru={ru} className="footer-social-links"/></div>
+  <div className="footer-contact"><span>{ru?"НАПИСАТЬ":"EMAIL"}</span><a href="mailto:artishazy14@gmail.com">ARTISHAZY14@GMAIL.COM <ArrowIcon direction="up-right"/></a><p>{ru?"Продуктовый дизайн, графика и цифровое искусство.":"Product design, graphic design and digital art."}</p><a className="contact-action" href="https://t.me/art_is_hazy" target="_blank" rel="noreferrer">{ru?"ОБСУДИТЬ ПРОЕКТ В TELEGRAM":"DISCUSS A PROJECT ON TELEGRAM"}<ArrowIcon direction="up-right"/></a><SocialLinks ru={ru} className="footer-social-links"/></div>
   <nav className="footer-nav" aria-label={ru?"Навигация в подвале":"Footer navigation"}><a href="/work">{ru?"КЕЙСЫ":"CASES"}</a><a href="/about">{ru?"ОБО МНЕ":"ABOUT"}</a><a href="/graphic">{ru?"ГРАФИКА":"GRAPHIC"}</a><a href="/art">{ru?"АРТ":"ART"}</a><a href="#top">{ru?"НАВЕРХ":"BACK TO TOP"} <ArrowIcon direction="up"/></a></nav>
-  <div className="footer-meta"><span>©2026 ДАНИИЛ ЧЕРКАШИН</span><span>{ru?"МОСКВА":"MOSCOW"} / WORLDWIDE</span><span>ART_IS_HAZY®</span></div>
+  <div className="footer-meta"><span>©2026 {ru?"ДАНИИЛ ЧЕРКАШИН":"DANIIL CHERKASHIN"}</span><span>{ru?"МОСКВА":"MOSCOW"} / WORLDWIDE</span><span>ART_IS_HAZY®</span></div>
 </footer>}
-export function PageTitle({index,label,title,description}:{index:string,label:string,title:string,description:string}){return <section className="page-title"><div className="kicker">{index}—{label}</div><h1>{title}</h1><p>{description}</p></section>}
+export function PageTitle({index,label,title,description,level=1}:{index:string;label:string;title:string;description:string;level?:1|2}){const Heading=level===1?"h1":"h2";return <section className="page-title"><div className="kicker">{index}—{label}</div><Heading>{title}</Heading><p>{description}</p></section>}
 export const works=[
  {id:"01",slug:"exnode",title:"EXNODE / FINANCE",tagsEn:"PRODUCT · FINTECH · DESIGN SYSTEM",tagsRu:"ПРОДУКТ · ФИНТЕХ · ДИЗАЙН-СИСТЕМА",tone:"grid",category:"web" as WorkCategory},
  {id:"02",slug:"dreamy",title:"DREAMY / SLEEP APP",tagsEn:"MOBILE · UX/UI · RESEARCH",tagsRu:"МОБИЛЬНОЕ · UX/UI · ИССЛЕДОВАНИЕ",tone:"blocks",category:"mobile" as WorkCategory},
@@ -308,8 +319,8 @@ export const artWorks=[
  {id:"03",slug:"noise-study",titleRu:"ШУМ / СИГНАЛ",titleEn:"NOISE / SIGNAL",type:"noise",shape:"square",category:"vector" as ArtCategory},
 ];
 const artGalleryWorks=[
-  ...artWorks.map(work=>({...work,source:"local" as const})),
   ...artStationWorks.map(work=>({...work,source:"artstation" as const,category:"digital" as ArtCategory,shape:"landscape"})),
+  ...artWorks.map(work=>({...work,source:"local" as const})),
 ];
 export function ArtCarousel({ru=false,standalone=false}:{ru?:boolean;standalone?:boolean}){
   const track=useRef<HTMLDivElement>(null);const[current,setCurrent]=useState(0);const[active,setActive]=useState<ArtCategory>("all");
@@ -321,7 +332,7 @@ export function ArtCarousel({ru=false,standalone=false}:{ru?:boolean;standalone?
   const categoryLabel=(category:ArtCategory)=>artCategories.find(item=>item[0]===category)!;
   return <div className={`card-slider art-slider ${standalone?"is-grid":""}`}>
     <div className={`graphic-gallery-head art-gallery-head ${standalone?"is-standalone":""}`}><div className="graphic-filters" role="group" aria-label={ru?"Фильтр арт-работ":"Art work filter"}>{artCategories.map(category=>{const count=category[0]==="all"?artGalleryWorks.length:artGalleryWorks.filter(work=>work.category===category[0]).length;return <button type="button" className={active===category[0]?"is-active":""} aria-pressed={active===category[0]} onClick={()=>choose(category[0])} key={category[0]}>{ru?category[1]:category[2]}<span>{String(count).padStart(2,"0")}</span></button>})}</div>{!standalone&&<SliderControls track={track} current={current} total={visible.length} ru={ru} hideCount/>}</div>
-    <div className="card-slider-track" ref={track} onScroll={sync}>{visible.map((work)=>{const category=categoryLabel(work.category);const external=work.source==="artstation";const title=external?work.title:ru?work.titleRu:work.titleEn;return <a data-slide data-case-card className={`art-card interactive ${work.shape}`} href={external?work.href:`/art/${work.slug}`} target={external?"_blank":undefined} rel={external?"noreferrer":undefined} key={external?work.href:work.slug} data-cursor-label={ru?"ПЕРЕЙТИ":"OPEN"}><div className={`art-card-visual case-overlay-visual ${external?"artstation-image":work.type}`}>{external?<Image src={work.image} alt={work.title} width={1920} height={1080} loading="lazy" unoptimized/>:work.type==="ascii"?<pre>.+######+.{"\n"}##▒░()░▒##{"\n"}#▒ /||\\ ▒#{"\n"}## /_||_\\ ##{"\n"}  ######</pre>:work.type==="glitch"?<b data-text="HAZY">HAZY</b>:<i><span>▓▒░</span></i>}<div className="case-card-overlay"><h2>{title}</h2><p>{external?"ARTSTATION · ":""}{ru?category[1]:category[2]}</p></div></div></a>})}</div>
+    <div className="card-slider-track" ref={track} onScroll={sync}>{visible.map((work)=>{const category=categoryLabel(work.category);const external=work.source==="artstation";const title=external?work.title:ru?work.titleRu:work.titleEn;return <a data-slide data-case-card className={`art-card interactive ${work.shape}`} href={external?work.href:`/art/${work.slug}`} target={external?"_blank":undefined} rel={external?"noreferrer":undefined} key={external?work.href:work.slug} data-cursor-label={ru?"ПЕРЕЙТИ":"OPEN"}><div className={`art-card-visual case-overlay-visual ${external?"artstation-image":work.type}`}>{external?<PortfolioImage src={work.image} alt={work.title} sizes="(max-width: 700px) 85vw, 40vw"/>:work.type==="ascii"?<pre>.+######+.{"\n"}##▒░()░▒##{"\n"}#▒ /||\\ ▒#{"\n"}## /_||_\\ ##{"\n"}  ######</pre>:work.type==="glitch"?<b data-text="HAZY">HAZY</b>:<i><span>▓▒░</span></i>}<div className="case-card-overlay"><h2>{title}</h2><p>{external?"ARTSTATION ↗ · ":ru?"ЭКСПЕРИМЕНТ · ":"EXPERIMENT · "}{ru?category[1]:category[2]}</p></div></div></a>})}</div>
   </div>;
 }
 export function Shell({children}:{children:React.ReactNode}){return <main id="top"><Header/>{children}<Footer/></main>}

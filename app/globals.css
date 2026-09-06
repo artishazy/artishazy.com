@@ -95,7 +95,7 @@ main{min-height:100vh;padding:0 28px}
 .landing-section>.page-title{padding-top:72px}
 .landing .site-footer{scroll-margin-top:94px}
 
-.page-title h1,.case-hero h1,.case-copy h2,.about-hero h1,.process-head h2,.site-footer strong,.graphic-tile b,.glitch-word{font-weight:400}
+.page-title :is(h1,h2),.case-hero h1,.case-copy h2,.about-hero :is(h1,h2),.process-head h2,.site-footer strong,.graphic-tile b,.glitch-word{font-weight:400}
 
 /* Main navigation */
 .main-menu-trigger{min-width:118px;display:grid;grid-template-columns:14px 1fr;align-items:center;column-gap:11px;padding:0 15px;border:1px solid var(--fg);border-radius:999px;background:var(--fg);color:var(--bg);font:500 10px/1 var(--font-mono);letter-spacing:.06em;text-align:left;cursor:pointer;opacity:1}
@@ -156,7 +156,7 @@ main{min-height:100vh;padding:0 28px}
 /* Main directions */
 .main-services{padding-bottom:70px}
 .main-services .page-title{grid-template-columns:130px minmax(0,1fr) 300px}
-.main-services .page-title h1{min-width:0;font-size:clamp(58px,6.3vw,108px)}
+.main-services .page-title :is(h1,h2){min-width:0;font-size:clamp(58px,6.3vw,108px)}
 .main-service-list{border-top:0;margin-top:42px}
 .main-service-row{position:relative;display:grid;grid-template-columns:54px minmax(230px,1fr) 150px 30px;gap:24px;align-items:center;min-height:112px;border-bottom:1px solid var(--line);padding:18px 4px;overflow:hidden;transition:background .25s,color .25s,padding .35s cubic-bezier(.2,.8,.2,1)}
 .main-service-number,.main-service-row small{font:10px var(--font-mono);color:var(--muted)}
@@ -198,7 +198,7 @@ main{min-height:100vh;padding:0 28px}
   .ascii-caption{display:none}
   .ascii-axis{display:none}
   .main-services .page-title{grid-template-columns:1fr;gap:26px}
-  .main-services .page-title h1{font-size:clamp(36px,10.5vw,52px);line-height:1.02}
+  .main-services .page-title :is(h1,h2){font-size:clamp(36px,10.5vw,52px);line-height:1.02}
   .main-service-list{margin-top:24px}
   .main-service-row{grid-template-columns:30px 1fr 24px;gap:12px;min-height:92px;padding:16px 0}
   .main-service-row h2{font-size:clamp(31px,8.5vw,48px)}
@@ -208,7 +208,7 @@ main{min-height:100vh;padding:0 28px}
 
 @media(max-width:360px){
   main{padding-inline:max(14px,env(safe-area-inset-left))}
-  .page-title h1,.main-services .page-title h1{font-size:32px}
+  .page-title :is(h1,h2),.main-services .page-title :is(h1,h2){font-size:32px}
   .main-service-row{grid-template-columns:24px 1fr 20px;gap:8px}
   .main-service-row h2{font-size:clamp(27px,8.6vw,34px)}
 }

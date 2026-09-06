@@ -1,91 +1,41 @@
-import assert from "node:assert/strict";
-import { access, readFile, readdir } from "node:fs/promises";
-import test from "node:test";
-
-const developmentPreviewMeta =
-  /<meta(?=[^>]*\bname=["']codex-preview["'])(?=[^>]*\bcontent=["']development["'])[^>]*>/i;
-const templateRoot = new URL("../", import.meta.url);
-const previewRoot = new URL("../app/_sites-preview/", import.meta.url);
-
-async function render() {
-  const workerUrl = new URL("../dist/server/index.js", import.meta.url);
-  workerUrl.searchParams.set("test", `${process.pid}-${Date.now()}`);
-  const { default: worker } = await import(workerUrl.href);
-
-  return worker.fetch(
-    new Request("http://localhost/", {
-      headers: { accept: "text/html" },
-    }),
-    {
-      ASSETS: {
-        fetch: async () => new Response("Not found", { status: 404 }),
-      },
-    },
-    {
-      waitUntil() {},
-      passThroughOnException() {},
-    },
-  );
-}
-
-test("server-renders the starter loading skeleton", async () => {
-  const response = await render();
-  assert.equal(response.status, 200);
-  assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
-
-  const html = await response.text();
-  assert.match(html, developmentPreviewMeta);
-  assert.match(html, /<title>Your site is taking shape<\/title>/i);
-  assert.match(html, /Building your site/);
-  assert.match(html, /Your site is taking shape/);
-  assert.match(
-    html,
-    /Your first version will appear here automatically when it’s ready\./,
-  );
-  assert.doesNotMatch(html, /Codex/);
-  assert.match(html, /react-loading-skeleton/);
-  assert.match(html, /role="status"/);
+import assert from 'node:assert/strict';
+import {access,readFile} from 'node:fs/promises';
+import test from 'node:test';
+const root=new URL('../dist/client/',import.meta.url);
+const site='https://artishazy.com';
+const sitemap=await readFile(new URL('sitemap.xml',root),'utf8');
+const routes=[...sitemap.matchAll(/<loc>(.*?)<\/loc>/g)].map(match=>new URL(match[1]).pathname);
+const htmlFor=route=>readFile(new URL(route==='/'?'index.html':`${route.slice(1)}.html`,root),'utf8');
+function tags(html,tag){return [...html.matchAll(new RegExp(`<${tag}\\b[^>]*>`,'g'))].map(match=>Object.fromEntries([...match[0].matchAll(/([\w:-]+)="([^"]*)"/g)].map(attr=>[attr[1],attr[2]])))}
+test('published routes have a unique heading, canonical URL and share image',async()=>{
+ for(const route of routes){
+  const html=await htmlFor(route);
+  assert.equal((html.match(/<h1\b/g)||[]).length,1,route);
+  const canonical=tags(html,'link').find(tag=>tag.rel==='canonical')?.href;
+  assert.equal(new URL(canonical).pathname,route,`canonical: ${route}`);
+  const og=tags(html,'meta').find(tag=>tag.property==='og:image')?.content;
+  assert.ok(og,`share image: ${route}`);
+  await access(new URL(new URL(og).pathname.slice(1),root));
+ }
 });
-
-test("keeps the loading skeleton scoped and disposable", async () => {
-  const [preview, css, page, layout, packageJson, files] = await Promise.all([
-    readFile(new URL("SkeletonPreview.tsx", previewRoot), "utf8"),
-    readFile(new URL("preview.css", previewRoot), "utf8"),
-    readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
-    readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
-    readFile(new URL("../package.json", import.meta.url), "utf8"),
-    readdir(previewRoot),
-  ]);
-
-  assert.deepEqual(files.sort(), ["SkeletonPreview.tsx", "preview.css"]);
-  assert.match(preview, /from "react-loading-skeleton"/);
-  assert.match(preview, /baseColor="#eceae7"/);
-  assert.match(preview, /highlightColor="#f9f8f6"/);
-  assert.match(preview, /duration=\{2\.8\}/);
-  assert.match(preview, /sites-skeleton-search-placeholder/);
-  assert.match(packageJson, /"react-loading-skeleton": "3\.5\.0"/);
-
-  const shellIndex = preview.indexOf('className="sites-skeleton-shell"');
-  const statusIndex = preview.indexOf('className="sites-skeleton-status"');
-  assert.ok(shellIndex >= 0 && statusIndex > shellIndex);
-  assert.match(css, /position:\s*fixed/);
-  assert.match(css, /inset:\s*0/);
-  assert.match(css, /opacity:\s*0\.52/);
-  assert.match(css, /prefers-reduced-motion:\s*reduce/);
-  assert.doesNotMatch(css, /#020617|canvas|pets|progress/i);
-  assert.doesNotMatch(
-    preview,
-    /loading-spinner|status-mark|status-progress|canvas|cookie|random/i,
-  );
-
-  assert.match(page, /export const metadata:\s*Metadata/);
-  assert.match(page, /"codex-preview": "development"/);
-  assert.match(page, /<SkeletonPreview \/>/);
-  assert.match(layout, /title:\s*"Starter Project"/);
-  assert.doesNotMatch(layout, /codex-preview|_sites-preview|themeColor|\bViewport\b/);
-  assert.doesNotMatch(css, /(^|\s)(html|body)\s*\{/m);
-
-  await assert.rejects(
-    access(new URL("public/_sites-preview", templateRoot)),
-  );
+test('internal links, PDF downloads and responsive image files exist in the export',async()=>{
+ const checked=new Set();
+ for(const route of routes){
+  const html=await htmlFor(route);
+  const refs=[...tags(html,'a').map(tag=>tag.href),...tags(html,'img').map(tag=>tag.src),...tags(html,'source').flatMap(tag=>(tag.srcSet??tag.srcset??'').split(',').map(value=>value.trim().split(' ')[0]))].filter(Boolean);
+  for(const ref of refs){
+   const url=new URL(ref,site+route);
+   if(url.origin!==site||checked.has(url.pathname))continue;
+   checked.add(url.pathname);
+   const path=url.pathname==='/'?'index.html':url.pathname.slice(1);
+   try{await access(new URL(path,root))}catch{await access(new URL(`${path}.html`,root))}
+  }
+ }
+ assert.ok(checked.size>100,'Expected route, PDF and image coverage');
+});
+test('homepage retains all portfolio items and starts art with existing illustrations',async()=>{
+ const html=await htmlFor('/');
+ assert.ok(html.indexOf('artwork/OvJLaK')<html.indexOf('href="/art/ascii-sculpture"'));
+ for(const path of ['/work/exnode','/work/dreamy','/work/colorist','/work/landings','/graphic/wave-identity'])assert.ok(html.includes(`href="${path}"`),path);
+ assert.ok(html.includes('https://t.me/art_is_hazy'));
 });

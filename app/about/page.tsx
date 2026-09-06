@@ -85,7 +85,7 @@ export default function About(){return <LocalizedShell>{ru=><>
       <div className="about-intro-copy">
         <strong>{ru?"ПРОДУКТОВЫЙ UX/UI-ДИЗАЙНЕР":"PRODUCT UX/UI DESIGNER"}</strong>
         <p>{ru?"Проектирую веб- и мобильные продукты: исследую контекст и аудиторию, выстраиваю пользовательские сценарии, создаю прототипы, адаптивный UI и дизайн-системы. Бэкграунд в графическом дизайне и прикладной информатике помогает мне соединять продуктовую логику с цельным визуальным языком.":"I design web and mobile products: researching context and audiences, shaping user flows, and creating prototypes, responsive UI and design systems. My background in graphic design and applied informatics helps me connect product logic with a coherent visual language."}</p>
-        <div className="about-facts"><span>{ru?"МОСКВА":"MOSCOW"}</span><span>{ru?"3+ ГОДА В ДИЗАЙНЕ":"3+ YEARS IN DESIGN"}</span><span>WEB / MOBILE / SYSTEMS</span></div>
+        <div className="about-contact-actions"><a className="contact-action" href="https://t.me/art_is_hazy" target="_blank" rel="noreferrer">{ru?"ОБСУДИТЬ ПРОЕКТ":"LET’S TALK"} ↗</a><a href="mailto:artishazy14@gmail.com">EMAIL ↗</a></div><div className="about-facts"><span>{ru?"МОСКВА":"MOSCOW"}</span><span>{ru?"3+ ГОДА В ДИЗАЙНЕ":"3+ YEARS IN DESIGN"}</span><span>WEB / MOBILE / SYSTEMS</span></div>
       </div>
     </div>
   </section>

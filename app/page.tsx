@@ -30,7 +30,7 @@ export default function Home(){
         <h1><span className="hero-line hero-line-outline">UX/UI</span><span className="hero-line hero-line-main">{ru?"ДИЗАЙНЕР":"DESIGNER"}</span></h1>
         <div className="hero-intro">
           <p>{ru?"Проектирую веб- и мобильные продукты: от исследования и пользовательских сценариев до адаптивного интерфейса и дизайн-системы.":"I design web and mobile products from research and user flows to responsive interfaces and design systems."}</p>
-          <div className="hero-actions"><PortfolioLiquidLink href="#work" variant="solid" direction="down-right" label={ru?"СМОТРЕТЬ КЕЙСЫ":"VIEW CASES"}/><PortfolioLiquidLink className="hero-about-inline" href="/about" label={ru?"ОБО МНЕ":"ABOUT"}/></div>
+          <div className="hero-actions"><PortfolioLiquidLink href="#work" variant="solid" direction="down-right" label={ru?"СМОТРЕТЬ КЕЙСЫ":"VIEW CASES"}/><PortfolioLiquidLink className="hero-contact-inline" href="https://t.me/art_is_hazy" label={ru?"ОБСУДИТЬ ПРОЕКТ":"LET’S TALK"}/></div>
         </div>
       </div>
       <Stage ru={ru}/>
@@ -38,18 +38,18 @@ export default function Home(){
     </section>
 
     <section className="landing-section" id="work">
-      <PageTitle index="01" label={ru?"ИЗБРАННЫЕ ПРОЕКТЫ":"SELECTED WORK"} title={ru?"ПРОЕКТЫ / UX·UI":"WORK / UX·UI"} description={ru?"Показываю не только финальный интерфейс, но и логику работы: контекст, сценарии, структуру и систему.":"I show not only final interfaces, but the thinking behind them: context, flows, structure and systems."}/>
+      <PageTitle level={2} index="01" label={ru?"ИЗБРАННЫЕ ПРОЕКТЫ":"SELECTED WORK"} title={ru?"ПРОЕКТЫ / UX·UI":"WORK / UX·UI"} description={ru?"Показываю не только финальный интерфейс, но и логику работы: контекст, сценарии, структуру и систему.":"I show not only final interfaces, but the thinking behind them: context, flows, structure and systems."}/>
       <ProjectCarousel ru={ru}/>
       <PortfolioLiquidLink href="/work" label={ru?"ВСЕ ПРОЕКТЫ":"ALL PROJECTS"} variant="solid" full/>
     </section>
 
     <section className="landing-section" id="about">
-      <div className="about-hero"><div className="kicker">02—{ru?"ОБО МНЕ / ПРОФИЛЬ":"ABOUT / PROFILE"}</div><h1>{ru?<>ДЕЛАЮ<br/>СЛОЖНОЕ <span>ЯСНЫМ</span></>:<>MAKING<br/>COMPLEXITY <span>CLEAR</span></>}</h1><p>{ru?"Я — Даниил Черкашин, продуктовый UX/UI-дизайнер с бэкграундом в графике и прикладной информатике. Проектирую веб- и мобильные интерфейсы: от исследования и пользовательских сценариев до адаптивного UI и дизайн-систем.":"I am Daniil Cherkashin, a product UX/UI designer with a background in graphic design and applied informatics. I design web and mobile interfaces from research and user flows to responsive UI and design systems."}</p></div>
+      <div className="about-hero"><div className="kicker">02—{ru?"ОБО МНЕ / ПРОФИЛЬ":"ABOUT / PROFILE"}</div><h2>{ru?<>ДЕЛАЮ<br/>СЛОЖНОЕ <span>ЯСНЫМ</span></>:<>MAKING<br/>COMPLEXITY <span>CLEAR</span></>}</h2><p>{ru?"Я — Даниил Черкашин, продуктовый UX/UI-дизайнер с бэкграундом в графике и прикладной информатике. Проектирую веб- и мобильные интерфейсы: от исследования и пользовательских сценариев до адаптивного UI и дизайн-систем.":"I am Daniil Cherkashin, a product UX/UI designer with a background in graphic design and applied informatics. I design web and mobile interfaces from research and user flows to responsive UI and design systems."}</p></div>
       <PortfolioLiquidLink className="about-link" href="/about" label={ru?"ПОДРОБНЕЕ ОБО МНЕ":"MORE ABOUT ME"} variant="solid" full/>
     </section>
 
     <section className="landing-section main-services" id="services">
-      <PageTitle index="03" label={ru?"ПРАКТИКА":"PRACTICE"} title={ru?"ЧТО Я ДЕЛАЮ":"WHAT I DO"} description={ru?"Соединяю продуктовую логику, графическую систему и авторский визуальный подход.":"I combine product thinking, graphic systems and an authorial visual approach."}/>
+      <PageTitle level={2} index="03" label={ru?"ПРАКТИКА":"PRACTICE"} title={ru?"ЧТО Я ДЕЛАЮ":"WHAT I DO"} description={ru?"Соединяю продуктовую логику, графическую систему и авторский визуальный подход.":"I combine product thinking, graphic systems and an authorial visual approach."}/>
       <div className="main-service-list">
         {services.map((service,index)=><a className="main-service-row" href={service.href} key={service.enTitle}>
           <span className="main-service-number">0{index+1}</span>
@@ -61,13 +61,13 @@ export default function Home(){
     </section>
 
     <section className="landing-section" id="graphic">
-      <PageTitle index="04" label={ru?"ГРАФИЧЕСКИЙ ДИЗАЙН":"GRAPHIC DESIGN"} title={ru?"ГРАФИКА":"GRAPHIC"} description={ru?"Айдентика, логотипы, постеры, печатные материалы и визуальные системы.":"Identity, logos, posters, printed matter and visual systems."}/>
+      <PageTitle level={2} index="04" label={ru?"ГРАФИЧЕСКИЙ ДИЗАЙН":"GRAPHIC DESIGN"} title={ru?"ГРАФИКА":"GRAPHIC"} description={ru?"Айдентика, логотипы, постеры, печатные материалы и визуальные системы.":"Identity, logos, posters, printed matter and visual systems."}/>
       <GraphicGallery ru={ru}/>
       <PortfolioLiquidLink href="/graphic" label={ru?"ВСЕ ГРАФИЧЕСКИЕ РАБОТЫ":"ALL GRAPHIC WORK"} variant="solid" full/>
     </section>
 
     <section className="landing-section" id="art">
-      <PageTitle index="05" label={ru?"ЛИЧНАЯ ЛАБОРАТОРИЯ":"PERSONAL LAB"} title={ru?"АРТ / ЛАБ":"ART / LAB"} description={ru?"Диджитал-арт, векторная иллюстрация и 3D — авторские исследования формы, света, материала и движения.":"Digital art, vector illustration and 3D — independent studies of form, light, material and motion."}/>
+      <PageTitle level={2} index="05" label={ru?"ЛИЧНАЯ ЛАБОРАТОРИЯ":"PERSONAL LAB"} title={ru?"АРТ / ЛАБ":"ART / LAB"} description={ru?"Диджитал-арт, векторная иллюстрация и 3D — авторские исследования формы, света, материала и движения.":"Digital art, vector illustration and 3D — independent studies of form, light, material and motion."}/>
       <ArtCarousel ru={ru}/>
       <PortfolioLiquidLink href="/art" label={ru?"ОТКРЫТЬ ЛАБОРАТОРИЮ":"OPEN THE LAB"} variant="solid" full/>
     </section>
