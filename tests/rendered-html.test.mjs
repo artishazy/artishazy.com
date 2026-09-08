@@ -18,11 +18,14 @@ test('published routes have a unique heading, canonical URL and share image',asy
   await access(new URL(new URL(og).pathname.slice(1),root));
  }
 });
-test('internal links, PDF downloads and responsive image files exist in the export',async()=>{
+test('internal links, PDF downloads and original image files exist in the export',async()=>{
  const checked=new Set();
  for(const route of routes){
   const html=await htmlFor(route);
-  const refs=[...tags(html,'a').map(tag=>tag.href),...tags(html,'img').map(tag=>tag.src),...tags(html,'source').flatMap(tag=>(tag.srcSet??tag.srcset??'').split(',').map(value=>value.trim().split(' ')[0]))].filter(Boolean);
+  assert.ok(!html.includes('/optimized/'),`optimized image on ${route}`);
+  assert.ok(!html.includes('УВЕЛИЧИТЬ'),`zoom control on ${route}`);
+  assert.ok(!html.includes('ОБСУДИТЬ ПРОЕКТ'),`project discussion CTA on ${route}`);
+  const refs=[...tags(html,'a').map(tag=>tag.href),...tags(html,'img').map(tag=>tag.src)].filter(Boolean);
   for(const ref of refs){
    const url=new URL(ref,site+route);
    if(url.origin!==site||checked.has(url.pathname))continue;

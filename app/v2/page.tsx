@@ -131,7 +131,6 @@ export default function VariantTwo(){
       <p>НАЧНЁМ С</p>
       <h2>СИЛЬНОЙ<br/>ИДЕИ</h2>
       <span>Сначала — направление и ощущение. Затем структура, система и детали, которые собирают всё в цельный цифровой опыт.</span>
-      <a href="#v2-contact">ОБСУДИТЬ ПРОЕКТ <ArrowIcon direction="up-right"/></a>
     </section>
 
     <section className="v2-services" id="v2-services">

@@ -30,7 +30,7 @@ export default function Home(){
         <h1><span className="hero-line hero-line-outline">UX/UI</span><span className="hero-line hero-line-main">{ru?"ДИЗАЙНЕР":"DESIGNER"}</span></h1>
         <div className="hero-intro">
           <p>{ru?"Проектирую веб- и мобильные продукты: от исследования и пользовательских сценариев до адаптивного интерфейса и дизайн-системы.":"I design web and mobile products from research and user flows to responsive interfaces and design systems."}</p>
-          <div className="hero-actions"><PortfolioLiquidLink href="#work" variant="solid" direction="down-right" label={ru?"СМОТРЕТЬ КЕЙСЫ":"VIEW CASES"}/><PortfolioLiquidLink className="hero-contact-inline" href="https://t.me/art_is_hazy" label={ru?"ОБСУДИТЬ ПРОЕКТ":"LET’S TALK"}/></div>
+          <div className="hero-actions"><PortfolioLiquidLink href="#work" variant="solid" direction="down-right" label={ru?"СМОТРЕТЬ КЕЙСЫ":"VIEW CASES"}/><PortfolioLiquidLink className="hero-about-inline" href="/about" label={ru?"ОБО МНЕ":"ABOUT"}/></div>
         </div>
       </div>
       <Stage ru={ru}/>

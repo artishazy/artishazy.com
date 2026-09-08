@@ -1,5 +1,5 @@
 "use client";
-import ZoomImage from "./ZoomImage";
+import Image from "next/image";
 import {ArrowIcon,LocalizedShell,PortfolioLiquidLink} from "../components";
 import {brandbooks,findBrandbook} from "./brandbook-data";
 
@@ -27,7 +27,7 @@ export default function BrandbookPage({slug}:{slug:string}){
     </section>
 
     <figure className="brandbook-cover">
-      <ZoomImage ru={ru} src={project.cover} alt={ru?`Обложка брендбука ${project.name}`:`${project.name} brand book cover`} width={1920} height={1080} priority/>
+      <Image src={project.cover} alt={ru?`Обложка брендбука ${project.name}`:`${project.name} brand book cover`} width={1920} height={1080} priority unoptimized/>
     </figure>
 
     <section className="brandbook-story">
@@ -42,12 +42,12 @@ export default function BrandbookPage({slug}:{slug:string}){
 
     {project.before&&<section className="brandbook-before">
       <div className="brandbook-section-head"><div><span className="kicker">02—{ru?"ДО / ПОСЛЕ":"BEFORE / AFTER"}</span><h2>{ru?"ИСХОДНЫЙ БРЕНДБУК":"THE ORIGINAL GUIDE"}</h2></div><p>{ru?project.beforeRu:project.beforeEn}</p></div>
-      <div className="brandbook-before-grid">{project.before.map((src,itemIndex)=><figure key={src}><ZoomImage ru={ru} src={src} alt={ru?`Исходный брендбук Шротт, страница ${pageNumber(src)}`:`Original Schrott guide, page ${pageNumber(src)}`} width={1403} height={992}/><figcaption>{ru?"ДО":"BEFORE"} / {String(itemIndex+1).padStart(2,"0")}</figcaption></figure>)}</div>
+      <div className="brandbook-before-grid">{project.before.map((src,itemIndex)=><figure key={src}><Image src={src} alt={ru?`Исходный брендбук Шротт, страница ${pageNumber(src)}`:`Original Schrott guide, page ${pageNumber(src)}`} width={1403} height={992} loading="lazy" unoptimized/><figcaption>{ru?"ДО":"BEFORE"} / {String(itemIndex+1).padStart(2,"0")}</figcaption></figure>)}</div>
     </section>}
 
     <section className="brandbook-pages-section">
       <div className="brandbook-section-head"><div><span className="kicker">{project.before?"03":"02"}—{ru?"СИСТЕМА":"SYSTEM"}</span><h2>{ru?"ВЫБРАННЫЕ СТРАНИЦЫ":"SELECTED PAGES"}</h2></div><a className="brandbook-pdf-link" href={project.pdf} target="_blank" rel="noreferrer">{ru?"ОТКРЫТЬ ВЕСЬ PDF":"OPEN FULL PDF"}<ArrowIcon direction="up-right"/></a></div>
-      <div className="brandbook-pages">{project.pages.slice(1).map(src=><figure key={src}><ZoomImage ru={ru} src={src} alt={ru?`${project.name}, страница брендбука ${pageNumber(src)}`:`${project.name} brand book page ${pageNumber(src)}`} width={1920} height={1080}/><figcaption>{ru?"СТРАНИЦА":"PAGE"} {pageNumber(src)}</figcaption></figure>)}</div>
+      <div className="brandbook-pages">{project.pages.slice(1).map(src=><figure key={src}><Image src={src} alt={ru?`${project.name}, страница брендбука ${pageNumber(src)}`:`${project.name} brand book page ${pageNumber(src)}`} width={1920} height={1080} loading="lazy" unoptimized/><figcaption>{ru?"СТРАНИЦА":"PAGE"} {pageNumber(src)}</figcaption></figure>)}</div>
     </section>
 
     <nav className="brandbook-project-switcher" aria-label={ru?"Другие брендбуки":"Other brand books"}>
