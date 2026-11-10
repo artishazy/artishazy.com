@@ -129,7 +129,6 @@ body.v2-active .soft-cursor{width:44px;height:44px;border-color:#111;mix-blend-m
 .v2-footer>pre{position:absolute;right:-5vw;bottom:5vh;font:700 clamp(9px,1.3vw,20px)/1 var(--font-mono);white-space:pre;transform:rotate(-8deg) scale(1.5);opacity:.5}
 
 @media(max-width:900px){
-  body.v2-active .soft-cursor{display:none}
   .v2-header{inset:12px 14px auto;grid-template-columns:70px 1fr}.v2-header nav{gap:18px}.v2-header nav a:nth-child(2),.v2-header nav a:nth-child(3){display:none}
   .v2-logo{width:64px}.v2-logo span{width:34px;height:22px}
   .v2-menu-button{left:12px;top:auto;bottom:14px}.v2-contact-float{right:12px;bottom:12px}.v2-contact-float span{display:none}

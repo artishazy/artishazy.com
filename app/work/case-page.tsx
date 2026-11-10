@@ -1,22 +1,13 @@
 "use client";
 
-import {ArrowIcon,LocalizedShell} from "../components";
-
-const works=[
-  {slug:"exnode",title:"EXNODE / FINANCE"},
-  {slug:"dreamy",title:"DREAMY / SLEEP APP"},
-  {slug:"colorist",title:"COLORIST / ACCESSIBILITY"},
-  {slug:"landings",title:"LANDINGS / SELECTED"},
-];
+import {ArrowIcon,LocalizedShell,useProjectNavPress,works} from "../components";
+import {ExnodeDesignSystem} from "./exnode/design-system";
+import {ExnodeCase} from "./exnode/exnode-case";
 
 type Copy={title:string;subtitle:string;challenge:string;solution:string;outcome:string};
 type Detail={ru:Copy;en:Copy};
 
 export const caseDetails:Record<string,Detail>={
-  exnode:{
-    ru:{title:"EXNODE / FINANCE",subtitle:"Платформа мониторинга криптообменников и финансовых продуктов.",challenge:"Большой объём рейтингов, показателей и сервисных данных должен оставаться понятным и помогать пользователю принимать решения.",solution:"Исследование поведения, ясная структура данных, последовательные сценарии и поддерживаемая дизайн-система формируют масштабируемый продукт.",outcome:"Сложная финансовая информация складывается в спокойный интерфейс с предсказуемой логикой."},
-    en:{title:"EXNODE / FINANCE",subtitle:"A monitoring platform for crypto exchanges and financial products.",challenge:"A large volume of ratings, metrics and service data needs to remain understandable and support decision-making.",solution:"Behavior research, clear data structure, consistent flows and a maintained design system create a scalable product.",outcome:"Complex financial information becomes a calm interface with predictable logic."},
-  },
   dreamy:{
     ru:{title:"DREAMY / SLEEP APP",subtitle:"Мобильное приложение для контроля качества сна.",challenge:"Данные о сне должны быть понятны с первого взгляда, не перегружая пользователя медицинской сложностью.",solution:"Сценарии отслеживания, ясная иерархия показателей и мягкая визуальная система превращают наблюдения в ежедневную привычку.",outcome:"Пользователь видит динамику сна и понимает следующие действия без лишнего когнитивного давления."},
     en:{title:"DREAMY / SLEEP APP",subtitle:"A mobile application for tracking sleep quality.",challenge:"Sleep data needs to be clear at a glance without overwhelming the user with medical complexity.",solution:"Tracking flows, a clear metric hierarchy and a calm visual system turn observations into a daily habit.",outcome:"Users can see sleep patterns and understand next steps without unnecessary cognitive load."},
@@ -33,11 +24,10 @@ export const caseDetails:Record<string,Detail>={
 
 export function CasePage({slug}:{slug:string}){
   return <LocalizedShell>{ru=>{
+    if(slug==="exnode")return <><ExnodeDesignSystem ru={ru}/><CaseProjectNav slug={slug} ru={ru}/></>;
+    if(slug==="exnode-builder")return <><ExnodeCase ru={ru} builder/><CaseProjectNav slug={slug} ru={ru}/></>;
     const detail=caseDetails[slug];
     const p=ru?detail.ru:detail.en;
-    const current=Math.max(0,works.findIndex(work=>work.slug===slug));
-    const previous=works[(current-1+works.length)%works.length];
-    const next=works[(current+1)%works.length];
     const process=ru?[
       ["01","ИССЛЕДОВАНИЕ","Интервью, анализ пользователей, рынка и конкурентов, формулировка задачи."],
       ["02","СТРУКТУРА","Информационная архитектура, CJM, пользовательские потоки и каркасные экраны."],
@@ -56,11 +46,43 @@ export function CasePage({slug}:{slug:string}){
       <section className="process"><div className="process-head"><span>02—{ru?"ПРОЦЕСС":"PROCESS"}</span><h2>{ru?<>КАК ЭТО<br/>СДЕЛАНО</>:<>HOW IT<br/>WAS MADE</>}</h2></div>{process.map(item=><article className="process-step glass-panel" key={item[0]}><b>{item[0]}</b><h3>{item[1]}</h3><p>{item[2]}</p></article>)}</section>
       <section className="case-panels"><div><span>{ru?"ИССЛЕДОВАНИЕ":"DISCOVERY"}</span><b>UX</b><p>{ru?"Интервью, аналитика и проверка продуктовых гипотез.":"Interviews, analysis and product hypothesis validation."}</p></div><div><span>{ru?"АРХИТЕКТУРА":"ARCHITECTURE"}</span><b>UI</b><p>{ru?"Сценарии, пользовательские потоки и каркас интерфейса.":"Scenarios, user flows and the interface framework."}</p></div><div><span>{ru?"СИСТЕМА":"SYSTEM"}</span><b>WEB</b><p>{ru?"Компоненты, состояния и правила адаптивного интерфейса.":"Components, states and responsive interface rules."}</p></div></section>
       <section className="outcome"><span>03—{ru?"РЕЗУЛЬТАТ":"OUTCOME"}</span><blockquote>“{p.outcome}”</blockquote><div><b>01</b><small>{ru?"ИССЛЕДОВАНИЕ":"RESEARCH"}</small></div><div><b>01</b><small>{ru?"СИСТЕМА":"SYSTEM"}</small></div><div><b>01</b><small>{ru?"ПРОТОТИП":"PROTOTYPE"}</small></div></section>
-      <nav className="case-project-nav" aria-label={ru?"Навигация между кейсами":"Case study navigation"}>
-        <a className="case-project-link previous" href={"/work/"+previous.slug}><span><ArrowIcon direction="left"/>{ru?"ПРЕДЫДУЩИЙ":"PREVIOUS"}</span><strong>{previous.title}</strong></a>
-        <a className="case-project-all" href="/work">{ru?"ВСЕ КЕЙСЫ":"ALL CASES"}</a>
-        <a className="case-project-link next" href={"/work/"+next.slug}><span>{ru?"СЛЕДУЮЩИЙ":"NEXT"}<ArrowIcon direction="right"/></span><strong>{next.title}</strong></a>
-      </nav>
+      <CaseProjectNav slug={slug} ru={ru}/>
     </>;
   }}</LocalizedShell>;
+}
+
+
+function CaseProjectNav({slug,ru}:{slug:string;ru:boolean}){
+  const press=useProjectNavPress();
+  const current=Math.max(0,works.findIndex(work=>work.slug===slug));
+  const previous=works[(current-1+works.length)%works.length];
+  const next=works[(current+1)%works.length];
+  const compact=slug==="exnode" || slug==="exnode-builder";
+  const navLabels:Record<string,{title:[string,string];category:[string,string]}>={
+    exnode:{title:["Дизайн-система","Design system"],category:["Финансовый мониторинг","Financial monitoring"]},
+    "exnode-builder":{title:["Конструктор","Builder"],category:["Финансовый мониторинг","Financial monitoring"]},
+    landings:{title:["Лендинги","Landings"],category:["Веб-дизайн","Web design"]},
+    dreamy:{title:["Dreamy","Dreamy"],category:["Мобильное приложение","Mobile app"]},
+  };
+  const projectLink=(work:typeof works[number],direction:"previous"|"next")=>{
+    const label=compact ? navLabels[work.slug] : undefined;
+    const locale=ru ? 0 : 1;
+    const title=label?.title[locale] ?? (ru ? work.titleRu ?? work.title : work.title);
+    const category=label?.category[locale] ?? (ru ? work.tagsRu : work.tagsEn);
+    const isPrevious=direction==="previous";
+    const action=isPrevious ? (ru?"ПРЕДЫДУЩИЙ":"PREVIOUS") : (ru?"СЛЕДУЮЩИЙ":"NEXT");
+    return <a className={`case-project-link ${direction}`} href={`/work/${work.slug}`} onClick={press}>
+      <span>{isPrevious && <ArrowIcon direction="left"/>}{action}{!isPrevious && <ArrowIcon direction="right"/>}</span>
+      {compact ? <div className="case-project-name">
+        <strong>{title}</strong>
+        <div className="about-facts"><span>{category}</span></div>
+      </div> : <strong>{title}</strong>}
+    </a>;
+  };
+  const allCases=ru?"ВСЕ КЕЙСЫ":"ALL CASES";
+  return <nav className={`case-project-nav${compact ? " case-project-nav-compact" : ""}`} aria-label={ru?"Навигация между кейсами":"Case study navigation"}>
+    {projectLink(previous,"previous")}
+    <a className="case-project-all" href="/work" onClick={press}>{allCases}</a>
+    {projectLink(next,"next")}
+  </nav>;
 }

@@ -68,36 +68,120 @@ export function PortfolioLiquidLink({href,label,className="",variant="outline",d
 export function Cursor(){
   const ref=useRef<HTMLDivElement>(null);
   useEffect(()=>{
-    if(!matchMedia("(pointer:fine)").matches)return;
     const el=ref.current;
     if(!el)return;
     const label=el.querySelector("span");
+    const dialog=el.closest("dialog");
+    const reducedMotion=matchMedia("(prefers-reduced-motion: reduce)");
     let visible=false;
     let project=false;
     let control=false;
+    let overControl=false;
+    let x=0,y=0,targetX=0,targetY=0;
+    let frame=0,lastFrame=0;
+
+    const paint=()=>{el.style.transform=`translate3d(${x-18}px,${y-18}px,0)`;};
+    const snap=()=>{
+      cancelAnimationFrame(frame);
+      frame=0;
+      x=targetX;
+      y=targetY;
+      paint();
+    };
+    const animate=(now:number)=>{
+      frame=0;
+      const dx=targetX-x;
+      const dy=targetY-y;
+      const distance=Math.hypot(dx,dy);
+      if(distance<.15 || reducedMotion.matches){
+        snap();
+        return;
+      }
+      // Bound the lag so the visible cursor stays close to the real click point.
+      const follow=1-Math.exp(-Math.max(0,now-lastFrame)/(overControl ? 52 : 14));
+      const step=Math.max(follow,1-(overControl ? 12 : 6)/distance);
+      x+=dx*step;
+      y+=dy*step;
+      paint();
+      lastFrame=now;
+      frame=requestAnimationFrame(animate);
+    };
     const move=(event:PointerEvent)=>{
-      el.style.transform=`translate3d(${event.clientX-18}px,${event.clientY-18}px,0)`;
+      if(event.pointerType==="touch")return;
       const target=event.target as Element|null;
+      if((target?.closest?.("dialog[open]")??null)!==dialog){
+        if(visible){
+          visible=false;
+          el.classList.remove("is-visible");
+          snap();
+        }
+        return;
+      }
       const zone=target?.closest?.("[data-cursor-label]") as HTMLElement|null;
       const nextProject=Boolean(zone);
-      const nextControl=!nextProject&&Boolean(target?.closest?.("a,button"));
+      const wasOverControl=overControl;
+      overControl=nextProject||Boolean(target?.closest?.("a[href],button,summary,[role='button'],[role='link'],input:is([type='button'],[type='submit'],[type='reset'],[type='image'])"));
+      targetX=event.clientX;
+      targetY=event.clientY;
+      if(!visible || reducedMotion.matches || (!overControl && !wasOverControl && !frame)){
+        snap();
+      }else if(!frame){
+        lastFrame=performance.now();
+        frame=requestAnimationFrame(animate);
+      }
+      const nextControl=!nextProject&&Boolean(target?.closest?.("a,button"))&&!target?.closest?.("[data-steady-cursor]");
       if(nextProject!==project){project=nextProject;el.classList.toggle("is-project",project)}
       if(nextControl!==control){control=nextControl;el.classList.toggle("is-control",control)}
       if(zone&&label)label.textContent=zone.dataset.cursorLabel||"ПЕРЕЙТИ";
       if(!visible){visible=true;el.classList.add("is-visible")}
     };
-    const down=()=>el.classList.add("is-pressed");
+    const down=(event:PointerEvent)=>{
+      if(event.pointerType==="touch" || !visible)return;
+      targetX=event.clientX;
+      targetY=event.clientY;
+      snap();
+      el.classList.add("is-pressed");
+    };
     const up=()=>el.classList.remove("is-pressed");
     addEventListener("pointermove",move,{capture:true,passive:true});
     addEventListener("pointerdown",down,{passive:true});
     addEventListener("pointerup",up,{passive:true});
     return()=>{
+      cancelAnimationFrame(frame);
       removeEventListener("pointermove",move,true);
       removeEventListener("pointerdown",down);
       removeEventListener("pointerup",up);
     };
   },[]);
   return <div className="soft-cursor" ref={ref} aria-hidden="true"><i/><span>ПЕРЕЙТИ</span></div>;
+}
+export function useProjectNavPress(){
+  const pending=useRef<{link:HTMLAnchorElement;timer:number}|null>(null);
+  useEffect(()=>{
+    const clearPress=()=>{
+      if(!pending.current)return;
+      window.clearTimeout(pending.current.timer);
+      delete pending.current.link.dataset.navPressed;
+      pending.current=null;
+    };
+    window.addEventListener("pageshow",clearPress);
+    return ()=>{
+      window.removeEventListener("pageshow",clearPress);
+      clearPress();
+    };
+  },[]);
+
+  return (event:React.MouseEvent<HTMLAnchorElement>)=>{
+    if(event.defaultPrevented || event.button!==0 || event.metaKey || event.ctrlKey ||
+      event.altKey || event.shiftKey || matchMedia("(prefers-reduced-motion: reduce)").matches)return;
+    const link=event.currentTarget;
+    if(link.target || link.hasAttribute("download"))return;
+    event.preventDefault();
+    if(pending.current)return;
+
+    link.dataset.navPressed="true";
+    pending.current={link,timer:window.setTimeout(()=>window.location.assign(link.href),110)};
+  };
 }
 function subscribePreferences(callback:()=>void){addEventListener("aih-preferences",callback);addEventListener("storage",callback);return()=>{removeEventListener("aih-preferences",callback);removeEventListener("storage",callback)}}
 const visitPreferences:Record<string,string>={};
@@ -238,12 +322,18 @@ export function Footer({ru=false}:{ru?:boolean}={}){return <footer className="si
 </footer>}
 export function PageTitle({index,label,title,description,level=1}:{index:string;label:string;title:string;description:string;level?:1|2}){const Heading=level===1?"h1":"h2";return <section className="page-title"><div className="kicker">{index}—{label}</div><Heading>{title}</Heading><p>{description}</p></section>}
 export const works=[
- {id:"01",slug:"exnode",title:"EXNODE / FINANCE",tagsEn:"PRODUCT · FINTECH · DESIGN SYSTEM",tagsRu:"ПРОДУКТ · ФИНТЕХ · ДИЗАЙН-СИСТЕМА",tone:"grid",category:"web" as WorkCategory},
+ {id:"01",slug:"exnode",title:"RANKINGS DESIGN SYSTEM",titleRu:"ДИЗАЙН-СИСТЕМА РЕЙТИНГОВ",tagsEn:"FINANCIAL MONITORING · UX/UI",tagsRu:"ФИНАНСОВЫЙ МОНИТОРИНГ · UX/UI",tone:"monitoring",category:"web" as WorkCategory},
+ {id:"05",slug:"exnode-builder",title:"FINANCIAL MONITORING / BUILDER",titleRu:"ФИНАНСОВЫЙ МОНИТОРИНГ / КОНСТРУКТОР",tagsEn:"PRODUCT · ADMIN PANEL · UX/UI",tagsRu:"ПРОДУКТ · АДМИН-ПАНЕЛЬ · UX/UI",tone:"blocks",category:"web" as WorkCategory},
  {id:"02",slug:"dreamy",title:"DREAMY / SLEEP APP",tagsEn:"MOBILE · UX/UI · RESEARCH",tagsRu:"МОБИЛЬНОЕ · UX/UI · ИССЛЕДОВАНИЕ",tone:"blocks",category:"mobile" as WorkCategory},
  {id:"03",slug:"colorist",title:"COLORIST / ACCESSIBILITY",tagsEn:"COLOR TOOL · UX/UI · PROTOTYPE",tagsRu:"ЦВЕТ · ДОСТУПНОСТЬ · ПРОТОТИП",tone:"rings",category:"web" as WorkCategory},
  {id:"04",slug:"landings",title:"LANDINGS / SELECTED",tagsEn:"WEB · TELEGRAM APPS · FREELANCE",tagsRu:"ВЕБ · TELEGRAM APPS · ФРИЛАНС",tone:"type",category:"sites" as WorkCategory},
 ];
-export function ProjectGrid({compact=false,ru=false}:{compact?:boolean;ru?:boolean}){return <div className={`project-grid work-project-grid ${compact?"compact":""}`}>{works.map((w,i)=><a className="project-card interactive" href={`/work/${w.slug}`} key={w.slug} data-case-card data-cursor-label={ru?"ПЕРЕЙТИ":"OPEN"}><div className={`project-visual case-overlay-visual ${w.tone}`}><i/><b>{i%2?"▓▓▒░":"░▒▓▓"}</b><div className="case-card-overlay"><h2>{w.title}</h2><p>{ru?w.tagsRu:w.tagsEn}</p></div></div></a>)}</div>}
+function ProjectArtwork({slug,index}:{slug:string;index:number}){
+  if(slug==="exnode")return <Image className="monitoring-cover" src="/work/exnode/rankings-cover.svg" alt="" width={960} height={600} unoptimized/>;
+  return <><i/><b>{index%2?"▓▓▒░":"░▒▓▓"}</b></>;
+}
+
+export function ProjectGrid({compact=false,ru=false}:{compact?:boolean;ru?:boolean}){return <div className={`project-grid work-project-grid ${compact?"compact":""}`}>{works.map((w,i)=><a className="project-card interactive" href={`/work/${w.slug}`} key={w.slug} data-case-card data-cursor-label={ru?"ПЕРЕЙТИ":"OPEN"}><div className={`project-visual case-overlay-visual ${w.tone}`}><ProjectArtwork slug={w.slug} index={i}/><div className="case-card-overlay"><h2>{ru ? w.titleRu ?? w.title : w.title}</h2><p>{ru?w.tagsRu:w.tagsEn}</p></div></div></a>)}</div>}
 
 export function FilteredProjectGrid({ru=false}:{ru?:boolean}){
   const[active,setActive]=useState<WorkCategory>("all");
@@ -272,7 +362,7 @@ export function FilteredProjectGrid({ru=false}:{ru?:boolean}){
         return <button type="button" className={active===category.key?"is-active":""} aria-pressed={active===category.key} onClick={()=>select(category.key)} key={category.key}>{ru?category.labelRu:category.labelEn}<span>{String(count).padStart(2,"0")}</span></button>;
       })}</div>
     </div>
-    <div className="project-grid work-project-grid" aria-live="polite">{visible.map((work,index)=><a className="project-card interactive" href={`/work/${work.slug}`} key={work.slug} data-case-card data-cursor-label={ru?"ПЕРЕЙТИ":"OPEN"}><div className={`project-visual case-overlay-visual ${work.tone}`}><i/><b>{index%2?"▓▓▒░":"░▒▓▓"}</b><div className="case-card-overlay"><h2>{work.title}</h2><p>{ru?work.tagsRu:work.tagsEn}</p></div></div></a>)}</div>
+    <div className="project-grid work-project-grid" aria-live="polite">{visible.map((work,index)=><a className="project-card interactive" href={`/work/${work.slug}`} key={work.slug} data-case-card data-cursor-label={ru?"ПЕРЕЙТИ":"OPEN"}><div className={`project-visual case-overlay-visual ${work.tone}`}><ProjectArtwork slug={work.slug} index={index}/><div className="case-card-overlay"><h2>{ru ? work.titleRu ?? work.title : work.title}</h2><p>{ru?work.tagsRu:work.tagsEn}</p></div></div></a>)}</div>
   </section>;
 }
 
@@ -303,7 +393,7 @@ export function ProjectCarousel({ru=false}:{ru?:boolean}){
   const track=useRef<HTMLDivElement>(null);const[current,setCurrent]=useState(0);
   useHorizontalTrack(track);
   const sync=()=>{const el=track.current;if(!el)return;const card=el.querySelector<HTMLElement>("[data-slide]");const gap=parseFloat(getComputedStyle(el).columnGap||getComputedStyle(el).gap)||0;if(card)setCurrent(Math.min(works.length-1,Math.round(el.scrollLeft/(card.offsetWidth+gap))))};
-  return <div className="card-slider"><SliderControls track={track} current={current} total={works.length} ru={ru} hideCount/><div className="card-slider-track" ref={track} onScroll={sync}>{works.map((w,i)=><a data-slide data-case-card className="project-card interactive" href={`/work/${w.slug}`} key={w.slug} data-cursor-label={ru?"ПЕРЕЙТИ":"OPEN"}><div className={`project-visual case-overlay-visual ${w.tone}`}><i/><b>{i%2?"▓▓▒░":"░▒▓▓"}</b><div className="case-card-overlay"><h2>{w.title}</h2><p>{ru?w.tagsRu:w.tagsEn}</p></div></div></a>)}</div></div>;
+  return <div className="card-slider"><SliderControls track={track} current={current} total={works.length} ru={ru} hideCount/><div className="card-slider-track" ref={track} onScroll={sync}>{works.map((w,i)=><a data-slide data-case-card className="project-card interactive" href={`/work/${w.slug}`} key={w.slug} data-cursor-label={ru?"ПЕРЕЙТИ":"OPEN"}><div className={`project-visual case-overlay-visual ${w.tone}`}><ProjectArtwork slug={w.slug} index={i}/><div className="case-card-overlay"><h2>{ru ? w.titleRu ?? w.title : w.title}</h2><p>{ru?w.tagsRu:w.tagsEn}</p></div></div></a>)}</div></div>;
 }
 
 export type ArtCategory="all"|"digital"|"vector"|"3d";

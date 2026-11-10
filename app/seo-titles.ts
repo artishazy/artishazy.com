@@ -20,8 +20,12 @@ export const localizedTitles:Record<string,[string,string]>={
     "Digital art — art_is_hazy"
   ],
   "/work/exnode": [
-    "EXNODE / FINANCE — art_is_hazy",
-    "EXNODE / FINANCE — art_is_hazy"
+    "Дизайн-система рейтингов — art_is_hazy",
+    "Rankings Design System — art_is_hazy"
+  ],
+  "/work/exnode-builder": [
+    "Финансовый мониторинг / Конструктор — art_is_hazy",
+    "Financial Monitoring / Builder — art_is_hazy"
   ],
   "/work/dreamy": [
     "DREAMY / SLEEP APP — art_is_hazy",

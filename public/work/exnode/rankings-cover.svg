@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 600">
+  <path fill="#10100f" d="M0 0h960v600H0z"/>
+  <g fill="#f4f4f0">
+    <rect x="148" y="144" width="430" height="312" rx="18"/>
+    <rect x="598" y="144" width="214" height="174" rx="18"/>
+    <rect x="598" y="338" width="214" height="118" rx="18"/>
+  </g>
+
+  <g fill="#10100f">
+    <rect x="174" y="173" width="93" height="8" rx="4"/>
+    <rect x="274" y="173" width="35" height="8" rx="4"/>
+    <rect x="510" y="171" width="42" height="12" rx="6"/>
+    <rect x="174" y="206" width="138" height="28" rx="7"/>
+    <rect x="319" y="206" width="104" height="28" rx="7"/>
+    <rect x="430" y="206" width="122" height="28" rx="7"/>
+    <rect x="174" y="251" width="378" height="34" rx="5"/>
+    <rect x="624" y="172" width="77" height="8" rx="4"/>
+    <rect x="624" y="198" width="22" height="22" rx="4"/>
+    <rect x="655" y="204" width="96" height="8" rx="4"/>
+    <rect x="655" y="239" width="72" height="8" rx="4"/>
+    <rect x="655" y="274" width="115" height="8" rx="4"/>
+    <rect x="624" y="366" width="66" height="8" rx="4"/>
+    <rect x="624" y="389" width="77" height="39" rx="7"/>
+    <rect x="709" y="389" width="77" height="39" rx="7"/>
+  </g>
+
+  <g fill="#f4f4f0">
+    <path d="M194 219h72v2h-72zm142 0h47v2h-47zm111 0h58v2h-58z"/>
+    <path d="M192 266h72v4h-72zm125 0h47v4h-47zm79 0h49v4h-49zm81 0h55v4h-55z"/>
+    <path d="M629 208l4 4 8-9 2 2-10 11-6-6z"/>
+    <path d="M641 407h26v3h-26zm85 0h26v3h-26z"/>
+  </g>
+
+  <g fill="none" stroke="#10100f" stroke-width="2">
+    <path d="M174 338h378M174 387h378"/>
+    <rect x="624" y="233" width="22" height="22" rx="4"/>
+    <rect x="624" y="268" width="22" height="22" rx="4"/>
+  </g>
+  <g fill="#10100f">
+    <circle cx="192" cy="313" r="9"/>
+    <circle cx="192" cy="362" r="9"/>
+    <circle cx="192" cy="411" r="9"/>
+    <path d="M213 309h64v8h-64zm104 0h30v8h-30zm79 0h37v8h-37zm-183 49h48v8h-48zm104 0h43v8h-43zm79 0h28v8h-28zm-183 49h69v8h-69zm104 0h24v8h-24zm79 0h44v8h-44z"/>
+    <rect x="477" y="302" width="75" height="22" rx="6"/>
+    <rect x="477" y="351" width="75" height="22" rx="6"/>
+    <rect x="477" y="400" width="75" height="22" rx="6"/>
+  </g>
+  <path fill="#f4f4f0" d="M505 312h19v2h-19zm0 49h19v2h-19zm0 49h19v2h-19z"/>
+</svg>

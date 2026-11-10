@@ -1,11 +1,12 @@
 "use client";
 import Image from "next/image";
-import {ArrowIcon,LocalizedShell,PortfolioLiquidLink} from "../components";
+import {ArrowIcon,LocalizedShell,PortfolioLiquidLink,useProjectNavPress} from "../components";
 import {brandbooks,findBrandbook} from "./brandbook-data";
 
 const pageNumber=(src:string)=>src.match(/page-(\d+)/)?.[1]??"";
 
 export default function BrandbookPage({slug}:{slug:string}){
+  const press=useProjectNavPress();
   const project=findBrandbook(slug)!;
   const index=brandbooks.findIndex(item=>item.slug===slug);
   const previous=brandbooks[(index-1+brandbooks.length)%brandbooks.length];
@@ -51,9 +52,9 @@ export default function BrandbookPage({slug}:{slug:string}){
     </section>
 
     <nav className="brandbook-project-switcher" aria-label={ru?"Другие брендбуки":"Other brand books"}>
-      <div className="brandbook-project-switcher-secondary">
-        <a href={`/graphic/${previous.slug}`}><ArrowIcon direction="left"/><span>{ru?"ПРЕДЫДУЩИЙ":"PREVIOUS"}</span><strong>{previous.name}</strong></a>
-        <a href="/graphic"><span>{ru?"ВСЕ ПРОЕКТЫ":"ALL PROJECTS"}</span><ArrowIcon direction="up-right"/></a>
+      <div className="brandbook-project-switcher-secondary" data-steady-cursor>
+        <a href={`/graphic/${previous.slug}`} onClick={press}><ArrowIcon direction="left"/><span>{ru?"ПРЕДЫДУЩИЙ":"PREVIOUS"}</span><strong>{previous.name}</strong></a>
+        <a href="/graphic" onClick={press}><span>{ru?"ВСЕ ПРОЕКТЫ":"ALL PROJECTS"}</span><ArrowIcon direction="up-right"/></a>
       </div>
       <PortfolioLiquidLink className="brandbook-next-liquid" href={`/graphic/${next.slug}`} label={`${ru?"СЛЕДУЮЩИЙ ПРОЕКТ":"NEXT PROJECT"} — ${next.name}`} variant="solid" direction="right" full/>
     </nav>
