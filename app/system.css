@@ -810,7 +810,7 @@ html[data-language-pending="true"] main{visibility:hidden}
 
 @media(max-width:900px){
   .landing .landing-section,.landing #art.landing-section{padding-top:40px}
-  .landing .landing-section>.page-title,.landing #art>.page-title{gap:12px;padding-bottom:16px}
+  .landing .landing-section>.page-title,.landing #art>.page-title{gap:12px;padding-block:0 16px}
   .landing .about-hero{padding-block:0 20px}
   .landing .about-hero h2{margin-block:18px}
   .landing .main-services{padding-bottom:0}
@@ -828,15 +828,16 @@ html[data-language-pending="true"] main{visibility:hidden}
   .footer-heading h2.footer-brand-scatter{height:clamp(76px,24vw,108px);margin-top:12px}
 
   .case-project-nav{grid-template-columns:minmax(0,1fr)}
-  .case-project-nav .case-project-link{display:grid;grid-template-columns:minmax(0,1fr);gap:6px;min-height:0;padding:12px 28px 12px 0;border-bottom:1px solid var(--line)}
+  .case-project-nav .case-project-link{display:grid;grid-template-columns:minmax(0,1fr);gap:6px;min-height:0;border-bottom:1px solid var(--line)}
+  .case-project-nav .case-project-link,.case-project-nav.case-project-nav-compact .case-project-link{padding:12px 36px 12px 12px}
   .case-project-nav .case-project-link>span{gap:6px}
-  .case-project-nav .case-project-link>span .arrow-icon{position:absolute;inset-inline-end:4px;top:calc(50% - 8px)}
+  .case-project-nav .case-project-link>span .arrow-icon{position:absolute;inset-inline-end:12px;top:calc(50% - 8px)}
   .case-project-nav .case-project-link.next{justify-items:start;text-align:left}
   .case-project-nav .case-project-link.next>span{justify-content:start}
   .case-project-nav .case-project-link strong{font-size:clamp(20px,5.7vw,24px);line-height:1.15}
   .case-project-nav .case-project-name .about-facts{justify-content:flex-start;margin:0}
   .case-project-nav .case-project-name .about-facts span{padding:0;border:0;color:inherit;font-size:10px;opacity:.7}
-  .case-project-nav .case-project-all{display:flex;justify-content:space-between;grid-area:auto;min-height:44px;border-top:0;padding:8px 4px 8px 0}
+  .case-project-nav .case-project-all{display:flex;justify-content:space-between;grid-area:auto;min-height:44px;border-top:0;padding:8px 12px}
   .case-project-all .arrow-icon{display:block;width:16px;height:16px}
 
   .exnode-design-case .brandbook-pages-section{padding-block:20px}
