@@ -36,9 +36,13 @@ test('internal links, PDF downloads and original image files exist in the export
  }
  assert.ok(checked.size>100,'Expected route, PDF and image coverage');
 });
-test('homepage retains all portfolio items and starts art with existing illustrations',async()=>{
+test('homepage retains portfolio projects and shows ArtStation work in the art gallery',async()=>{
  const html=await htmlFor('/');
- assert.ok(html.indexOf('artwork/OvJLaK')<html.indexOf('href="/art/ascii-sculpture"'));
+ const art=html.match(/<div class="art-expand-row">([\s\S]*?)<\/section>/)?.[1];
+ assert.ok(art);
+ const links=tags(art,'a').filter(tag=>tag.class==='art-expand-card').map(tag=>tag.href);
+ assert.equal(new Set(links).size,16);
+ assert.ok(links.every(href=>href.startsWith('https://www.artstation.com/artwork/')));
  for(const path of ['/work/exnode','/work/dreamy','/work/colorist','/work/landings','/graphic/wave-identity'])assert.ok(html.includes(`href="${path}"`),path);
  assert.ok(html.includes('https://t.me/art_is_hazy'));
 });

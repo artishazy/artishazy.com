@@ -397,34 +397,49 @@ export function ProjectCarousel({ru=false}:{ru?:boolean}){
   return <div className="card-slider"><SliderControls track={track} current={current} total={works.length} ru={ru} hideCount/><div className="card-slider-track" ref={track} onScroll={sync}>{works.map((w,i)=><a data-slide data-case-card className="project-card interactive" href={`/work/${w.slug}`} key={w.slug} data-cursor-label={ru?"ПЕРЕЙТИ":"OPEN"}><div className={`project-visual case-overlay-visual ${w.tone}`}><ProjectArtwork slug={w.slug} index={i}/><div className="case-card-overlay"><h2>{ru ? w.titleRu ?? w.title : w.title}</h2><p>{ru?w.tagsRu:w.tagsEn}</p></div></div></a>)}</div></div>;
 }
 
-export type ArtCategory="all"|"digital"|"vector"|"3d";
-export const artCategories:[ArtCategory,string,string][]=[
+export const artWorks=[
+ {id:"01",slug:"ascii-sculpture",titleRu:"ASCII / СКУЛЬПТУРА",titleEn:"ASCII / SCULPTURE",type:"ascii",shape:"portrait",category:"3d"},
+ {id:"02",slug:"hazy-form",titleRu:"ФОРМА / ТУМАН",titleEn:"FORM / HAZE",type:"glitch",shape:"landscape",category:"digital"},
+ {id:"03",slug:"noise-study",titleRu:"ШУМ / СИГНАЛ",titleEn:"NOISE / SIGNAL",type:"noise",shape:"square",category:"vector"},
+];
+const artFilters=[
   ["all","ВСЕ РАБОТЫ","ALL WORK"],
   ["digital","ДИДЖИТАЛ-АРТ","DIGITAL ART"],
   ["vector","ВЕКТОРНАЯ ИЛЛЮСТРАЦИЯ","VECTOR ILLUSTRATION"],
   ["3d","3D","3D"],
-];
-export const artWorks=[
- {id:"01",slug:"ascii-sculpture",titleRu:"ASCII / СКУЛЬПТУРА",titleEn:"ASCII / SCULPTURE",type:"ascii",shape:"portrait",category:"3d" as ArtCategory},
- {id:"02",slug:"hazy-form",titleRu:"ФОРМА / ТУМАН",titleEn:"FORM / HAZE",type:"glitch",shape:"landscape",category:"digital" as ArtCategory},
- {id:"03",slug:"noise-study",titleRu:"ШУМ / СИГНАЛ",titleEn:"NOISE / SIGNAL",type:"noise",shape:"square",category:"vector" as ArtCategory},
-];
-const artGalleryWorks=[
-  ...artStationWorks.map(work=>({...work,source:"artstation" as const,category:"digital" as ArtCategory,shape:"landscape"})),
-  ...artWorks.map(work=>({...work,source:"local" as const})),
-];
-export function ArtCarousel({ru=false,standalone=false}:{ru?:boolean;standalone?:boolean}){
-  const track=useRef<HTMLDivElement>(null);const[current,setCurrent]=useState(0);const[active,setActive]=useState<ArtCategory>("all");
-  const visible=active==="all"?artGalleryWorks:artGalleryWorks.filter(work=>work.category===active);
-  useHorizontalTrack(track,!standalone);
-  useEffect(()=>{if(track.current)track.current.scrollLeft=0},[active]);
-  const choose=(category:ArtCategory)=>{setActive(category);setCurrent(0)};
-  const sync=()=>{const el=track.current;if(!el)return;const card=el.querySelector<HTMLElement>("[data-slide]");const gap=parseFloat(getComputedStyle(el).columnGap||getComputedStyle(el).gap)||0;if(card)setCurrent(Math.min(visible.length-1,Math.round(el.scrollLeft/(card.offsetWidth+gap))))};
-  const categoryLabel=(category:ArtCategory)=>artCategories.find(item=>item[0]===category)!;
-  return <div className={`card-slider art-slider ${standalone?"is-grid":""}`}>
-    <div className={`graphic-gallery-head art-gallery-head ${standalone?"is-standalone":""}`}><div className="graphic-filters" role="group" aria-label={ru?"Фильтр арт-работ":"Art work filter"}>{artCategories.map(category=>{const count=category[0]==="all"?artGalleryWorks.length:artGalleryWorks.filter(work=>work.category===category[0]).length;return <button type="button" className={active===category[0]?"is-active":""} aria-pressed={active===category[0]} onClick={()=>choose(category[0])} key={category[0]}>{ru?category[1]:category[2]}<span>{String(count).padStart(2,"0")}</span></button>})}</div>{!standalone&&<SliderControls track={track} current={current} total={visible.length} ru={ru} hideCount/>}</div>
-    <div className="card-slider-track" ref={track} onScroll={sync}>{visible.map((work)=>{const category=categoryLabel(work.category);const external=work.source==="artstation";const title=external?work.title:ru?work.titleRu:work.titleEn;return <a data-slide data-case-card className={`art-card interactive ${work.shape}`} href={external?work.href:`/art/${work.slug}`} target={external?"_blank":undefined} rel={external?"noreferrer":undefined} key={external?work.href:work.slug} data-cursor-label={ru?"ПЕРЕЙТИ":"OPEN"}><div className={`art-card-visual case-overlay-visual ${external?"artstation-image":work.type}`}>{external?<Image src={work.image} alt={work.title} width={1920} height={1080} loading="lazy" unoptimized/>:work.type==="ascii"?<pre>.+######+.{"\n"}##▒░()░▒##{"\n"}#▒ /||\\ ▒#{"\n"}## /_||_\\ ##{"\n"}  ######</pre>:work.type==="glitch"?<b data-text="HAZY">HAZY</b>:<i><span>▓▒░</span></i>}<div className="case-card-overlay"><h2>{title}</h2><p>{external?"ARTSTATION ↗ · ":ru?"ЭКСПЕРИМЕНТ · ":"EXPERIMENT · "}{ru?category[1]:category[2]}</p></div></div></a>})}</div>
-  </div>;
+] as const;
+
+export function ArtCarousel({ru=false}:{ru?:boolean}){
+  const [active,setActive]=useState<(typeof artFilters)[number][0]>("all");
+  const [expanded,setExpanded]=useState(1);
+  const hasWorks=active==="all"||active==="digital";
+
+  return <>
+    <div className="graphic-filters art-expand-filters" role="group" aria-label={ru?"Фильтр арт-работ":"Art work filter"}>
+      {artFilters.map(([category,labelRu,labelEn])=>{
+        const count=category==="all"||category==="digital"?artStationWorks.length:0;
+        return <button type="button" key={category} className={active===category?"is-active":""} aria-pressed={active===category} onClick={()=>{setActive(category);setExpanded(1);}}>
+          {ru?labelRu:labelEn}<span>{String(count).padStart(2,"0")}</span>
+        </button>;
+      })}
+    </div>
+    {hasWorks?<div className="art-expand-row" key={active}>
+    {artStationWorks.map((work,index)=><a className="art-expand-card" aria-label={`${work.title} — ArtStation`} href={work.href} target="_blank" rel="noreferrer" key={work.href}
+      data-expanded={index===expanded}
+      style={{"--art-ratio":work.width/work.height} as React.CSSProperties}
+      onPointerMove={event=>{if(event.pointerType==="mouse"&&index!==expanded)setExpanded(index);}}
+      onFocus={event=>{if(event.currentTarget.matches(":focus-visible"))setExpanded(index);}}>
+      <div className="art-card-visual artstation-image">
+        <Image src={work.image} alt="" width={work.width} height={work.height} loading="lazy" unoptimized/>
+        <div className="art-expand-caption">
+          <h2 title={work.title}>{work.title}</h2>
+          <ArrowIcon direction="up-right"/>
+          <p>ARTSTATION</p>
+        </div>
+      </div>
+    </a>)}
+    </div>:<p className="art-expand-empty" role="status">{ru?"В этой категории пока нет работ.":"There are no works in this category yet."}</p>}
+  </>;
 }
 export function Shell({children}:{children:React.ReactNode}){return <main id="top"><Header/>{children}<Footer/></main>}
 export function LocalizedShell({children}:{children:(ru:boolean)=>React.ReactNode}){const{ru,toggle}=useSiteLanguage();return <main id="top"><Header ru={ru} onToggleLanguage={toggle}/>{children(ru)}<Footer ru={ru}/></main>}
