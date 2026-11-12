@@ -3,6 +3,7 @@ import { useEffect,useLayoutEffect,useRef,useState,useSyncExternalStore } from "
 import Image from "next/image";
 import {usePathname} from "next/navigation";
 import {localizedTitles} from "./seo-titles";
+import {animateThemeChange} from "./theme-transition";
 import LiquidCarveButton from "../components/originkit/ui/liquid-carve-button";
 import {DotScatter} from "../components/originkit/ui/dot-scatter";
 import {artStationWorks} from "./art/data";
@@ -225,7 +226,7 @@ export function Header({landing=false,ru:controlledRu,onToggleLanguage}:{landing
   const caseMenuRef=useRef<HTMLDivElement>(null);
   const ru=controlledRu??localRu;
   const toggleLanguage=onToggleLanguage??toggleLocalRu;
-  const toggleTheme=()=>savePreference("aih-theme",dark?"light":"dark");
+  const toggleTheme=()=>animateThemeChange(()=>savePreference("aih-theme",dark?"light":"dark"));
   const href=(section:string)=>section==="about"?"/about":landing?`#${section}`:`/#${section}`;
   const menuItems=[
     {label:ru?"ГЛАВНАЯ":"HOME",url:landing?"#top":"/"},
