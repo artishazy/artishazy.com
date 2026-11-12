@@ -386,6 +386,8 @@ button{border:0}
 .case-project-link.next:is(:hover,:focus-visible) .arrow-icon{transform:translateX(4px)}
 .brandbook-project-switcher-secondary>a:last-child:is(:hover,:focus-visible) .arrow-icon{transform:translate(3px,-3px)}
 .case-project-all{min-width:150px;display:grid;place-items:center;padding:24px;border-inline:1px solid var(--line);font-size:var(--text-label);font-weight:500;text-align:center;transition:background .25s,color .25s}
+.case-project-all .arrow-icon{display:none}
+@media(min-width:901px){.case-project-all{grid-area:1/2}.case-project-link.next{grid-area:1/3}}
 :is(.brandbook-project-switcher-secondary,.case-project-nav)>a{transition:background-color .08s var(--ease-out),color .08s,border-color .08s}
 :is(.brandbook-project-switcher-secondary,.case-project-nav)>a:is(:active,[data-nav-pressed]){background-color:#10100f;color:#f4f4f0;border-color:#10100f}
 :is(.brandbook-project-switcher-secondary,.case-project-nav)>a[data-nav-pressed] .about-facts span{border-color:#f4f4f080}
@@ -804,4 +806,45 @@ html[data-language-pending="true"] main{visibility:hidden}
   .hero-actions{flex-wrap:wrap;gap:8px}
   .hero-actions>a{padding-inline:14px;font-size:11px}
   .about-facts span{font-size:11px}
+}
+
+@media(max-width:900px){
+  .landing .landing-section,.landing #art.landing-section{padding-top:40px}
+  .landing .landing-section>.page-title,.landing #art>.page-title{gap:12px;padding-bottom:16px}
+  .landing .about-hero{padding-block:0 20px}
+  .landing .about-hero h2{margin-block:18px}
+  .landing .main-services{padding-bottom:0}
+  .landing .main-service-row{padding-block:14px}
+  .landing .main-service-row h2{font-size:clamp(22px,7.4vw,32px);line-height:1.06}
+  .landing :is(#work,#graphic,#art) .origin-liquid-full{margin-top:12px}
+  .landing .origin-liquid-full>a{min-height:54px!important}
+  .landing :is(#work,#graphic,#art) [data-case-card]{padding:0}
+  .landing #work .card-slider-track{align-items:start}
+  .landing #work .card-slider .project-card{content-visibility:visible;contain-intrinsic-size:none}
+  .landing :is(#work .card-slider-track,#graphic .graphic-project-grid,#art .card-slider-track){gap:12px}
+  .landing #graphic .graphic-gallery-head,.landing #art .art-gallery-head{padding-block:8px 12px}
+  .landing .site-footer,.case-project-nav + .site-footer{margin-top:36px}
+  .site-footer{gap:24px;padding-top:24px;padding-bottom:calc(68px + env(safe-area-inset-bottom))}
+  .footer-heading h2.footer-brand-scatter{height:clamp(76px,24vw,108px);margin-top:12px}
+
+  .case-project-nav{grid-template-columns:minmax(0,1fr)}
+  .case-project-nav .case-project-link{display:grid;grid-template-columns:minmax(0,1fr);gap:6px;min-height:0;padding:12px 28px 12px 0;border-bottom:1px solid var(--line)}
+  .case-project-nav .case-project-link>span{gap:6px}
+  .case-project-nav .case-project-link>span .arrow-icon{position:absolute;inset-inline-end:4px;top:calc(50% - 8px)}
+  .case-project-nav .case-project-link.next{justify-items:start;text-align:left}
+  .case-project-nav .case-project-link.next>span{justify-content:start}
+  .case-project-nav .case-project-link strong{font-size:clamp(20px,5.7vw,24px);line-height:1.15}
+  .case-project-nav .case-project-name .about-facts{justify-content:flex-start;margin:0}
+  .case-project-nav .case-project-name .about-facts span{padding:0;border:0;color:inherit;font-size:10px;opacity:.7}
+  .case-project-nav .case-project-all{display:flex;justify-content:space-between;grid-area:auto;min-height:44px;border-top:0;padding:8px 4px 8px 0}
+  .case-project-all .arrow-icon{display:block;width:16px;height:16px}
+
+  .exnode-design-case .brandbook-pages-section{padding-block:20px}
+  .exnode-design-case .brandbook-section-head{margin-bottom:14px}
+  .exnode-rating-side{gap:8px}
+  .exnode-rating-row{padding-block:4px 8px}
+  .exnode-rating-set{gap:10px;padding-right:0}
+  .exnode-rating-all{position:static;justify-self:start;margin-top:4px}
+  .exnode-mobile-meta>.exnode-viewer-control{width:44px;height:44px}
+  .exnode-mobile-meta{grid-template-columns:44px minmax(0,1fr) 44px}
 }

@@ -82,7 +82,7 @@ function CaseProjectNav({slug,ru}:{slug:string;ru:boolean}){
   const allCases=ru?"ВСЕ КЕЙСЫ":"ALL CASES";
   return <nav className={`case-project-nav${compact ? " case-project-nav-compact" : ""}`} aria-label={ru?"Навигация между кейсами":"Case study navigation"}>
     {projectLink(previous,"previous")}
-    <a className="case-project-all" href="/work" onClick={press}>{allCases}</a>
     {projectLink(next,"next")}
+    <a className="case-project-all" href="/work" onClick={press}>{allCases}<ArrowIcon direction="up-right"/></a>
   </nav>;
 }
