@@ -46,56 +46,27 @@ body{margin:0;font-family:var(--font-sans);font-weight:400;transition:background
 
 .theme-transition-glyphs {
   position: fixed;
-  top: 0;
-  left: 0;
+  inset: 0;
+  z-index: 10001;
   pointer-events: none;
-  view-transition-name: theme-glyphs;
+  contain: strict;
+  will-change: transform;
+}
+
+.theme-transition-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  pointer-events: none;
+  background: #fff;
+  mix-blend-mode: difference;
+  will-change: clip-path;
 }
 
 :root[data-theme-transition] *,
 :root[data-theme-transition] *::before,
 :root[data-theme-transition] *::after {
   transition-duration: 0s !important;
-}
-
-:root[data-theme-transition]::view-transition {
-  pointer-events: none;
-}
-
-:root[data-theme-transition]::view-transition-group(root),
-:root[data-theme-transition]::view-transition-group(theme-glyphs),
-:root[data-theme-transition]::view-transition-old(root) {
-  animation: none;
-}
-
-:root[data-theme-transition]::view-transition-group(theme-glyphs) {
-  z-index: 1;
-}
-
-:root[data-theme-transition]::view-transition-new(root),
-:root[data-theme-transition]::view-transition-new(theme-glyphs) {
-  mix-blend-mode: normal;
-  animation-duration: 1100ms;
-  animation-timing-function: cubic-bezier(.45, 0, .25, 1);
-  animation-fill-mode: both;
-}
-
-:root[data-theme-transition]::view-transition-new(root) {
-  animation-name: theme-wipe;
-}
-
-:root[data-theme-transition]::view-transition-new(theme-glyphs) {
-  animation-name: theme-glyph-sweep;
-}
-
-@keyframes theme-wipe {
-  from { clip-path: var(--theme-wipe-from); }
-  to { clip-path: var(--theme-wipe-to); }
-}
-
-@keyframes theme-glyph-sweep {
-  from { transform: translateX(var(--theme-glyphs-from)); }
-  to { transform: translateX(var(--theme-glyphs-to)); }
 }
 
 a{color:inherit;text-decoration:none}

@@ -1,6 +1,7 @@
 "use client";
 
-import AsciiHero from "./AsciiHero";
+import KnightParticles from "./KnightParticles";
+import {useRef,useState} from "react";
 import {ArrowIcon,ArtCarousel,Footer,Header,PageTitle,PortfolioLiquidLink,ProjectCarousel,useSiteLanguage} from "./components";
 import GraphicGallery from "./graphic/GraphicGallery";
 
@@ -11,10 +12,22 @@ const services=[
 ];
 
 function Stage({ru}:{ru:boolean}){
-  return <div className="stage" aria-label={ru?"Интерактивный объёмный ASCII-арт на модульной сетке":"Interactive volumetric ASCII artwork on a modular grid"}>
-    <div className="stage-grid"/>
-    <AsciiHero ru={ru}/>
-  </div>;
+  const viewer = useRef<HTMLDialogElement>(null);
+  const [preview,setPreview] = useState<{light:boolean}|null>(null);
+  function openViewer(){
+    if (!viewer.current || viewer.current.open) return;
+    setPreview({light:document.documentElement.dataset.theme !== "dark"});
+    viewer.current.showModal();
+  }
+  return <>
+    <div className="stage" aria-label={ru?"Интерактивный объёмный ASCII-арт на модульной сетке":"Interactive volumetric ASCII artwork on a modular grid"}>
+      <div className="stage-grid" style={{ opacity: .28, maskImage: "radial-gradient(ellipse at 55% 51%, black 18%, transparent 74%)" }}/>
+      <KnightParticles embedded ru={ru} onOpen={openViewer}/>
+    </div>
+    <dialog ref={viewer} className="knight-viewer-dialog" aria-label={ru?"Просмотр ASCII-рыцаря":"ASCII knight viewer"} onClose={()=>setPreview(null)}>
+      {preview && <KnightParticles ru={ru} initialLight={preview.light} onClose={()=>viewer.current?.close()}/>}
+    </dialog>
+  </>;
 }
 
 export default function Home(){

@@ -1,4 +1,7 @@
 .soft-cursor{display:none}
+@media(any-pointer:fine){
+  body:has([data-knight-stage][role="application"]:hover) > .soft-cursor{visibility:hidden}
+}
 @media(any-pointer:fine){html,body,.ascii-hero{cursor:none}
 .soft-cursor{display:block}
 :is(a,button,summary,[role="button"],[role="link"],input:is([type="button"],[type="submit"],[type="reset"],[type="image"])),.exnode-viewer{cursor:none!important}
