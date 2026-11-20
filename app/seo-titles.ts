@@ -19,11 +19,11 @@ export const localizedTitles:Record<string,[string,string]>={
     "Цифровой арт — art_is_hazy",
     "Digital art — art_is_hazy"
   ],
-  "/work/exnode": [
+  "/work/rankings": [
     "Дизайн-система рейтингов — art_is_hazy",
     "Rankings Design System — art_is_hazy"
   ],
-  "/work/exnode-builder": [
+  "/work/rankings-builder": [
     "Финансовый мониторинг / Конструктор — art_is_hazy",
     "Financial Monitoring / Builder — art_is_hazy"
   ],

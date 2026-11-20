@@ -43,6 +43,6 @@ test('homepage retains portfolio projects and shows ArtStation work in the art g
  const links=tags(art,'a').filter(tag=>tag.class==='art-expand-card').map(tag=>tag.href);
  assert.equal(new Set(links).size,16);
  assert.ok(links.every(href=>href.startsWith('https://www.artstation.com/artwork/')));
- for(const path of ['/work/exnode','/work/dreamy','/work/colorist','/work/landings','/graphic/wave-identity'])assert.ok(html.includes(`href="${path}"`),path);
+ for(const path of ['/work/rankings','/work/dreamy','/work/colorist','/work/landings','/graphic/wave-identity'])assert.ok(html.includes(`href="${path}"`),path);
  assert.ok(html.includes('https://t.me/art_is_hazy'));
 });

@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import {ArrowIcon,LocalizedShell,PortfolioLiquidLink,useProjectNavPress} from "../components";
+import {ArrowIcon,LocalizedShell,PortfolioLink,useProjectNavPress} from "../components";
 import {brandbooks,findBrandbook} from "./brandbook-data";
 
 const pageNumber=(src:string)=>src.match(/page-(\d+)/)?.[1]??"";
@@ -56,7 +56,7 @@ export default function BrandbookPage({slug}:{slug:string}){
         <a href={`/graphic/${previous.slug}`} onClick={press}><ArrowIcon direction="left"/><span>{ru?"ПРЕДЫДУЩИЙ":"PREVIOUS"}</span><strong>{previous.name}</strong></a>
         <a href="/graphic" onClick={press}><span>{ru?"ВСЕ ПРОЕКТЫ":"ALL PROJECTS"}</span><ArrowIcon direction="up-right"/></a>
       </div>
-      <PortfolioLiquidLink className="brandbook-next-liquid" href={`/graphic/${next.slug}`} label={`${ru?"СЛЕДУЮЩИЙ ПРОЕКТ":"NEXT PROJECT"} — ${next.name}`} variant="solid" direction="right" full/>
+      <PortfolioLink className="brandbook-next-link" href={`/graphic/${next.slug}`} label={`${ru?"СЛЕДУЮЩИЙ ПРОЕКТ":"NEXT PROJECT"} — ${next.name}`} variant="solid" direction="right" full/>
     </nav>
   </>}</LocalizedShell>;
 }

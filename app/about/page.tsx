@@ -17,7 +17,7 @@ const experience:AboutItem[]=[
   {
     periodRu:"МАРТ 2026 — СЕЙЧАС",
     periodEn:"MAR 2026 — NOW",
-    title:"EXNODE / UX/UI DESIGNER",
+    title:"FINANCIAL MONITORING / UX/UI DESIGNER",
     descriptionRu:"Адаптивные веб-интерфейсы, прототипы и дизайн-концепции, исследование конкурентов, развитие дизайн-системы, продуктовые презентации и маркетинговые материалы.",
     descriptionEn:"Responsive web interfaces, prototypes and design concepts, competitor research, design-system development, product presentations and marketing assets.",
   },

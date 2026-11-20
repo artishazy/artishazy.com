@@ -117,8 +117,7 @@ main{min-height:100vh;padding:0 28px}
 .stage-grid{position:absolute;inset:0;opacity:.42;background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:36px 36px;mask-image:linear-gradient(to bottom,transparent,black 12%,black 88%,transparent)}
 .hero-scroll{position:absolute;right:0;bottom:24px;z-index:6;padding:8px 0;border-bottom:1px solid var(--line);font:10px var(--font-mono);color:var(--muted)}
 
-.landing-section{padding-top:24px;scroll-margin-top:94px}
-.landing-section>.page-title{padding-top:72px}
+.landing-section{scroll-margin-top:94px}
 .landing .site-footer{scroll-margin-top:94px}
 
 .page-title :is(h1,h2),.case-hero h1,.case-copy h2,.about-hero :is(h1,h2),.process-head h2,.site-footer strong,.graphic-tile b,.glitch-word{font-weight:400}
@@ -179,25 +178,7 @@ main{min-height:100vh;padding:0 28px}
 .ascii-axis.axis-y:after{left:4px;bottom:13px;width:1px;height:42px}
 @keyframes ascii-cloud-idle{0%,100%{transform:translate3d(-3px,2px,0) scale(1)}50%{transform:translate3d(4px,-3px,0) scale(1.012)}}
 
-/* Main directions */
-.main-services{padding-bottom:70px}
-.main-services .page-title{grid-template-columns:130px minmax(0,1fr) 300px}
-.main-services .page-title :is(h1,h2){min-width:0;font-size:clamp(58px,6.3vw,108px)}
-.main-service-list{border-top:0;margin-top:42px}
-.main-service-row{position:relative;display:grid;grid-template-columns:54px minmax(230px,1fr) 150px 30px;gap:24px;align-items:center;min-height:112px;border-bottom:1px solid var(--line);padding:18px 4px;overflow:hidden;transition:background .25s,color .25s,padding .35s cubic-bezier(.2,.8,.2,1)}
-.main-service-number,.main-service-row small{font:10px var(--font-mono);color:var(--muted)}
-.main-service-row h2{margin:0;font-size:clamp(34px,3.6vw,62px);line-height:.96;letter-spacing:0;font-weight:400}
-.main-service-row small{justify-self:end;text-align:right}
 .arrow-icon{display:inline-block;width:1em;height:1em;flex:0 0 auto;overflow:visible;fill:none;stroke:currentColor;stroke-width:1.35;stroke-linecap:square;stroke-linejoin:miter;vertical-align:-.12em}
-.main-service-arrow{width:22px;height:22px;transition:transform .45s cubic-bezier(.2,.8,.2,1)}
-.main-service-row:hover .main-service-arrow{transform:rotate(-90deg)}
-.main-service-row:hover{padding-left:16px;background:color-mix(in srgb,var(--fg),transparent 96%)}
-
-@supports (animation-timeline:view()){
-  .main-service-row{animation:service-reveal both linear;animation-timeline:view();animation-range:entry 8% cover 30%}
-  @keyframes service-reveal{from{opacity:.15;transform:translateY(34px)}to{opacity:1;transform:none}}
-}
-
 @media(max-width:900px){
   main{padding:0 16px}
   .header{position:relative;top:auto;height:60px;margin:8px 0;padding:0 13px;grid-template-columns:1fr auto}
@@ -209,7 +190,6 @@ main{min-height:100vh;padding:0 28px}
   .stage{min-height:440px;margin-top:-30px;border:0}
   .intro{grid-template-columns:90px 1fr}
   .hero-scroll{bottom:14px}
-  .landing-section{padding-top:64px}
   .controls>button:nth-child(2){display:block}
   .main-menu-floating{left:10px;bottom:max(12px,env(safe-area-inset-bottom));width:104px;height:42px;padding:0 12px}
   .main-menu-floating[aria-expanded="true"]{width:104px}
@@ -223,20 +203,11 @@ main{min-height:100vh;padding:0 28px}
   .ascii-aura{width:min(88vw,420px)}
   .ascii-caption{display:none}
   .ascii-axis{display:none}
-  .main-services .page-title{grid-template-columns:1fr;gap:26px}
-  .main-services .page-title :is(h1,h2){font-size:clamp(36px,10.5vw,52px);line-height:1.02}
-  .main-service-list{margin-top:24px}
-  .main-service-row{grid-template-columns:30px 1fr 24px;gap:12px;min-height:92px;padding:16px 0}
-  .main-service-row h2{font-size:clamp(31px,8.5vw,48px)}
-  .main-service-row small{display:none}
-  .main-service-arrow{grid-column:3;justify-self:end}
 }
 
 @media(max-width:360px){
   main{padding-inline:max(14px,env(safe-area-inset-left))}
-  .page-title :is(h1,h2),.main-services .page-title :is(h1,h2){font-size:32px}
-  .main-service-row{grid-template-columns:24px 1fr 20px;gap:8px}
-  .main-service-row h2{font-size:clamp(27px,8.6vw,34px)}
+  .page-title :is(h1,h2){font-size:32px}
 }
 
 @media(max-width:900px) and (max-height:650px){

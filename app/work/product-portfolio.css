@@ -1,0 +1,19 @@
+/* One spacing scale and single-owner dividers for the UX/UI profile. */
+.ux-profile{--profile-gap:24px;--profile-section-gap:48px;--profile-rule:1px solid var(--line)}
+.ux-profile .about-grid{grid-template-columns:repeat(3,minmax(0,1fr));border-top:0;border-bottom:var(--profile-rule)}
+.ux-profile .about-grid>div{min-height:0;padding:var(--profile-gap);border:0;border-left:var(--profile-rule)}
+.ux-profile .about-grid>div:first-child{border-left:0;padding-left:0}
+.ux-profile .about-grid>div:last-child{padding-right:0}
+.ux-profile .about-grid span{display:block;line-height:1.5}
+.ux-profile .about-grid ul{padding:16px 0 0;margin:0;font-family:var(--font-sans);font-size:15px;line-height:1.6}
+.ux-profile-cases{padding-top:var(--profile-section-gap);scroll-margin-top:100px}
+.ux-profile-cases-heading{padding-bottom:var(--profile-gap);border-bottom:var(--profile-rule)}
+.ux-profile-cases-heading h2{font-size:clamp(28px,3vw,44px);font-weight:400;line-height:1.08;margin:0}
+.ux-profile .work-gallery-head{position:static;padding-block:var(--profile-gap);border:0}
+@media(max-width:900px){
+ .ux-profile{--profile-section-gap:32px;--profile-gap:20px}
+ .ux-profile .about-grid{grid-template-columns:1fr}
+ .ux-profile .about-grid>div{padding:var(--profile-gap) 0;border:0;border-top:var(--profile-rule)}
+ .ux-profile .about-grid>div:first-child{border-top:0}
+ .ux-profile .about-grid ul{padding-top:12px}
+}

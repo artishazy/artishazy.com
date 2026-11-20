@@ -125,7 +125,7 @@ export default function AsciiHero({ru=true}:{ru?:boolean}){
     };
     const animate=(time:number)=>{
       if(!visible||document.hidden||reducedMotion){motionFrame=0;return;}
-      const frameInterval=mobile?42:33;
+      const frameInterval=mobile?32:16;
       if(time-lastMotion<frameInterval){motionFrame=requestAnimationFrame(animate);return;}
       lastMotion=time;
       currentX+=(targetX-currentX)*.065;
@@ -163,7 +163,7 @@ export default function AsciiHero({ru=true}:{ru?:boolean}){
       if(!visible&&motionFrame){cancelAnimationFrame(motionFrame);motionFrame=0;}
     },{threshold:0});
     resizeObserver.observe(host);
-    addEventListener("aih-theme-change",scheduleDraw);
+    addEventListener("aih-theme-change",draw);
     visibilityObserver.observe(host);
     if(!mobile&&!reducedMotion)window.addEventListener("pointermove",move,{capture:true,passive:true});
     document.addEventListener("visibilitychange",syncVisibility);
@@ -173,7 +173,7 @@ export default function AsciiHero({ru=true}:{ru?:boolean}){
       cancelAnimationFrame(resizeFrame);
       cancelAnimationFrame(motionFrame);
       resizeObserver.disconnect();
-      removeEventListener("aih-theme-change",scheduleDraw);
+      removeEventListener("aih-theme-change",draw);
       visibilityObserver.disconnect();
       window.removeEventListener("pointermove",move,{capture:true});
       document.removeEventListener("visibilitychange",syncVisibility);

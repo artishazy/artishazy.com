@@ -1,8 +1,8 @@
 "use client";
 
-import {ArrowIcon,LocalizedShell,useProjectNavPress,works} from "../components";
-import {ExnodeDesignSystem} from "./exnode/design-system";
-import {ExnodeCase} from "./exnode/exnode-case";
+import {ArrowIcon,PortfolioLink,LocalizedShell,useProjectNavPress,works} from "../components";
+import {ExnodeDesignSystem} from "./rankings/design-system";
+import {ExnodeCase} from "./rankings/rankings-case";
 
 type Copy={title:string;subtitle:string;challenge:string;solution:string;outcome:string};
 type Detail={ru:Copy;en:Copy};
@@ -24,8 +24,8 @@ export const caseDetails:Record<string,Detail>={
 
 export function CasePage({slug}:{slug:string}){
   return <LocalizedShell>{ru=>{
-    if(slug==="exnode")return <><ExnodeDesignSystem ru={ru}/><CaseProjectNav slug={slug} ru={ru}/></>;
-    if(slug==="exnode-builder")return <><ExnodeCase ru={ru} builder/><CaseProjectNav slug={slug} ru={ru}/></>;
+    if(slug==="rankings")return <><ExnodeDesignSystem ru={ru}/><CaseProjectNav slug={slug} ru={ru}/></>;
+    if(slug==="rankings-builder")return <><ExnodeCase ru={ru} builder/><CaseProjectNav slug={slug} ru={ru}/></>;
     const detail=caseDetails[slug];
     const p=ru?detail.ru:detail.en;
     const process=ru?[
@@ -57,13 +57,23 @@ function CaseProjectNav({slug,ru}:{slug:string;ru:boolean}){
   const current=Math.max(0,works.findIndex(work=>work.slug===slug));
   const previous=works[(current-1+works.length)%works.length];
   const next=works[(current+1)%works.length];
-  const compact=slug==="exnode" || slug==="exnode-builder";
+  const compact=slug==="rankings" || slug==="rankings-builder";
   const navLabels:Record<string,{title:[string,string];category:[string,string]}>={
-    exnode:{title:["Дизайн-система","Design system"],category:["Финансовый мониторинг","Financial monitoring"]},
-    "exnode-builder":{title:["Конструктор","Builder"],category:["Финансовый мониторинг","Financial monitoring"]},
+    rankings:{title:["Дизайн-система","Design system"],category:["Финансовый мониторинг","Financial monitoring"]},
+    "rankings-builder":{title:["Конструктор","Builder"],category:["Финансовый мониторинг","Financial monitoring"]},
     landings:{title:["Лендинги","Landings"],category:["Веб-дизайн","Web design"]},
     dreamy:{title:["Dreamy","Dreamy"],category:["Мобильное приложение","Mobile app"]},
   };
+  if(compact){
+    const title=(work:typeof works[number])=>navLabels[work.slug]?.title[ru?0:1] ?? (ru ? work.titleRu ?? work.title : work.title);
+    return <nav className="brandbook-project-switcher rankings-project-switcher" aria-label={ru?"Навигация между кейсами":"Case study navigation"}>
+      <div className="brandbook-project-switcher-secondary" data-steady-cursor>
+        <a href={`/work/${previous.slug}`} onClick={press}><ArrowIcon direction="left"/><span>{ru?"ПРЕДЫДУЩИЙ":"PREVIOUS"}</span><strong>{title(previous)}</strong></a>
+        <a href="/work" onClick={press}><span>{ru?"ВСЕ ПРОЕКТЫ":"ALL PROJECTS"}</span><ArrowIcon direction="up-right"/></a>
+      </div>
+      <PortfolioLink className="brandbook-next-link" href={`/work/${next.slug}`} label={`${ru?"СЛЕДУЮЩИЙ ПРОЕКТ":"NEXT PROJECT"} — ${title(next)}`} variant="solid" direction="right" full/>
+    </nav>;
+  }
   const projectLink=(work:typeof works[number],direction:"previous"|"next")=>{
     const label=compact ? navLabels[work.slug] : undefined;
     const locale=ru ? 0 : 1;

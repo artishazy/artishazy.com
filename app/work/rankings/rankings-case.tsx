@@ -82,28 +82,28 @@ export function ExnodeCase({ru,builder}: {ru:boolean;builder:boolean}) {
     : (ru ? "Обновить страницу рейтинга и создать общую систему для страниц сравнения." : "Redesign the ranking page and create a shared system for comparison pages.");
   const home = ru ? "Главная · редизайн" : "Homepage redesign";
 
-  return <article className="exnode-case">
+  return <article className="rankings-case">
     <header className="case-hero">
       <a className="case-back" href="/work"><ArrowIcon direction="left"/>{ru ? "ВСЕ КЕЙСЫ" : "ALL CASES"}</a>
       <div className="kicker">{ru ? "ФИНАНСОВЫЙ МОНИТОРИНГ" : "FINANCIAL MONITORING"} / {p.label}</div>
       <h1>{step.title}</h1>
       <p className="case-lead">{task}</p>
-      <dl className="exnode-facts">
+      <dl className="rankings-facts">
         {[p.role, p.scope].map(([label, value]) => <div key={label}><dt>{label}</dt><dd>{value}</dd></div>)}
       </dl>
     </header>
 
-    <section className="exnode-section">
+    <section className="rankings-section">
       <span className="kicker">01</span>
       <div><h2>{p.context}</h2><p>{p.intro}</p><h3>{p.process}</h3><p>{p.workflow}</p></div>
     </section>
 
-    <section className="exnode-section">
+    <section className="rankings-section">
       <span className="kicker">02</span>
       <div>
         <h2>{ru ? "Ключевые решения" : "Key design decisions"}</h2>
         <p>{step.summary}</p>
-        {builder ? step.details.map((detail, i) => <section className="exnode-decision" key={detail}>
+        {builder ? step.details.map((detail, i) => <section className="rankings-decision" key={detail}>
           <h3>{(ru ? ["Навигация и настройки", "Типы колонок"] : ["Navigation and settings", "Column types"])[i]}</h3>
           <p>{detail}</p>
         </section>) : <p>{step.details[0]}</p>}
@@ -115,34 +115,34 @@ export function ExnodeCase({ru,builder}: {ru:boolean;builder:boolean}) {
       </div>
     </section>
 
-    <section className="exnode-section">
+    <section className="rankings-section">
       <span className="kicker">03</span>
       <div>
         <h2>{ru ? "Финальный дизайн" : "Final design"}</h2>
         {builder ? <>
-          <figure className="exnode-screen">
-            <img src="/work/exnode/builder-table.png" width="1440" height="812" loading="lazy" alt={ru ? "Редактор таблицы с типами колонок" : "Table editor showing column types"}/>
+          <figure className="rankings-screen">
+            <img src="/work/rankings/builder-table.png" width="1440" height="812" loading="lazy" alt={ru ? "Редактор таблицы с типами колонок" : "Table editor showing column types"}/>
             <figcaption>{ru ? "Редактор рейтинга. Типы данных видны под названиями колонок." : "Ranking editor. Data types appear beneath column names."}</figcaption>
           </figure>
-          <figure className="exnode-screen">
-            <img src="/work/exnode/builder-navigation.png" width="1440" height="864" loading="lazy" alt={ru ? "Навигация конструктора и настройки SEO" : "Builder navigation and SEO settings"}/>
+          <figure className="rankings-screen">
+            <img src="/work/rankings/builder-navigation.png" width="1440" height="864" loading="lazy" alt={ru ? "Навигация конструктора и настройки SEO" : "Builder navigation and SEO settings"}/>
             <figcaption>{ru ? "Навигация по разделам страницы и настройки SEO." : "Page sections in the sidebar and SEO settings."}</figcaption>
           </figure>
         </> : <>
-          <figure className="exnode-screen">
-            <img src="/work/exnode/ranking-page.png" width="1440" height="1024" loading="lazy" alt={step.caption}/>
+          <figure className="rankings-screen">
+            <img src="/work/rankings/ranking-page.png" width="1440" height="1024" loading="lazy" alt={step.caption}/>
             <figcaption>{ru ? "Шаблон рейтинга. Заголовок, фильтры и таблица в контексте страницы." : "Ranking template showing the title, filters and table in context."}</figcaption>
           </figure>
           <h3>{home}</h3>
           <p>{ru ? "В редизайне главной применил ту же систему таблиц: общую структуру строк, метки и действия. Содержание колонок адаптировал под выбор обменника." : "The homepage redesign uses the same table system for row structure, labels and actions. I adapted the columns to help users choose an exchanger."}</p>
-          <figure className="exnode-screen">
-            <img src="/work/exnode/monitoring.png" width="1318" height="1050" loading="lazy" alt={home}/>
+          <figure className="rankings-screen">
+            <img src="/work/rankings/monitoring.png" width="1318" height="1050" loading="lazy" alt={home}/>
             <figcaption>{home}</figcaption>
           </figure>
         </>}
       </div>
     </section>
-    <section className="exnode-section">
+    <section className="rankings-section">
       <span className="kicker">04</span>
       <div><h2>{p.result}</h2><p>{builder
         ? (ru ? "Подготовил макеты админ-панели с настройками контента и рейтингов. Типы колонок задают редактору параметры для самостоятельной сборки таблицы." : "I prepared admin panel designs for managing content and rankings. Column types give editors the settings they need to build tables.")

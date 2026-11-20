@@ -24,4 +24,4 @@ export const metadata:Metadata={
     other:[{rel:"mask-icon",url:"/safari-pinned-tab.svg",color:"#0b0b0a"}],
   },
 };
-export default function RootLayout({children}:Readonly<{children:React.ReactNode}>){return <html lang="ru" data-theme="light" suppressHydrationWarning><head><script dangerouslySetInnerHTML={{__html:`try{var r=document.documentElement;r.dataset.theme=localStorage.getItem("aih-theme")==="dark"?"dark":"light";if(localStorage.getItem("aih-language")==="en"){r.dataset.languagePending="true";setTimeout(function(){delete r.dataset.languagePending},1500)}}catch(e){}`}}/></head><body><SmoothScroll/><Cursor/>{children}</body></html>}
+export default function RootLayout({children}:Readonly<{children:React.ReactNode}>){return <html lang="ru" data-theme="dark" suppressHydrationWarning><head><script dangerouslySetInnerHTML={{__html:`try{var r=document.documentElement;r.dataset.theme=localStorage.getItem("aih-theme")==="light"?"light":"dark";if(localStorage.getItem("aih-language")==="en"){r.dataset.languagePending="true";setTimeout(function(){delete r.dataset.languagePending},1500)}}catch(e){}`}}/></head><body><SmoothScroll/><Cursor/>{children}</body></html>}
