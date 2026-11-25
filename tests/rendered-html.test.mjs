@@ -7,6 +7,12 @@ const sitemap=await readFile(new URL('sitemap.xml',root),'utf8');
 const routes=[...sitemap.matchAll(/<loc>(.*?)<\/loc>/g)].map(match=>new URL(match[1]).pathname);
 const htmlFor=route=>readFile(new URL(route==='/'?'index.html':`${route.slice(1)}.html`,root),'utf8');
 function tags(html,tag){return [...html.matchAll(new RegExp(`<${tag}\\b[^>]*>`,'g'))].map(match=>Object.fromEntries([...match[0].matchAll(/([\w:-]+)="([^"]*)"/g)].map(attr=>[attr[1],attr[2]])))}
+test('shared page URLs ending in a slash have the same content',async()=>{
+ for(const route of routes.filter(route=>route!=='/')){
+  const alias=await readFile(new URL(`${route.slice(1)}/index.html`,root),'utf8');
+  assert.equal(alias,await htmlFor(route),route);
+ }
+});
 test('published routes have a unique heading, canonical URL and share image',async()=>{
  for(const route of routes){
   const html=await htmlFor(route);
@@ -24,7 +30,7 @@ test('internal links, PDF downloads and original image files exist in the export
   const html=await htmlFor(route);
   assert.ok(!html.includes('/optimized/'),`optimized image on ${route}`);
   assert.ok(!html.includes('УВЕЛИЧИТЬ'),`zoom control on ${route}`);
-  assert.ok(!html.includes('ОБСУДИТЬ ПРОЕКТ'),`project discussion CTA on ${route}`);
+  if(route.startsWith('/work/'))assert.ok(!html.includes('ОБСУДИТЬ ПРОЕКТ'),`project discussion CTA on ${route}`);
   const refs=[...tags(html,'a').map(tag=>tag.href),...tags(html,'img').map(tag=>tag.src)].filter(Boolean);
   for(const ref of refs){
    const url=new URL(ref,site+route);

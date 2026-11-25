@@ -2,7 +2,7 @@
 
 import {ArrowIcon,PortfolioLink,LocalizedShell,useProjectNavPress,works} from "../components";
 import {ExnodeDesignSystem} from "./rankings/design-system";
-import {ExnodeCase} from "./rankings/rankings-case";
+import {BuilderCase} from "./rankings-builder/builder-case";
 
 type Copy={title:string;subtitle:string;challenge:string;solution:string;outcome:string};
 type Detail={ru:Copy;en:Copy};
@@ -25,7 +25,7 @@ export const caseDetails:Record<string,Detail>={
 export function CasePage({slug}:{slug:string}){
   return <LocalizedShell>{ru=>{
     if(slug==="rankings")return <><ExnodeDesignSystem ru={ru}/><CaseProjectNav slug={slug} ru={ru}/></>;
-    if(slug==="rankings-builder")return <><ExnodeCase ru={ru} builder/><CaseProjectNav slug={slug} ru={ru}/></>;
+    if(slug==="rankings-builder")return <><BuilderCase ru={ru}/><CaseProjectNav slug={slug} ru={ru}/></>;
     const detail=caseDetails[slug];
     const p=ru?detail.ru:detail.en;
     const process=ru?[

@@ -1069,3 +1069,35 @@ html[data-language-pending="true"] main{visibility:hidden}
   .main-service-row:hover .main-service-arrow{transform:none}
 }
 @media(prefers-reduced-motion:reduce){.main-service-row{animation:none!important;transition:none}}
+
+/* Shared mobile typography and vertical rhythm across portfolio sections. */
+@media(max-width:760px){
+  :root{--text-section:28px;--mobile-section-gap:64px;--mobile-content-gap:24px;--text-card-title:20px}
+  .landing{--landing-section-gap:var(--mobile-section-gap);--landing-content-gap:var(--mobile-content-gap);--landing-gallery-gap:24px}
+  .landing .stage{height:clamp(380px,130vw,560px);min-height:0;margin-top:20px}
+  .landing :is(.services-heading h2,.landing-section-title,.about-hero h2),
+  .brandbook-section-head h2{font-size:var(--text-section);line-height:1.15;letter-spacing:0}
+  .landing #services{row-gap:24px}
+  .services-heading{gap:16px;padding-bottom:24px}
+  .services-heading .kicker{margin:0}
+  .main-service-row{min-height:72px;padding-block:20px}
+  .main-service-row h3{font-size:clamp(18px,5.2vw,22px);line-height:1.2}
+  .landing .about-hero{gap:24px}
+  .landing .about-hero h2{max-width:100%;overflow-wrap:normal}
+  .landing .about-hero h2 br{display:initial}
+  .landing .about-hero>p{justify-self:start;font-size:16px;line-height:1.6}
+  .landing-section-title{padding-bottom:20px}
+  .landing :is(#work,#graphic,#art) .portfolio-link-full{margin-top:8px}
+  .landing #graphic .graphic-project-grid{padding-top:24px}
+  .graphic-gallery-head .graphic-filters{flex-wrap:nowrap;overflow-x:auto}
+  .graphic-gallery-head .graphic-filters button{flex-shrink:0}
+  .work-gallery-head{padding-bottom:24px}
+  .work-project-grid{gap:24px;border:0}
+  .work-project-grid .project-card{padding:0;border:0}
+  .work-project-grid .project-visual{aspect-ratio:4/3;height:auto;max-height:none}
+  :is(.work-project-grid,.card-slider) .monitoring-cover{height:calc(100% - 80px);bottom:auto}
+  .card-slider [data-case-card],.graphic-project-grid [data-case-card],.work-project-grid .project-card{content-visibility:visible;contain-intrinsic-size:none}
+  [data-case-card] .case-card-overlay{padding:20px 18px;gap:10px}
+  [data-case-card] .case-card-overlay :is(h2,h3){font-size:var(--text-card-title);line-height:1.2}
+  [data-case-card] .case-card-overlay p{font-size:11px;line-height:1.5}
+}

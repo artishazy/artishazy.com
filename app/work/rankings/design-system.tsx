@@ -83,7 +83,7 @@ function DesktopShowcase({ru,open}:{ru:boolean;open:()=>void}){
     <div className="graphic-gallery-head"><div className="graphic-filters" role="group" aria-label={ru?"Группа фильтров":"Filter family"}>
       {filterFamilies.map(({label,indices},i)=><button key={label[1]} className={family===i?"is-active":""} aria-pressed={family===i} onClick={()=>{setFamily(i);if(track.current)track.current.scrollLeft=0}}>{label[lang]}<span>{indices.length}</span></button>)}
     </div><SliderControls track={track} current={0} total={filterFamilies[family].indices.length} ru={ru} hideCount/></div>
-    <div className="graphic-project-grid filter-library-grid" ref={track} tabIndex={0} aria-label={ru?"Состояния фильтров":"Filter states"}>{filterFamilies[family].indices.map(index=>{
+    <div className="graphic-project-grid filter-library-grid" ref={track} role="region" tabIndex={0} aria-label={ru?"Состояния фильтров":"Filter states"}>{filterFamilies[family].indices.map(index=>{
       const item=filterStates[index];
       return <button type="button" className="project-card interactive filter-state-card" data-slide data-case-card data-cursor-label={ru?"СМОТРЕТЬ":"VIEW"} onClick={open} key={item.file}>
         <div className="project-visual case-overlay-visual monitoring"><img src={fullImage(item)} alt="" loading="lazy"/><div className="case-card-overlay"><h3>{item.caption[lang].split(". ")[0]}</h3></div></div>

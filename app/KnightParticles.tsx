@@ -371,7 +371,8 @@ export default function KnightParticles({ embedded = false, ru = true, initialLi
       renderer.setSize(width, height);
       camera.aspect = width / height;
       const wideHero = embedded && window.matchMedia("(min-width: 901px)").matches;
-      fitDistance = Math.max(wideHero ? 2.24 : 1.98, 1.75 / camera.aspect);
+      const mobileHero = embedded && !wideHero;
+      fitDistance = Math.max(wideHero ? 2.24 : mobileHero ? 2.5 : 1.98, (mobileHero ? 2.2 : 1.75) / camera.aspect);
       camera.position.z = fitDistance / zoom;
       figure.position.set(wideHero ? .085 : 0, wideHero ? .04 : 0, 0);
       camera.updateProjectionMatrix();
@@ -535,6 +536,7 @@ export default function KnightParticles({ embedded = false, ru = true, initialLi
       aria-label={ru ? "Интерактивный рыцарь из ASCII-символов" : "Interactive knight made of ASCII characters"}
       style={{ position: "absolute", inset: 0, zIndex: 2, overflow: "hidden", pointerEvents: "none" }}
     >
+      {status && <p role="status" style={{position:"absolute",inset:"auto 16px 24px",textAlign:"center",fontSize:12,color:"var(--muted)",pointerEvents:"none"}}>{status}</p>}
       <button
         ref={openViewer}
         type="button"

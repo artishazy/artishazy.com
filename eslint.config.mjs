@@ -13,6 +13,7 @@ const eslintConfig = defineConfig([
     "dist/**",
     "out/**",
     "build/**",
+    "tmp/**",
     "components/originkit/**",
     "next-env.d.ts",
   ]),
@@ -23,6 +24,11 @@ const eslintConfig = defineConfig([
   reactHooks.configs.flat["recommended-latest"],
   jsxA11y.flatConfigs.recommended,
   next.configs["core-web-vitals"],
+  {
+    files:["app/work/rankings/design-system.tsx"],
+    // Scrollable previews need keyboard focus for arrow/PageDown scrolling.
+    rules:{"jsx-a11y/no-noninteractive-tabindex":["error",{roles:["region"]}]},
+  },
   {
     languageOptions: {
       globals: {
